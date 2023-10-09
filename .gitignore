@@ -1,0 +1,44 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Archivos generados por Flutter
+/.dart_tool/
+/.flutter-plugins
+/.flutter-plugins-dependencies
+/.idea/
+/.vscode/
+/flutter/
+/build/
+/dev/
+/docs/
+/packages/
+/test/
+/bin/cache/
+/.pub-cache/
+/*.log
+/*.log.json
+/*.lock
+/*.flutter-plugins
+/*.flutter-plugins-dependencies
+
+# Android
+/build/app/outputs/
+
+# iOS
+/build/ios/
+
+# Dependencias de Dart
+/.pub/
