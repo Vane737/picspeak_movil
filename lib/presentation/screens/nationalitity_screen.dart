@@ -29,11 +29,11 @@ class NationalityScreen extends StatelessWidget {
           child: Column( 
           children: [
             
-            CustomTitle(headingText: 'Ayúdanos a configurar tu perfil', styles: AppFonts.heading1Style),
+            const CustomTitle(headingText: 'Ayúdanos a configurar tu perfil', styles: AppFonts.heading1Style),
 
-            MainContent(),
+            const MainContent(),
             Expanded(child: Container()),
-            FooterContent()
+            const FooterContent()
 
           ],
         ),
@@ -57,7 +57,7 @@ class MainContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Column(
           children: [
-              SizedBox(height: 60),
+              SizedBox(height: 20),
               CustomTitle(headingText: '¿Cuál es tu nacionalidad?', styles: AppFonts.heading2Style),
               DropdownButtonOptions(myObjectList: list,),
               CustomTitle(headingText: 'Selecciona tu lengua materna', styles: AppFonts.heading2Style),
@@ -79,7 +79,7 @@ class FooterContent extends StatelessWidget {
               children: [
                 
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 50),
+                  padding: const EdgeInsets.only(bottom: 30),
                   child: CustomButton(
                     alignment: MainAxisAlignment.spaceBetween,
                     text: 'CONTINUAR', 

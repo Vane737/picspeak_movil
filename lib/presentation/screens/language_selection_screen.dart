@@ -62,7 +62,7 @@ class _MainContentState extends State<MainContent> {
   Widget build(BuildContext context) {
     return  const Column(
           children: [
-              SizedBox(height: 80),
+              SizedBox(height: 50),
               CustomTitle(headingText: 'Elige tus idiomas preferidos', styles: AppFonts.heading2Style),
               
               DropdownTagSelector(),    
@@ -79,7 +79,7 @@ class FooterContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 50),
+      padding: const EdgeInsets.only(bottom: 30),
       child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
