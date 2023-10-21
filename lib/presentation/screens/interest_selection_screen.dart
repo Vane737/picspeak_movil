@@ -62,7 +62,7 @@ class _MainContentState extends State<MainContent> {
   Widget build(BuildContext context) {
     return  Column(
           children: [
-              const SizedBox(height: 80),
+              const SizedBox(height: 20),
               const CustomTitle(headingText: '¿Qué tipo de intereses tienes?', styles: AppFonts.heading2Style),
               
               MultiSelectTags(
@@ -88,7 +88,7 @@ class FooterContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 50),
+      padding: const EdgeInsets.only(bottom: 30),
       child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
