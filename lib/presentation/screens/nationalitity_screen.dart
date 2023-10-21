@@ -26,13 +26,13 @@ class NationalityScreen extends StatelessWidget {
           width: double.infinity,
           height: double.infinity,
           color: AppColors.primaryColor,
-          child: const Column( 
+          child: Column( 
           children: [
             
             CustomTitle(headingText: 'Ayúdanos a configurar tu perfil', styles: AppFonts.heading1Style),
 
             MainContent(),
-
+            Expanded(child: Container()),
             FooterContent()
 
           ],
@@ -77,14 +77,15 @@ class FooterContent extends StatelessWidget {
     return Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                
                 Padding(
-                  padding: const EdgeInsets.only(top: 100.0),
+                  padding: const EdgeInsets.only(bottom: 50),
                   child: CustomButton(
                     alignment: MainAxisAlignment.spaceBetween,
                     text: 'CONTINUAR', 
                     icon: Icons.arrow_forward_ios_outlined, 
                     color: AppColors.bgSecondaryColor, 
-                    width: 150, 
+                    // width: 150, 
                     onPressed: (){
                       Navigator.push(
                       context,

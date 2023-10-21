@@ -31,7 +31,6 @@ class LanguageSelectionScreen extends StatelessWidget {
               const MainContent(),
                
               Expanded(child: Container()),
-              
               const FooterContent(),
           
             ],
@@ -80,7 +79,7 @@ class FooterContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 150),
+      padding: const EdgeInsets.only(bottom: 50),
       child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -89,7 +88,7 @@ class FooterContent extends StatelessWidget {
                     icon: null,
                     text: 'TERMINAMOS', 
                     color: AppColors.bgPrimaryColor, 
-                    width: 200, 
+                    // width: 200, 
                     onPressed: (){
                       Navigator.push(
                       context,

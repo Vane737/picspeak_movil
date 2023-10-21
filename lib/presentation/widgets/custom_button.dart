@@ -28,7 +28,7 @@ class CustomButton extends StatelessWidget {
           onTap: onPressed, // Llama a la función cuando se presiona el botón
           child: Container(
             width: width,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
             child: Row(
               mainAxisAlignment: alignment,
               children: [

@@ -90,7 +90,7 @@ class FooterContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 150),
+      padding: const EdgeInsets.only(bottom: 50),
       child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -98,7 +98,7 @@ class FooterContent extends StatelessWidget {
                     alignment: MainAxisAlignment.spaceBetween,
                     icon: Icons.arrow_back_ios, 
                     color: AppColors.bgSecondaryColor, 
-                    width: 55, 
+                    // width: 55, 
                     onPressed: (){
                       Navigator.pop(context);
                     },
@@ -108,7 +108,7 @@ class FooterContent extends StatelessWidget {
                     text: 'CONTINUAR', 
                     icon: Icons.arrow_forward_ios, 
                     color: AppColors.bgSecondaryColor, 
-                    width: 150, 
+                    // width: 150, 
                     onPressed: (){
                       Navigator.push(
                       context,
