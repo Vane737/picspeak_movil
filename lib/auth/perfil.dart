@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:picspeak_front/auth/verificCorreo.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class Perfil extends StatefulWidget {
   @override
@@ -7,6 +10,33 @@ class Perfil extends StatefulWidget {
 
 class _PerfilState extends State<Perfil> {
   DateTime? _selectedDate;
+  File? _image;
+
+  Future _imgFromCamera() async {
+    final XFile? image = await ImagePicker().pickImage(
+      source: ImageSource.camera,
+      imageQuality: 50,
+    );
+
+    if (image != null) {
+      setState(() {
+        _image = File(image.path);
+      });
+    }
+  }
+
+  Future _imgFromGallery() async {
+    final XFile? image = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 50,
+    );
+
+    if (image != null) {
+      setState(() {
+        _image = File(image.path);
+      });
+    }
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime? picked = await showDatePicker(
@@ -59,9 +89,27 @@ class _PerfilState extends State<Perfil> {
                   child: Stack(
                     children: [
                       CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            'https://domain.net/saintseiya/images/some.jpg'),
                         radius: 70,
+                        backgroundColor: Colors.white, // Fondo blanco
+                        child: _image != null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                    70), // Para que sea circular
+                                child: Image.file(
+                                  _image!,
+                                  width: 140,
+                                  height: 140,
+                                  fit: BoxFit
+                                      .cover, // Ajusta el ajuste según tus necesidades
+                                ),
+                              )
+                            : Image.network(
+                                'https://domain.net/saintseiya/images/some.jpg',
+                                width: 140,
+                                height: 140,
+                                fit: BoxFit
+                                    .cover, // Ajusta el ajuste según tus necesidades
+                              ),
                       ),
                       Positioned(
                         bottom: 0,
@@ -72,8 +120,7 @@ class _PerfilState extends State<Perfil> {
                           child: IconButton(
                             icon: Icon(Icons.camera_alt),
                             onPressed: () {
-                              // Aquí puedes agregar la lógica para abrir la cámara
-                              // o hacer lo que necesites al presionar el ícono de la cámara.
+                              _imgFromCamera();
                             },
                           ),
                         ),
@@ -178,7 +225,12 @@ class _PerfilState extends State<Perfil> {
                 ),
                 const SizedBox(height: 40),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => VerificCorreo()),
+                    );
+                  },
                   child: Text(
                     'Crear Cuenta ',
                     style: TextStyle(
