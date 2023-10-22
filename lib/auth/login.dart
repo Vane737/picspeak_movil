@@ -1,90 +1,105 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/auth/password.dart';
+import 'package:picspeak_front/config/theme/app_colors.dart';
+import '../presentation/widgets/custom_button.dart';
 
 class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.all(16.0),
-        width: double.infinity,
-        height: double.infinity,
-        color: Color.fromARGB(255, 253, 235, 235), // Color de fondo
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Crear una nueva Cuenta',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 50,
-                ),
-              ),
-              Text(
-                'Por favor introduce tu correo electrónico para comenzar',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-              ),
-              const SizedBox(height: 50),
-              TextField(
-                obscureText: false,
-                autofocus: false,
-                style: TextStyle(
-                    fontSize: 22.0, color: Color.fromARGB(255, 0, 0, 0)),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  fillColor: Colors.white,
-                  labelText: 'Correo Electronico',
-                  contentPadding:
-                      const EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(25.7),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(25.7),
+        color: AppColors.primaryColor,
+        child: ListView(padding: const EdgeInsets.all(16.0), children: [
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(top: 70.0),
+                  child: Text(
+                    'Crear una nueva cuenta',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 40,
+                      color: AppColors.textColor,
+                      fontFamily: 'Roboto',
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 40),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Password()),
-                  );
-                },
-                child: Text(
-                  'Continuar >',
+                const SizedBox(height: 20),
+                const Text(
+                  'Por favor introduce tu correo electrónico para comenzar',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 24.0,
-                    color: Colors.white,
+                    fontSize: 20,
+                    color: AppColors.textColor,
+                    fontFamily: 'Inter',
                   ),
                 ),
-                style: ElevatedButton.styleFrom(
-                  primary: Color.fromRGBO(102, 213, 216, 1),
-                  minimumSize: Size(250.0, 60.0),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(top: 200.0, right: 20, left: 20),
+                  child: TextField(
+                    keyboardType: TextInputType.emailAddress,
+                    obscureText: false,
+                    autofocus: true,
+                    style: const TextStyle(
+                        fontSize: 22.0, color: Color.fromARGB(255, 0, 0, 0)),
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelText: 'Correo electrónico',
+                      labelStyle: const TextStyle(
+                        color: Colors.grey,
+                      ),
+                      contentPadding: const EdgeInsets.only(
+                          left: 14.0, bottom: 8.0, top: 8.0),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(25.7),
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(25.7),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 40),
-              IconButton(
-                onPressed: () {
-                  // Acción cuando se presiona el botón de retroceso
-                  Navigator.pop(context);
-                },
-                icon: Icon(
-                  Icons.arrow_back,
-                  size: 40.0,
-                ),
-              ),
-            ],
-          ),
-        ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 150, right: 10, left: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomButton(
+                        alignment: MainAxisAlignment.spaceBetween,
+                        icon: Icons.arrow_back_ios,
+                        color: AppColors.bgSecondaryColor,
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      CustomButton(
+                        alignment: MainAxisAlignment.spaceBetween,
+                        text: 'CONTINUAR',
+                        icon: Icons.arrow_forward_ios_outlined,
+                        color: AppColors.bgSecondaryColor,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Password()),
+                          );
+                        },
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          )
+        ]),
       ),
     );
   }
