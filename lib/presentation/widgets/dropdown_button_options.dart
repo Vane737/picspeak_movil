@@ -1,14 +1,18 @@
  import 'package:flutter/material.dart';
+import 'package:picspeak_front/presentation/interfaces/DropdownObject.dart';
 
 import '../../config/theme/app_text_style.dart';
 
 
+
 class DropdownButtonOptions extends StatefulWidget {
-  final List<String> myObjectList; // Cambia MyObject por el tipo de tus objetos
-  
+  final List<DropdownObject> myObjectList;
+  final ValueNotifier<int?> selectedValueNotifier; // Notificador del valor seleccionado
+
   const DropdownButtonOptions({
     Key? key,
     required this.myObjectList,
+    required this.selectedValueNotifier,
   }) : super(key: key);
 
   @override
@@ -16,36 +20,41 @@ class DropdownButtonOptions extends StatefulWidget {
 }
 
 class _DropdownButtonOptionsState extends State<DropdownButtonOptions> {
-  late String? _dropdownValue;
+  late int? _dropdownValue;
 
   @override
   void initState() {
     super.initState();
-    _dropdownValue = null; // Inicializa el valor como nulo para mostrar el hint
+    _dropdownValue = null;
+    widget.selectedValueNotifier.addListener(_valueNotifierListener);
+  }
+
+  void _valueNotifierListener() {
+    setState(() {
+      _dropdownValue = widget.selectedValueNotifier.value;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // Accede a la lista de objetos a través de widget.myObjectList
-    
-    return DropdownButton<String>(
+    return DropdownButton<DropdownObject>(
       hint: const Text("Seleccionar"),
       isExpanded: true,
       borderRadius: BorderRadius.circular(5),
-      style: AppTextStyles.inputLightTextStyle,
-      onChanged: (String? value) {
-        setState(() {
-          _dropdownValue = value;
-        });
+      style: AppTextStyles.inputLightTextStyle, // Asegúrate de definir AppTextStyles
+      onChanged: (DropdownObject? selectedObject) {
+        widget.selectedValueNotifier.value = selectedObject?.id;
       },
-      value: _dropdownValue,
-      items: widget.myObjectList.map<DropdownMenuItem<String>>((String text) {
-        return DropdownMenuItem<String>(
-          
-          value: text,
-          child: Text(text),
-        );
-      }).toList(),
+      value: widget.myObjectList.firstWhere(
+          (obj) => obj.id == _dropdownValue, orElse: () => widget.myObjectList.first),
+      items: widget.myObjectList.map<DropdownMenuItem<DropdownObject>>(
+        (DropdownObject obj) {
+          return DropdownMenuItem<DropdownObject>(
+            value: obj,
+            child: Text(obj.name),
+          );
+        },
+      ).toList(),
     );
   }
 }
