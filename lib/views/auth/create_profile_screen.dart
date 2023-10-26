@@ -1,18 +1,22 @@
 // ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'package:picspeak_front/auth/verificCorreo.dart';
+import 'package:picspeak_front/views/auth/validate_email_screen.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:picspeak_front/config/theme/app_colors.dart';
-import 'package:picspeak_front/presentation/widgets/custom_button.dart';
+import 'package:picspeak_front/views/widgets/custom_button.dart';
 
-class Perfil extends StatefulWidget {
+class CreateProfileScreen extends StatefulWidget {
+  final String userPassword;
+
+  const CreateProfileScreen({required this.userPassword});
+
   @override
   _PerfilState createState() => _PerfilState();
 }
 
-class _PerfilState extends State<Perfil> {
+class _PerfilState extends State<CreateProfileScreen> {
   DateTime? _selectedDate;
   File? _image;
 
@@ -239,7 +243,7 @@ class _PerfilState extends State<Perfil> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => VerificCorreo()),
+                            builder: (context) => ValidateEmailScreen()),
                       );
                     },
                   ),

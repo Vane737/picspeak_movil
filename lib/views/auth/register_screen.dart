@@ -1,11 +1,19 @@
 // ignore_for_file: use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
-import 'package:picspeak_front/auth/password.dart';
+import 'package:picspeak_front/views/auth/save_password_screen.dart';
 import 'package:picspeak_front/config/theme/app_colors.dart';
-import '../presentation/widgets/custom_button.dart';
+import 'package:picspeak_front/views/widgets/custom_button.dart';
 
-class Login extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
+  
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  TextEditingController emailController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,6 +50,7 @@ class Login extends StatelessWidget {
                   padding:
                       const EdgeInsets.only(top: 200.0, right: 20, left: 20),
                   child: TextField(
+                    controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                     obscureText: false,
                     autofocus: true,
@@ -87,9 +96,14 @@ class Login extends StatelessWidget {
                         icon: Icons.arrow_forward_ios_outlined,
                         color: AppColors.bgSecondaryColor,
                         onPressed: () {
+                          String userEmail = emailController.text;
+
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => Password()),
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  SavePasswordScreen(userEmail: userEmail),
+                            ),
                           );
                         },
                       )

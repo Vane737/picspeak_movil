@@ -1,8 +1,8 @@
 // ignore_for_file: use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
-import 'auth/login.dart';
-import 'auth/register.dart';
+import 'views/auth/register_screen.dart';
+import 'views/auth/login_screen.dart';
 import 'config/theme/app_colors.dart';
 
 void main() {
@@ -67,7 +67,7 @@ class HomeScreen extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => Login()),
+                          MaterialPageRoute(builder: (context) => RegisterScreen()),
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -87,7 +87,7 @@ class HomeScreen extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => Register()),
+                          MaterialPageRoute(builder: (context) => LoginScreen()),
                         );
                       },
                       style: ElevatedButton.styleFrom(
