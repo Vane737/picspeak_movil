@@ -6,7 +6,7 @@ class AppFonts {
   static const TextStyle heading1Style = TextStyle(
     fontFamily: primaryFontFamily,
     fontWeight: FontWeight.bold,
-    fontSize: 40,
+    fontSize: 38,
   );
   static const TextStyle heading2Style = TextStyle(
     fontFamily: primaryFontFamily,

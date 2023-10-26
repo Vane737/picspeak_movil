@@ -5,7 +5,7 @@ import '../../config/theme/app_text_style.dart';
 
 class DropdownButtonOptions extends StatefulWidget {
   final List<String> myObjectList; // Cambia MyObject por el tipo de tus objetos
-
+  
   const DropdownButtonOptions({
     Key? key,
     required this.myObjectList,
@@ -27,14 +27,11 @@ class _DropdownButtonOptionsState extends State<DropdownButtonOptions> {
   @override
   Widget build(BuildContext context) {
     // Accede a la lista de objetos a través de widget.myObjectList
-    // Por ejemplo, puedes usar widget.myObjectList.map() para crear los elementos del DropdownButton.
     
     return DropdownButton<String>(
       hint: const Text("Seleccionar"),
-      isDense: true,
       isExpanded: true,
-      elevation: 16,
-      menuMaxHeight: 30,
+      borderRadius: BorderRadius.circular(5),
       style: AppTextStyles.inputLightTextStyle,
       onChanged: (String? value) {
         setState(() {
@@ -44,6 +41,7 @@ class _DropdownButtonOptionsState extends State<DropdownButtonOptions> {
       value: _dropdownValue,
       items: widget.myObjectList.map<DropdownMenuItem<String>>((String text) {
         return DropdownMenuItem<String>(
+          
           value: text,
           child: Text(text),
         );
