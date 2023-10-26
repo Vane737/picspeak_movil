@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/auth/password.dart';
+import 'package:picspeak_front/chat/ChatList.dart';
 
 class Register extends StatelessWidget {
   @override
@@ -92,7 +93,10 @@ class Register extends StatelessWidget {
               const SizedBox(height: 40),
               IconButton(
                 onPressed: () {
-                  // Acción cuando se presiona el botón de retroceso
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ChatList()),
+                  );
                   Navigator.pop(context);
                 },
                 icon: Icon(

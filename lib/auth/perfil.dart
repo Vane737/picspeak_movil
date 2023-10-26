@@ -52,6 +52,33 @@ class _PerfilState extends State<Perfil> {
       });
   }
 
+  void _showImageSourceDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Selecciona una fuente de imagen"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                _imgFromCamera();
+                Navigator.of(context).pop();
+              },
+              child: Text("Cámara"),
+            ),
+            TextButton(
+              onPressed: () {
+                _imgFromGallery();
+                Navigator.of(context).pop();
+              },
+              child: Text("Galería"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     String formattedDate = _selectedDate != null
@@ -120,7 +147,7 @@ class _PerfilState extends State<Perfil> {
                           child: IconButton(
                             icon: Icon(Icons.camera_alt),
                             onPressed: () {
-                              _imgFromCamera();
+                              _showImageSourceDialog(); // Mostrar diálogo para elegir cámara o galería
                             },
                           ),
                         ),
