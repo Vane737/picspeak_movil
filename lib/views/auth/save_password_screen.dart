@@ -19,11 +19,13 @@ class _SavePasswordScreenState extends State<SavePasswordScreen> {
   TextEditingController txtConfirmPasswordController = TextEditingController();
 
   bool passwordVisibility = false;
+  bool confirmpasswordVisibility = false;
 
   @override
   void initState() {
     super.initState();
     passwordVisibility = false;
+    confirmpasswordVisibility = false;
   }
 
   @override
@@ -72,6 +74,18 @@ class _SavePasswordScreenState extends State<SavePasswordScreen> {
                       labelStyle: const TextStyle(
                         color: Colors.grey,
                       ),
+                      suffixIcon: InkWell(
+                          onTap: () => setState(
+                                () => passwordVisibility = !passwordVisibility,
+                              ),
+                          focusNode: FocusNode(skipTraversal: true),
+                          child: Icon(
+                            passwordVisibility
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                            color: const Color(0xFF95A1AC),
+                            size: 22,
+                          )),
                       contentPadding: const EdgeInsets.only(
                           left: 14.0, bottom: 8.0, top: 8.0),
                       focusedBorder: OutlineInputBorder(
@@ -89,7 +103,7 @@ class _SavePasswordScreenState extends State<SavePasswordScreen> {
                   const SizedBox(height: 20),
                   TextField(
                     controller: txtConfirmPasswordController,
-                    obscureText: !passwordVisibility,
+                    obscureText: !confirmpasswordVisibility,
                     autofocus: false,
                     style: const TextStyle(
                         fontSize: 22.0, color: Color.fromARGB(255, 0, 0, 0)),
@@ -103,11 +117,11 @@ class _SavePasswordScreenState extends State<SavePasswordScreen> {
                       ),
                       suffixIcon: InkWell(
                           onTap: () => setState(
-                                () => passwordVisibility = !passwordVisibility,
+                                () => confirmpasswordVisibility = !confirmpasswordVisibility,
                               ),
                           focusNode: FocusNode(skipTraversal: true),
                           child: Icon(
-                            passwordVisibility
+                            confirmpasswordVisibility
                                 ? Icons.visibility_outlined
                                 : Icons.visibility_off_outlined,
                             color: const Color(0xFF95A1AC),
@@ -147,11 +161,35 @@ class _SavePasswordScreenState extends State<SavePasswordScreen> {
                       color: AppColors.bgSecondaryColor,
                       onPressed: () {
                         String userPassword = txtPasswordController.text;
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CreateProfileScreen(userEmail: userEmail, userPassword: userPassword)),
-                        );
+                        String confirmPassword = txtConfirmPasswordController.text;
+                        String userEmail = widget.userEmail;
+
+                        if (userPassword.isNotEmpty && confirmPassword.isNotEmpty) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CreateProfileScreen(
+                                    userEmail: userEmail,
+                                    userPassword: userPassword)),
+                          );
+                        } else {                         
+                          if (userPassword.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    'El campo de contraseña no puede estar vacío.'),
+                              ),
+                            );
+                          }
+                          if (confirmPassword.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    'Las contraseñas no coinciden'),
+                              ),
+                            );
+                          }
+                        }
                       },
                     )
                   ],

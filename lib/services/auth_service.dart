@@ -42,8 +42,8 @@ Future<ApiResponse> register(
   String name, 
   String lastname, 
   String birthDate, 
-  String gender, 
-  String nationality,
+  //String gender, 
+  //String nationality,
   String email,
   String password,
   String photourl
@@ -56,15 +56,17 @@ Future<ApiResponse> register(
           'name': name,
           'lastname': lastname,
           'birthDate': birthDate,
-          'gender': gender,
-          'nationality': nationality,
+          //'gender': gender,
+          //'nationality': nationality,
           'email': email, 
           'password': password,
           'photo_url': photourl
         });
 
+    print('REGISTER'+response.body);
+
     switch (response.statusCode) {
-      case 200:
+      case 201:
         apiResponse.data = User.fromJson(jsonDecode(response.body));
         break;
       case 422:

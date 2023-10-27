@@ -98,13 +98,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         onPressed: () {
                           String userEmail = emailController.text;
 
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  SavePasswordScreen(userEmail: userEmail),
-                            ),
-                          );
+                          if (userEmail.isNotEmpty) {  
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SavePasswordScreen(userEmail: userEmail),
+                              ),
+                            );
+                          } else {    
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('El campo de correo electrónico no puede estar vacío.'),
+                              ),
+                            );
+                          }
                         },
                       )
                     ],
