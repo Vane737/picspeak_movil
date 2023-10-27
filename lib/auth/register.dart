@@ -97,7 +97,6 @@ class Register extends StatelessWidget {
                     context,
                     MaterialPageRoute(builder: (context) => ChatList()),
                   );
-                  Navigator.pop(context);
                 },
                 icon: Icon(
                   Icons.arrow_back,
