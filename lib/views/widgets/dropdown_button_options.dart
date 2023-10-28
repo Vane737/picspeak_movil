@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../config/theme/app_text_style.dart';
+import 'package:picspeak_front/config/theme/app_text_style.dart';
 
 class DropdownButtonOptions extends StatefulWidget {
   final List<String> myObjectList; // Cambia MyObject por el tipo de tus objetos
