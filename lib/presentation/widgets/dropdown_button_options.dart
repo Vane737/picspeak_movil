@@ -1,13 +1,12 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:picspeak_front/presentation/interfaces/DropdownObject.dart';
 
 import '../../config/theme/app_text_style.dart';
 
-
-
 class DropdownButtonOptions extends StatefulWidget {
   final List<DropdownObject> myObjectList;
-  final ValueNotifier<int?> selectedValueNotifier; // Notificador del valor seleccionado
+  final ValueNotifier<int?>
+      selectedValueNotifier; // Notificador del valor seleccionado
 
   const DropdownButtonOptions({
     Key? key,
@@ -41,12 +40,13 @@ class _DropdownButtonOptionsState extends State<DropdownButtonOptions> {
       hint: const Text("Seleccionar"),
       isExpanded: true,
       borderRadius: BorderRadius.circular(5),
-      style: AppTextStyles.inputLightTextStyle, // Asegúrate de definir AppTextStyles
+      style: AppTextStyles
+          .inputLightTextStyle, // Asegúrate de definir AppTextStyles
       onChanged: (DropdownObject? selectedObject) {
         widget.selectedValueNotifier.value = selectedObject?.id;
       },
-      value: widget.myObjectList.firstWhere(
-          (obj) => obj.id == _dropdownValue, orElse: () => widget.myObjectList.first),
+      value: widget.myObjectList.firstWhere((obj) => obj.id == _dropdownValue,
+          orElse: () => widget.myObjectList.first),
       items: widget.myObjectList.map<DropdownMenuItem<DropdownObject>>(
         (DropdownObject obj) {
           return DropdownMenuItem<DropdownObject>(
@@ -58,4 +58,3 @@ class _DropdownButtonOptionsState extends State<DropdownButtonOptions> {
     );
   }
 }
-

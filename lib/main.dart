@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'auth/login.dart';
 import 'auth/register.dart';
 import 'config/theme/app_colors.dart';
+import 'presentation/screens/nationalitity_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -20,7 +21,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
       ),
       home: Scaffold(
-        body: HomeScreen(),
+        // body: HomeScreen(),
+        body: NationalityScreen(),
       ),
     );
   }
@@ -43,8 +45,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           Column(
-            mainAxisAlignment: MainAxisAlignment
-                .spaceBetween, 
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Padding(
                 padding: EdgeInsets.all(35.0),
@@ -52,10 +53,9 @@ class HomeScreen extends StatelessWidget {
                   child: Text(
                     '¡PickSpeak!',
                     style: TextStyle(
-                      fontSize: 40.0,
-                      color: AppColors.textColor,
-                      fontFamily: 'Roboto'
-                    ),
+                        fontSize: 40.0,
+                        color: AppColors.textColor,
+                        fontFamily: 'Roboto'),
                   ),
                 ),
               ),
