@@ -1,11 +1,10 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import '../../config/theme/app_text_style.dart';
 
-
 class DropdownButtonOptions extends StatefulWidget {
   final List<String> myObjectList; // Cambia MyObject por el tipo de tus objetos
-  
+
   const DropdownButtonOptions({
     Key? key,
     required this.myObjectList,
@@ -27,7 +26,7 @@ class _DropdownButtonOptionsState extends State<DropdownButtonOptions> {
   @override
   Widget build(BuildContext context) {
     // Accede a la lista de objetos a través de widget.myObjectList
-    
+
     return DropdownButton<String>(
       hint: const Text("Seleccionar"),
       isExpanded: true,
@@ -41,7 +40,6 @@ class _DropdownButtonOptionsState extends State<DropdownButtonOptions> {
       value: _dropdownValue,
       items: widget.myObjectList.map<DropdownMenuItem<String>>((String text) {
         return DropdownMenuItem<String>(
-          
           value: text,
           child: Text(text),
         );
@@ -49,4 +47,3 @@ class _DropdownButtonOptionsState extends State<DropdownButtonOptions> {
     );
   }
 }
-
