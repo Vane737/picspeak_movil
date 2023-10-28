@@ -63,8 +63,6 @@ Future<ApiResponse> register(
           'photo_url': photourl
         });
 
-    print('REGISTER'+response.body);
-
     switch (response.statusCode) {
       case 201:
         apiResponse.data = User.fromJson(jsonDecode(response.body));
