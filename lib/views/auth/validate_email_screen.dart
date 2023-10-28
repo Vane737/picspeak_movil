@@ -26,10 +26,10 @@ import 'package:flutter/material.dart'
         Widget;
 import 'package:flutter/widgets.dart';
 import 'package:picspeak_front/config/theme/app_colors.dart';
-import 'package:picspeak_front/presentation/screens/nationalitity_screen.dart';
-import 'package:picspeak_front/presentation/widgets/custom_button.dart';
+import 'package:picspeak_front/views/screens/nationalitity_screen.dart';
+import 'package:picspeak_front/views/widgets/custom_button.dart';
 
-class VerificCorreo extends StatelessWidget {
+class ValidateEmailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
