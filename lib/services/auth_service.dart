@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:picspeak_front/config/constants/api_routes.dart';
@@ -41,12 +42,11 @@ Future<ApiResponse> login(String email, String password) async {
 Future<ApiResponse> register(
   String name, 
   String lastname, 
+  String username,
   String birthDate, 
-  //String gender, 
-  //String nationality,
   String email,
   String password,
-  String photourl
+  String? photourl
 ) async {
   ApiResponse apiResponse = ApiResponse();
   try {
@@ -55,13 +55,14 @@ Future<ApiResponse> register(
         body: {
           'name': name,
           'lastname': lastname,
+          'username': username,
           'birthDate': birthDate,
-          //'gender': gender,
-          //'nationality': nationality,
           'email': email, 
           'password': password,
           'photo_url': photourl
         });
+
+    print(response.body);
 
     switch (response.statusCode) {
       case 201:
@@ -125,4 +126,9 @@ Future<int> getUserId() async {
 Future<bool> logout() async {
   SharedPreferences pref = await SharedPreferences.getInstance();
   return await pref.remove('token');
+}
+
+String? getStringImage(File? file) {
+  if (file == null) return null;
+  return base64Encode(file.readAsBytesSync());
 }

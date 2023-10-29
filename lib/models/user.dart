@@ -3,6 +3,7 @@ class User {
   String? photourl;
   String? name;
   String? lastname;
+  String? username;
   String? birthDate;
   String? gender;
   String? nationality;
@@ -15,6 +16,7 @@ class User {
     this.photourl,
     this.name, 
     this.lastname,
+    this.username,
     this.birthDate,
     this.gender,
     this.nationality,
@@ -29,6 +31,7 @@ class User {
       photourl: json['user']['photo_url'],
       name: json['user']['name'],
       lastname: json['user']['lastname'],
+      username: json['user']['username'],
       birthDate: json['user']['birthDate'],
       gender: json['user']['gender'],
       nationality: json['user']['nationality'],
