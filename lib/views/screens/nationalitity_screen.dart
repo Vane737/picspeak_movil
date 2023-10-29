@@ -4,7 +4,6 @@ import 'package:picspeak_front/config/theme/app_fonts.dart';
 import 'package:picspeak_front/views/widgets/custom_button.dart';
 import 'package:picspeak_front/views/widgets/custom_title.dart';
 import 'package:picspeak_front/views/widgets/dropdown_button_options.dart';
-
 import 'customer_content_screen.dart';
 
 class NationalityScreen extends StatelessWidget {
@@ -48,21 +47,30 @@ class MainContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(children: [
-      SizedBox(height: 20),
-      CustomTitle(
-          headingText: '¿Cuál es tu nacionalidad?',
-          styles: AppFonts.heading2Style),
-      DropdownButtonOptions(
-        myObjectList: list,
-      ),
-      CustomTitle(
-          headingText: 'Selecciona tu lengua materna',
-          styles: AppFonts.heading2Style),
-      DropdownButtonOptions(
-        myObjectList: list,
-      ),
-    ]);
+    return const Padding(
+      padding: EdgeInsets.all(20),
+      child: Column(children: [
+        SizedBox(height: 20),
+        CustomTitle(
+            headingText: '¿Cuál es tu nacionalidad?',
+            styles: AppFonts.heading2Style),
+        SizedBox(
+          height: 10,
+        ),
+        DropdownButtonOptions(
+          myObjectList: list,
+        ),
+        CustomTitle(
+            headingText: 'Selecciona tu lengua materna',
+            styles: AppFonts.heading2Style),
+        SizedBox(
+          height: 10,
+        ),
+        DropdownButtonOptions(
+          myObjectList: list,
+        ),
+      ]),
+    );
   }
 }
 
@@ -77,13 +85,12 @@ class FooterContent extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Padding(
-          padding: const EdgeInsets.only(bottom: 30),
+          padding: const EdgeInsets.only(bottom: 50, right: 20),
           child: CustomButton(
             alignment: MainAxisAlignment.spaceBetween,
             text: 'CONTINUAR',
             icon: Icons.arrow_forward_ios_outlined,
             color: AppColors.bgSecondaryColor,
-            // width: 150,
             onPressed: () {
               Navigator.push(
                 context,
