@@ -61,18 +61,20 @@ class _PerfilState extends State<CreateProfileScreen> {
   }
 
   void _registerUser() async {
+    String? image = _image ==  null ? null : getStringImage(_image);
     String formattedBirthday = _selectedDate != null
       ? _selectedDate!.toIso8601String()
       : '';
     ApiResponse response = await register(
         txtNameController.text,
         txtLastnameController.text,
+        txtUsernameController.text,
         formattedBirthday,
         widget.userEmail,
         widget.userPassword,
-        _image!.path
+        image
     );
-    print(response.error);
+
     if (response.error == null) {
       _saveAndRedirectToHome(response.data as User);
     } else {

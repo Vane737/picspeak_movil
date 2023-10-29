@@ -83,7 +83,7 @@ class MainContent extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => InformationInterestsScreen(),
+                builder: (context) => const InformationInterestsScreen(),
               ),
             );
           },
