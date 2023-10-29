@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class CustomTitle extends StatelessWidget {
   const CustomTitle({
     super.key,
-    required this.headingText, required this.styles,
+    required this.headingText,
+    required this.styles,
   });
 
   final String headingText;
@@ -12,7 +13,7 @@ class CustomTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 25),
+      padding: const EdgeInsets.only(top: 70.0),
       child: Text(headingText, style: styles, textAlign: TextAlign.center),
     );
   }
