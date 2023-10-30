@@ -1,18 +1,34 @@
-// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api
+// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:picspeak_front/auth/verificCorreo.dart';
+import 'package:picspeak_front/models/api_response.dart';
+import 'package:picspeak_front/models/user.dart';
+import 'package:picspeak_front/services/auth_service.dart';
+import 'package:picspeak_front/views/auth/validate_email_screen.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:picspeak_front/config/theme/app_colors.dart';
-import 'package:picspeak_front/presentation/widgets/custom_button.dart';
+import 'package:picspeak_front/views/widgets/custom_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Perfil extends StatefulWidget {
+class CreateProfileScreen extends StatefulWidget {
+  final String userEmail;
+  final String userPassword;
+
+  const CreateProfileScreen(
+      {required this.userPassword, required this.userEmail});
+
   @override
   _PerfilState createState() => _PerfilState();
 }
 
-class _PerfilState extends State<Perfil> {
+class _PerfilState extends State<CreateProfileScreen> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController txtNameController = TextEditingController();
+  TextEditingController txtLastnameController = TextEditingController();
+  TextEditingController txtUsernameController = TextEditingController();
+  
+  bool loading = false;
   DateTime? _selectedDate;
   File? _image;
 
@@ -44,6 +60,43 @@ class _PerfilState extends State<Perfil> {
     }
   }
 
+  void _registerUser() async {
+    String? image = _image ==  null ? null : getStringImage(_image);
+    String formattedBirthday = _selectedDate != null
+      ? _selectedDate!.toIso8601String()
+      : '';
+    ApiResponse response = await register(
+        txtNameController.text,
+        txtLastnameController.text,
+        txtUsernameController.text,
+        formattedBirthday,
+        widget.userEmail,
+        widget.userPassword,
+        image
+    );
+
+    if (response.error == null) {
+      _saveAndRedirectToHome(response.data as User);
+    } else {
+      setState(() {
+        loading = false;
+      });
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('${response.error}')));
+    }
+  }
+
+  void _saveAndRedirectToHome(User user) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    await pref.setString('token', user.token ?? '');
+    await pref.setInt('userId', user.id ?? 0);
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => ValidateEmailScreen(),
+        ),
+        (route) => false);
+  }
+
   @override
   Widget build(BuildContext context) {
     String formattedDate = _selectedDate != null
@@ -55,6 +108,8 @@ class _PerfilState extends State<Perfil> {
         color: AppColors.primaryColor,
         child: Center(
           child: SingleChildScrollView(
+              child: Form(
+            key: formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -124,9 +179,12 @@ class _PerfilState extends State<Perfil> {
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     children: [
-                      TextField(
+                      TextFormField(
+                        keyboardType: TextInputType.name,
+                        controller: txtNameController,
                         obscureText: false,
-                        autofocus: false,
+                        autofocus: true,
+                        validator: (val) => val!.isEmpty ? 'El campo no puede estar vacío' : null,
                         style: const TextStyle(
                             fontSize: 22.0,
                             color: Color.fromARGB(255, 5, 5, 6)),
@@ -149,9 +207,13 @@ class _PerfilState extends State<Perfil> {
                         ),
                       ),
                       const SizedBox(height: 15),
-                      TextField(
+                      TextFormField(
+                        controller: txtLastnameController,
+                        keyboardType: TextInputType.name,
                         obscureText: false,
                         autofocus: false,
+                        validator: (val) =>
+                    val!.isEmpty ? 'El campo no puede estar vacío' : null,
                         style: const TextStyle(
                             fontSize: 22.0,
                             color: Color.fromARGB(255, 0, 0, 0)),
@@ -173,9 +235,13 @@ class _PerfilState extends State<Perfil> {
                         ),
                       ),
                       const SizedBox(height: 15),
-                      TextField(
+                      TextFormField(
+                        controller: txtUsernameController,
                         obscureText: false,
                         autofocus: false,
+                        validator: (val) => val!.length < 3
+                    ? 'Se requieren al menos 3 caracteres'
+                    : null,
                         style: const TextStyle(
                             fontSize: 22.0,
                             color: Color.fromARGB(255, 0, 0, 0)),
@@ -229,24 +295,26 @@ class _PerfilState extends State<Perfil> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 10, right: 50, left: 50),
+                  padding:
+                      const EdgeInsets.only(bottom: 10, right: 50, left: 50),
                   child: CustomButton(
                     alignment: MainAxisAlignment.center,
                     icon: null,
                     text: 'CREAR CUENTA',
                     color: AppColors.bgPrimaryColor,
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => VerificCorreo()),
-                      );
+                      if (formKey.currentState!.validate()) {
+                          setState(() {
+                            loading = true;
+                          });
+                          _registerUser();
+                        }
                     },
                   ),
                 )
               ],
             ),
-          ),
+          )),
         ),
       ),
     );

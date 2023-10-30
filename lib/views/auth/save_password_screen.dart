@@ -1,11 +1,33 @@
 // ignore_for_file: use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
-import 'package:picspeak_front/auth/perfil.dart';
 import 'package:picspeak_front/config/theme/app_colors.dart';
-import 'package:picspeak_front/presentation/widgets/custom_button.dart';
+import 'package:picspeak_front/views/auth/create_profile_screen.dart';
+import 'package:picspeak_front/views/widgets/custom_button.dart';
 
-class Password extends StatelessWidget {
+class SavePasswordScreen extends StatefulWidget {
+  final String userEmail;
+
+  const SavePasswordScreen({required this.userEmail});
+
+  @override
+  State<SavePasswordScreen> createState() => _SavePasswordScreenState();
+}
+
+class _SavePasswordScreenState extends State<SavePasswordScreen> {
+  TextEditingController txtPasswordController = TextEditingController();
+  TextEditingController txtConfirmPasswordController = TextEditingController();
+
+  bool passwordVisibility = false;
+  bool confirmpasswordVisibility = false;
+
+  @override
+  void initState() {
+    super.initState();
+    passwordVisibility = false;
+    confirmpasswordVisibility = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +62,8 @@ class Password extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
                 child: Column(children: [
                   TextField(
-                    obscureText: true,
+                    controller: txtPasswordController,
+                    obscureText: !passwordVisibility,
                     autofocus: false,
                     style: const TextStyle(
                         fontSize: 22.0, color: Color.fromARGB(255, 5, 5, 6)),
@@ -51,6 +74,18 @@ class Password extends StatelessWidget {
                       labelStyle: const TextStyle(
                         color: Colors.grey,
                       ),
+                      suffixIcon: InkWell(
+                          onTap: () => setState(
+                                () => passwordVisibility = !passwordVisibility,
+                              ),
+                          focusNode: FocusNode(skipTraversal: true),
+                          child: Icon(
+                            passwordVisibility
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                            color: const Color(0xFF95A1AC),
+                            size: 22,
+                          )),
                       contentPadding: const EdgeInsets.only(
                           left: 14.0, bottom: 8.0, top: 8.0),
                       focusedBorder: OutlineInputBorder(
@@ -67,7 +102,8 @@ class Password extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   TextField(
-                    obscureText: true,
+                    controller: txtConfirmPasswordController,
+                    obscureText: !confirmpasswordVisibility,
                     autofocus: false,
                     style: const TextStyle(
                         fontSize: 22.0, color: Color.fromARGB(255, 0, 0, 0)),
@@ -79,6 +115,18 @@ class Password extends StatelessWidget {
                       labelStyle: const TextStyle(
                         color: Colors.grey,
                       ),
+                      suffixIcon: InkWell(
+                          onTap: () => setState(
+                                () => confirmpasswordVisibility = !confirmpasswordVisibility,
+                              ),
+                          focusNode: FocusNode(skipTraversal: true),
+                          child: Icon(
+                            confirmpasswordVisibility
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                            color: const Color(0xFF95A1AC),
+                            size: 22,
+                          )),
                       contentPadding: const EdgeInsets.only(
                           left: 14.0, bottom: 8.0, top: 8.0),
                       focusedBorder: OutlineInputBorder(
@@ -112,10 +160,36 @@ class Password extends StatelessWidget {
                       icon: Icons.arrow_forward_ios_outlined,
                       color: AppColors.bgSecondaryColor,
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Perfil()),
-                        );
+                        String userPassword = txtPasswordController.text;
+                        String confirmPassword = txtConfirmPasswordController.text;
+                        String userEmail = widget.userEmail;
+
+                        if (userPassword.isNotEmpty && confirmPassword.isNotEmpty) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CreateProfileScreen(
+                                    userEmail: userEmail,
+                                    userPassword: userPassword)),
+                          );
+                        } else {                         
+                          if (userPassword.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    'El campo de contraseña no puede estar vacío.'),
+                              ),
+                            );
+                          }
+                          if (confirmPassword.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    'Las contraseñas no coinciden'),
+                              ),
+                            );
+                          }
+                        }
                       },
                     )
                   ],
