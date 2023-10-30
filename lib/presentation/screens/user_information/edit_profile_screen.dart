@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 
-import 'package:image_picker/image_picker.dart';
 import '../../../config/theme/app_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:picspeak_front/config/theme/app_colors.dart';
 
-import 'package:picspeak_front/models/user.dart';
 import 'package:picspeak_front/presentation/screens/user_information/user_information.dart';
-import 'package:picspeak_front/presentation/widgets/custom_button.dart';
+
+import 'package:picspeak_front/models/user.dart';
+import 'package:picspeak_front/views/widgets/custom_button.dart';
 
 
 class EditProfileScreen extends StatefulWidget {
-  final User user = User(
+  final User userData = User(
     photourl: 'https://cdn-icons-png.flaticon.com/512/147/147142.png',
     name: 'John',
     lastname: 'Doe',
@@ -22,23 +23,21 @@ class EditProfileScreen extends StatefulWidget {
   EditProfileScreen({super.key});
 
   @override
-  EditProfileScreenState createState() => EditProfileScreenState(user: user);
+  EditProfileScreenState createState() => EditProfileScreenState();
 }
 
 class EditProfileScreenState extends State<EditProfileScreen> {
-  // DateTime? _selectedDate;
-  // File? _image;
-  // String userStatus = "Estado actual del usuario"; // Agrega el estado del usuario
   DateTime? _selectedDate;
   late User user;
   File? _image;
 
-  EditProfileScreenState({required this.user});
+  EditProfileScreenState();
 
   @override
   void initState() {
     super.initState();
-    _selectedDate = user.birthDate;
+    _selectedDate = widget.userData.birthDate;
+    user = widget.userData;
   }
 
   Future _imgFromCamera() async {
@@ -140,7 +139,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => UserInformation(
+                        builder: (context) => const UserInformation(
                           // initialUserStatus: user.userStatus,
                         ),
                       ),
@@ -157,7 +156,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
                       children: [
                         Expanded(
                           child: Text(
-                            user.userStatus?? '¡Hola, estoy usando PicSpeak!',
+                            '¡Hola, estoy usando PicSpeak!',
                             style: AppFonts.smallTextStyle.copyWith(fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -167,7 +166,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => UserInformation(
+                                builder: (context) => const UserInformation(
                                   // initialUserStatus: user.userStatus,
                                 ),
                               ),

@@ -4,7 +4,7 @@ class User {
   String? name;
   String? lastname;
   String? username;
-  String? birthDate;
+  DateTime? birthDate;
   String? gender;
   String? nationality;
   String? email;
