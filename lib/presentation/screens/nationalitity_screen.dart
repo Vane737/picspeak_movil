@@ -34,20 +34,6 @@ class _NationalityState extends State<NationalityScreen> {
   void initState() {
     super.initState();
     nationalityFuture = _getNacionalidades();
-    // nationalityFuture?.then((list) {
-    //   if (list.isNotEmpty) {
-    //     nationalityList.addAll(list);
-    //     selectedNationality.value = list[0].id;
-    //     languageFuture = _getLanguages(list[0].id);
-    //     languageFuture?.then((val) {
-    //       if (val.isNotEmpty) {
-    //         logger.e("está es perando a los languages");
-    //         //  logger.e("cantidad de lenguages: ${languageList.length}");
-    //         selectedLanguage.value = val[0].id;
-    //       }
-    //     });
-    //   }
-    // });
   }
 
   Future<List<DropdownObject>> _getNacionalidades() async {
@@ -62,7 +48,9 @@ class _NationalityState extends State<NationalityScreen> {
     }
     selectedNationality.value = result.first.id;
     languageList.addAll(await _getLanguages(result.first.id));
+    print('la longitud de la lista de language es: ${languageList.length}');
     selectedLanguage.value = languageList.first.id;
+    print('el language seleccionado es: ${selectedLanguage.value}');
     nationalityList.addAll(result);
     return result;
   }
@@ -105,10 +93,6 @@ class _NationalityState extends State<NationalityScreen> {
                   // Maneja errores
                   return Text('Error: ${snapshot.error}');
                 } else if (snapshot.hasData) {
-                  // Los datos se han cargado con éxito, ahora puedes mostrarlos
-                  // nationalityList.clear();
-                  // nationalityList.addAll(snapshot.data!);
-                  // logger.e("entra al future");
                   return MainContent(
                       selectedNationality: selectedNationality,
                       selectedLanguage: selectedLanguage,
@@ -121,26 +105,31 @@ class _NationalityState extends State<NationalityScreen> {
               },
             ),
             Expanded(child: Container()),
-            ValueListenableBuilder<int?>(
-              valueListenable: selectedNationality,
-              builder: (context, selectedNationalityValue, child) {
-                if (selectedNationalityValue != null) {
-                  _getLanguages(selectedNationalityValue).then((result) {
-                    if (result.isNotEmpty) {
-                      languageList.clear();
-                      languageList.addAll(result);
-                      // También puedes seleccionar el primer elemento si lo deseas
-                      selectedLanguage.value = result.first.id;
-                    }
-                  });
-                }
-
-                return FooterContent(
-                  text:
-                      'Nationality ID: $selectedNationalityValue, Language ID: ${selectedLanguage.value}',
-                );
-              },
-            )
+            ValueListenableBuilder(
+                valueListenable: selectedNationality,
+                builder: (context, int? selectedNationalityValue, child) {
+                  print('Cambió la nacionalidad: ${selectedNationalityValue}');
+                  if (selectedNationalityValue != null) {
+                    logger.e(
+                        "el valor del selectedNationalityValue es: ${selectedNationalityValue}");
+                    _getLanguages(selectedNationalityValue).then((languages) {
+                      languageList.clear(); // Limpia la lista existente
+                      languageList
+                          .addAll(languages); // Agrega las nuevas lenguajes
+                      if (languageList.length > 0) {
+                        selectedLanguage.value = languageList.first.id;
+                      }
+                    });
+                  }
+                  return ValueListenableBuilder(
+                    valueListenable: selectedLanguage,
+                    builder: (context, int? selectedLanguageValue, child) {
+                      final textWithIDs =
+                          'Nationality ID: $selectedNationalityValue, Language ID: $selectedLanguageValue';
+                      return FooterContent(text: textWithIDs, nationality_id:selectedNationalityValue, language_id: selectedLanguageValue);
+                    },
+                  );
+                })
           ],
         ),
       ),
@@ -187,10 +176,14 @@ class MainContent extends StatelessWidget {
 
 class FooterContent extends StatelessWidget {
   final String text;
+  final int? nationality_id;
+  final int? language_id;
 
   const FooterContent({
     super.key,
     required this.text,
+    required this.nationality_id,
+    required this.language_id,
   });
 
   @override
@@ -208,6 +201,8 @@ class FooterContent extends StatelessWidget {
             // width: 150,
             onPressed: () {
               print(text);
+              final ConfigurationService configurationService = ConfigurationService();
+              configurationService.setLanguageNationalityUser(1, 2, 2);
               Navigator.push(
                 context,
                 MaterialPageRoute(
