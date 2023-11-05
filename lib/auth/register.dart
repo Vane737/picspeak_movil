@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:picspeak_front/auth/password.dart';
 import 'package:picspeak_front/chat/ChatList.dart';
 
+import 'package:picspeak_front/config/theme/app_colors.dart';
+import 'package:picspeak_front/presentation/widgets/custom_button.dart';
+
 class Register extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -13,96 +16,107 @@ class Register extends StatelessWidget {
         color: Color.fromARGB(255, 253, 235, 235), // Color de fondo
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Iniciar Sesion',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 50,
+              const Padding(
+                padding: EdgeInsets.only(top: 70.0),
+                child: Text(
+                  'Iniciar Sesion',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 40,
+                    color: AppColors.textColor,
+                    fontFamily: 'Roboto',
+                  ),
                 ),
               ),
-              Text(
+              const Text(
                 'Porfavor, ingresa los datos para iniciar sesion',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20,
+                  color: AppColors.textColor,
+                  fontFamily: 'Inter',
                 ),
               ),
-              const SizedBox(height: 50),
-              TextField(
-                obscureText: false,
-                autofocus: false,
-                style: TextStyle(
-                    fontSize: 22.0, color: Color.fromARGB(255, 0, 0, 0)),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  fillColor: Colors.white,
-                  labelText: 'Correo Electronico',
-                  contentPadding:
-                      const EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(25.7),
+              Padding(
+                padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
+                child: Column(children: [
+                  TextField(
+                    obscureText: false,
+                    autofocus: false,
+                    style: const TextStyle(
+                        fontSize: 22.0, color: Color.fromARGB(255, 5, 5, 6)),
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelText: 'Correo Electronico',
+                      labelStyle: const TextStyle(
+                        color: Colors.grey,
+                      ),
+                      contentPadding: const EdgeInsets.only(
+                          left: 14.0, bottom: 8.0, top: 8.0),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                            color: Color.fromARGB(255, 242, 237, 237)),
+                        borderRadius: BorderRadius.circular(25.7),
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: const BorderSide(
+                            color: Color.fromARGB(255, 232, 229, 229)),
+                        borderRadius: BorderRadius.circular(25.7),
+                      ),
+                    ),
                   ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(25.7),
+                  const SizedBox(height: 20),
+                  TextField(
+                    obscureText: true,
+                    autofocus: false,
+                    style: const TextStyle(
+                        fontSize: 22.0, color: Color.fromARGB(255, 0, 0, 0)),
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelText: 'Contraseña',
+                      labelStyle: const TextStyle(
+                        color: Colors.grey,
+                      ),
+                      contentPadding: const EdgeInsets.only(
+                          left: 14.0, bottom: 8.0, top: 8.0),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(25.7),
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(25.7),
+                      ),
+                    ),
                   ),
-                ),
+                ]),
               ),
-              const SizedBox(height: 50),
-              TextField(
-                obscureText: true,
-                autofocus: false,
-                style: TextStyle(
-                    fontSize: 22.0, color: Color.fromARGB(255, 0, 0, 0)),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  fillColor: Colors.white,
-                  labelText: 'Contraseña',
-                  contentPadding:
-                      const EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(25.7),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(25.7),
-                  ),
+              Padding(
+                padding:
+                    const EdgeInsets.only(bottom: 100, right: 20, left: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomButton(
+                      alignment: MainAxisAlignment.spaceBetween,
+                      text: 'CONTINUAR',
+                      icon: Icons.arrow_forward_ios_outlined,
+                      color: Color.fromARGB(255, 241, 131, 186),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ChatList()),
+                        );
+                      },
+                    )
+                  ],
                 ),
-              ),
-              const SizedBox(height: 40),
-              ElevatedButton(
-                onPressed: () {},
-                child: Text(
-                  'Continuar >',
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    color: Colors.white,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  primary: Color.fromRGBO(102, 213, 216, 1),
-                  minimumSize: Size(250.0, 60.0),
-                ),
-              ),
-              const SizedBox(height: 40),
-              IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ChatList()),
-                  );
-                },
-                icon: Icon(
-                  Icons.arrow_back,
-                  size: 40.0,
-                ),
-              ),
+              )
             ],
           ),
         ),
