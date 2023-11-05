@@ -47,7 +47,7 @@ class _NationalityState extends State<NationalityScreen> {
       }
     }
     selectedNationality.value = result.first.id;
-    languageList.addAll(await _getLanguages(result.first.id));
+    languageList.addAll(await _getLanguages());
     print('la longitud de la lista de language es: ${languageList.length}');
     selectedLanguage.value = languageList.first.id;
     print('el language seleccionado es: ${selectedLanguage.value}');
@@ -55,15 +55,13 @@ class _NationalityState extends State<NationalityScreen> {
     return result;
   }
 
-  Future<List<DropdownObject>> _getLanguages(int id) async {
+  Future<List<DropdownObject>> _getLanguages() async {
     final ConfigurationService nationalityService = ConfigurationService();
-    final response = await nationalityService.getLanguage(id);
+    final response = await nationalityService.getLanguage();
     final List<DropdownObject> result = [];
     if (response != null) {
       for (final language in response) {
-        result.add(DropdownObject(
-            id: language['language']['id'],
-            name: language['language']['name']));
+        result.add(DropdownObject(id: language['id'], name: language['name']));
       }
     }
     return result;
@@ -109,24 +107,16 @@ class _NationalityState extends State<NationalityScreen> {
                 valueListenable: selectedNationality,
                 builder: (context, int? selectedNationalityValue, child) {
                   print('Cambió la nacionalidad: ${selectedNationalityValue}');
-                  if (selectedNationalityValue != null) {
-                    logger.e(
-                        "el valor del selectedNationalityValue es: ${selectedNationalityValue}");
-                    _getLanguages(selectedNationalityValue).then((languages) {
-                      languageList.clear(); // Limpia la lista existente
-                      languageList
-                          .addAll(languages); // Agrega las nuevas lenguajes
-                      if (languageList.length > 0) {
-                        selectedLanguage.value = languageList.first.id;
-                      }
-                    });
-                  }
+                  
                   return ValueListenableBuilder(
                     valueListenable: selectedLanguage,
                     builder: (context, int? selectedLanguageValue, child) {
                       final textWithIDs =
                           'Nationality ID: $selectedNationalityValue, Language ID: $selectedLanguageValue';
-                      return FooterContent(text: textWithIDs, nationality_id:selectedNationalityValue, language_id: selectedLanguageValue);
+                      return FooterContent(
+                          text: textWithIDs,
+                          nationality_id: selectedNationalityValue,
+                          language_id: selectedLanguageValue);
                     },
                   );
                 })
@@ -199,10 +189,12 @@ class FooterContent extends StatelessWidget {
             icon: Icons.arrow_forward_ios_outlined,
             color: AppColors.bgSecondaryColor,
             // width: 150,
-            onPressed: () {
+            onPressed: () async{
               print(text);
               final ConfigurationService configurationService = ConfigurationService();
-              configurationService.setLanguageNationalityUser(1, 2, 2);
+              final response = await configurationService.setLanguageNationalityUser(2, language_id, nationality_id);
+              print("nacionalidad seleccionada ${nationality_id} y lenguaje seleccionado: ${language_id}");
+              print("response: ${response}");
               Navigator.push(
                 context,
                 MaterialPageRoute(
