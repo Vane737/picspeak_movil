@@ -39,7 +39,8 @@ const List<String> list = <String>[
   'Boliviana',
   'Argentina',
   'Peruana',
-  'Alemana'
+  'Alemana',
+  'chilena'
 ];
 
 class MainContent extends StatelessWidget {

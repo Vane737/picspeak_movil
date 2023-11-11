@@ -27,7 +27,7 @@ class _PerfilState extends State<CreateProfileScreen> {
   TextEditingController txtNameController = TextEditingController();
   TextEditingController txtLastnameController = TextEditingController();
   TextEditingController txtUsernameController = TextEditingController();
-  
+
   bool loading = false;
   DateTime? _selectedDate;
   File? _image;
@@ -61,10 +61,9 @@ class _PerfilState extends State<CreateProfileScreen> {
   }
 
   void _registerUser() async {
-    String? image = _image ==  null ? null : getStringImage(_image);
-    String formattedBirthday = _selectedDate != null
-      ? _selectedDate!.toIso8601String()
-      : '';
+    String? image = _image == null ? null : getStringImage(_image);
+    String formattedBirthday =
+        _selectedDate != null ? _selectedDate!.toIso8601String() : '';
     ApiResponse response = await register(
         txtNameController.text,
         txtLastnameController.text,
@@ -72,12 +71,14 @@ class _PerfilState extends State<CreateProfileScreen> {
         formattedBirthday,
         widget.userEmail,
         widget.userPassword,
-        image
-    );
-
+        image);
+    print("Response desde la pantalla: ${response.data}");
     if (response.error == null) {
+      print("Ingresa response.error == null");
       _saveAndRedirectToHome(response.data as User);
     } else {
+      print("response: ${response.error}");
+      print("Ingresa response.error !=null");
       setState(() {
         loading = false;
       });
@@ -184,7 +185,9 @@ class _PerfilState extends State<CreateProfileScreen> {
                         controller: txtNameController,
                         obscureText: false,
                         autofocus: true,
-                        validator: (val) => val!.isEmpty ? 'El campo no puede estar vacío' : null,
+                        validator: (val) => val!.isEmpty
+                            ? 'El campo no puede estar vacío'
+                            : null,
                         style: const TextStyle(
                             fontSize: 22.0,
                             color: Color.fromARGB(255, 5, 5, 6)),
@@ -212,8 +215,9 @@ class _PerfilState extends State<CreateProfileScreen> {
                         keyboardType: TextInputType.name,
                         obscureText: false,
                         autofocus: false,
-                        validator: (val) =>
-                    val!.isEmpty ? 'El campo no puede estar vacío' : null,
+                        validator: (val) => val!.isEmpty
+                            ? 'El campo no puede estar vacío'
+                            : null,
                         style: const TextStyle(
                             fontSize: 22.0,
                             color: Color.fromARGB(255, 0, 0, 0)),
@@ -240,8 +244,8 @@ class _PerfilState extends State<CreateProfileScreen> {
                         obscureText: false,
                         autofocus: false,
                         validator: (val) => val!.length < 3
-                    ? 'Se requieren al menos 3 caracteres'
-                    : null,
+                            ? 'Se requieren al menos 3 caracteres'
+                            : null,
                         style: const TextStyle(
                             fontSize: 22.0,
                             color: Color.fromARGB(255, 0, 0, 0)),
@@ -304,11 +308,11 @@ class _PerfilState extends State<CreateProfileScreen> {
                     color: AppColors.bgPrimaryColor,
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
-                          setState(() {
-                            loading = true;
-                          });
-                          _registerUser();
-                        }
+                        setState(() {
+                          loading = true;
+                        });
+                        _registerUser();
+                      }
                     },
                   ),
                 )
