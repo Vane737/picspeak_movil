@@ -58,8 +58,10 @@ Future<ApiResponse> register(String name, String lastname, String username,
     print(response.statusCode);
     switch (response.statusCode) {
       case 201:
-        print("ingresa a 201");
+        print("ingresa a 201 asi es ${response.body}");
+        //print(User.fromJson(jsonDecode(response.body)));
         apiResponse.data = User.fromJson(jsonDecode(response.body));
+        print("imprimiendo el response.data desde la llamada: ${apiResponse.data}");
         break;
       case 422:
         print("ingresa a 422");

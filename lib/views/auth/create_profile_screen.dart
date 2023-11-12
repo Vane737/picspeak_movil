@@ -72,13 +72,13 @@ class _PerfilState extends State<CreateProfileScreen> {
         widget.userEmail,
         widget.userPassword,
         image);
-    print("Response desde la pantalla: ${response.data}");
+   
     if (response.error == null) {
-      print("Ingresa response.error == null");
+    
       _saveAndRedirectToHome(response.data as User);
     } else {
-      print("response: ${response.error}");
-      print("Ingresa response.error !=null");
+      
+    
       setState(() {
         loading = false;
       });

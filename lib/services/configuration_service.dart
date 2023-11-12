@@ -9,58 +9,32 @@ class ConfigurationService {
   static final Logger logger = Logger();
 
   Future<dynamic> getNacionalidades() async {
-    ApiResponse apiResponse = ApiResponse();
-    try {
-      final Uri uri = Uri.parse(nationalities);
-      final response = await http.get(uri);
+    final Uri uri = Uri.parse(nationalities);
+    final response = await http.get(uri);
 
-      switch (response.statusCode) {
-        case 200:
-          apiResponse.data = jsonDecode(response.body);
-          break;
-        case 401:
-          apiResponse.error = unauthorized;
-          break;
-        default:
-          apiResponse.error = somethingWentWrong;
-          break;
-      }
-    } catch (e) {
-      apiResponse.error = serverError;
+    final jsonResponse = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      logger.e("DESDE LA API: ${jsonResponse['data']}");
+      return jsonResponse['data'];
+    } else {
+      throw Exception('Error en la solicitud: ${response.reasonPhrase}');
     }
-    return apiResponse;
-    // Aquí se usa decode() para decodificar la respuesta JSON
-    // final jsonResponse = jsonDecode(response.body);
-
-    // if (response.statusCode == 200) {
-    //   logger.e("DESDE LA API: ${jsonResponse['data']}");
-    //   return jsonResponse['data'];
-    // } else {
-    //   throw Exception('Error en la solicitud: ${response.reasonPhrase}');
-    // }
   }
 
   Future<dynamic> getLanguage() async {
-    ApiResponse apiResponse = ApiResponse();
-    try {
-      final Uri uri = Uri.parse(languages);
-      final response = await http.get(uri);
+    final Uri uri = Uri.parse(languages);
+    final response = await http.get(uri);
 
-      switch (response.statusCode) {
-        case 200:
-          apiResponse.data = jsonDecode(response.body);
-          break;
-        case 401:
-          apiResponse.error = unauthorized;
-          break;
-        default:
-          apiResponse.error = somethingWentWrong;
-          break;
-      }
-    } catch (e) {
-      apiResponse.error = serverError;
+    // Aquí se usa decode() para decodificar la respuesta JSON
+    final jsonResponse = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      logger.e("Language: ${jsonResponse['data']}");
+      return jsonResponse['data'];
+    } else {
+      throw Exception('Error en la solicitud: ${response.reasonPhrase}');
     }
-    return apiResponse;
   }
 
   Future<dynamic> getInappropriateContents() async {
@@ -70,7 +44,7 @@ class ConfigurationService {
       final response = await http.get(uri);
       switch (response.statusCode) {
         case 200:
-          apiResponse.data = jsonDecode(response.body);
+          apiResponse.data = jsonDecode(response.body)['data'];
           break;
         case 401:
           apiResponse.error = unauthorized;
@@ -93,7 +67,7 @@ class ConfigurationService {
       final response = await http.get(uri);
       switch (response.statusCode) {
         case 200:
-          apiResponse.data = jsonDecode(response.body);
+          apiResponse.data = jsonDecode(response.body)['data'];
           break;
         case 401:
           apiResponse.error = unauthorized;
@@ -115,9 +89,9 @@ class ConfigurationService {
     }
 
     final Uri uri = Uri.parse('$configuration/$user_id/language-nacionality');
-    final response = await http.post(uri, body: {
-      'nationality_id': nationality_id.toString(),
-      'language_id': language_id.toString(),
+    final response = await http.post(uri,headers: headers, body: {
+      'nationality_id': nationality_id,
+      'language_id': language_id,
     });
     final jsonResponse = jsonDecode(response.body);
     print("respuesta json: ${jsonResponse}");
