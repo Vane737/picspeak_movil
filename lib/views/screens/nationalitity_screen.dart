@@ -9,7 +9,7 @@ import '../widgets/dropdown_button_options.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_title.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'customer_content_screen.dart';
+import '../screens/customer_content_screen.dart';
 import '../../services/configuration_service.dart';
 
 class NationalityScreen extends StatefulWidget {
@@ -36,36 +36,64 @@ class _NationalityState extends State<NationalityScreen> {
     nationalityFuture = _getNacionalidades();
   }
 
-  Future<List<DropdownObject>> _getNacionalidades() async {
-    final ConfigurationService nationalityService = ConfigurationService();
-    final response = await nationalityService.getNacionalidades();
+Future<List<DropdownObject>> _getNacionalidades() async {
+  try {
+    final response = await getNacionalidades();
     final List<DropdownObject> result = [];
-    if (response != null) {
-      for (final nacionalidad in response) {
-        result.add(
-            DropdownObject(id: nacionalidad['id'], name: nacionalidad['name']));
-      }
-    }
-    selectedNationality.value = result.first.id;
-    languageList.addAll(await _getLanguages());
-    print('la longitud de la lista de language es: ${languageList.length}');
-    selectedLanguage.value = languageList.first.id;
-    print('el language seleccionado es: ${selectedLanguage.value}');
-    nationalityList.addAll(result);
-    return result;
-  }
 
-  Future<List<DropdownObject>> _getLanguages() async {
-    final ConfigurationService nationalityService = ConfigurationService();
-    final response = await nationalityService.getLanguage();
+    if (response != null && response is List) {
+      for (final nacionalidad in response) {
+        if (nacionalidad is Map && nacionalidad.containsKey('id') && nacionalidad.containsKey('name')) {
+          result.add(DropdownObject(id: nacionalidad['id'], name: nacionalidad['name']));
+        }
+      }
+
+      if (result.isNotEmpty) {
+        selectedNationality.value = result.first.id;
+        languageList.addAll(await _getLanguages());
+        print('La longitud de la lista de language es: ${languageList.length}');
+        selectedLanguage.value = languageList.first.id;
+        print('El language seleccionado es: ${selectedLanguage.value}');
+        nationalityList.addAll(result);
+        return result;
+      } else {
+        // Manejar el caso en que la lista resultante esté vacía o no tenga el formato esperado.
+        print('La lista de nacionalidades no tiene el formato esperado.');
+        return [];
+      }
+    } else {
+      // Manejar el caso en que la respuesta sea nula o no tenga el formato esperado.
+      print('La respuesta de getNacionalidades no tiene el formato esperado.');
+      return [];
+    }
+  } catch (e) {
+    // Manejar cualquier excepción que pueda ocurrir durante la ejecución.
+    print('Error durante la obtención de nacionalidades: $e');
+    return [];
+  }
+}
+
+
+Future<List<DropdownObject>> _getLanguages() async {
+  try {
+    final response = await getLanguage();
     final List<DropdownObject> result = [];
-    if (response != null) {
+
+    if (response != null && response is List) {
       for (final language in response) {
-        result.add(DropdownObject(id: language['id'], name: language['name']));
+        if (language is Map && language.containsKey('id') && language.containsKey('name')) {
+          result.add(DropdownObject(id: language['id'], name: language['name']));
+        }
       }
     }
     return result;
+  } catch (e) {
+    // Manejar cualquier excepción que pueda ocurrir durante la ejecución.
+    print('Error durante la obtención de idiomas: $e');
+    return [];
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +135,7 @@ class _NationalityState extends State<NationalityScreen> {
                 valueListenable: selectedNationality,
                 builder: (context, int? selectedNationalityValue, child) {
                   print('Cambió la nacionalidad: ${selectedNationalityValue}');
-                  
+
                   return ValueListenableBuilder(
                     valueListenable: selectedLanguage,
                     builder: (context, int? selectedLanguageValue, child) {
@@ -189,18 +217,18 @@ class FooterContent extends StatelessWidget {
             icon: Icons.arrow_forward_ios_outlined,
             color: AppColors.bgSecondaryColor,
             // width: 150,
-            onPressed: () async{
-               SharedPreferences pref = await SharedPreferences.getInstance();
+            onPressed: () async {
+              SharedPreferences pref = await SharedPreferences.getInstance();
 
-              final ConfigurationService configurationService = ConfigurationService();
               print("usuario id: ${pref.getInt('userId')}");
-              final response = await configurationService.setLanguageNationalityUser(pref.getInt('userId'), language_id, nationality_id);
-             print("Response: ${response}");
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //       builder: (context) => const CustomerContentScreen()),
-              // );
+              final response = await setLanguageNationalityUser(
+                  pref.getInt('userId'), language_id, nationality_id);
+              print("Response: ${response}");
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const CustomerContentScreen()),
+              );
             },
           ),
         ),
