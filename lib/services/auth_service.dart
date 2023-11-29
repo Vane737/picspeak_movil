@@ -62,11 +62,13 @@ Future<ApiResponse> register(
           'photo_url': photourl
         });
 
+    print(response.statusCode);
     print(response.body);
 
     switch (response.statusCode) {
       case 201:
         apiResponse.data = User.fromJson(jsonDecode(response.body));
+        print(apiResponse);
         break;
       case 422:
         final errors = jsonDecode(response.body)['errors'];
@@ -80,6 +82,7 @@ Future<ApiResponse> register(
         break;
     }
   } catch (e) {
+    print(e);
     apiResponse.error = serverError;
   }
 

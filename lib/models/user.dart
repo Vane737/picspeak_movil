@@ -4,11 +4,12 @@ class User {
   String? name;
   String? lastname;
   String? username;
-  DateTime? birthDate;
+  String? birthDate;
   String? gender;
   String? nationality;
   String? email;
   String? password;
+  String? activationToken;
   String? token;
 
   User({
@@ -22,6 +23,7 @@ class User {
     this.nationality,
     this.email, 
     this.password,
+    this.activationToken,
     this.token
   });
 
@@ -33,11 +35,12 @@ class User {
       lastname: json['user']['lastname'],
       username: json['user']['username'],
       birthDate: json['user']['birthDate'],
-      gender: json['user']['gender'],
-      nationality: json['user']['nationality'],
       email: json['user']['email'],
       password: json['user']['password'],
-      token: json['token'],
+      activationToken: json['user']['activationToken'],
+      gender: json['user']['gender'],
+      nationality: json['user']['nationality'],
+      token: json['token']
     );
   }
 }
