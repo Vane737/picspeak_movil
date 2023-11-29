@@ -39,42 +39,37 @@ Future<ApiResponse> login(String email, String password) async {
   return apiResponse;
 }
 
-Future<ApiResponse> register(
-  String name, 
-  String lastname, 
-  String username,
-  String birthDate, 
-  String email,
-  String password,
-  String? photourl
-) async {
+Future<ApiResponse> register(String name, String lastname, String username,
+    String birthDate, String email, String password, String? photourl) async {
   ApiResponse apiResponse = ApiResponse();
   try {
-    final response = await http.post(Uri.parse(registerUrl),
-        headers: headers, 
-        body: {
-          'name': name,
-          'lastname': lastname,
-          'username': username,
-          'birthDate': birthDate,
-          'email': email, 
-          'password': password,
-          'photo_url': photourl
-        });
+    final response =
+        await http.post(Uri.parse(registerUrl), headers: headers, body: {
+      'name': name,
+      'lastname': lastname,
+      'username': username,
+      'birthDate': birthDate,
+      'email': email,
+      'password': password,
+      'photo_url': photourl
+    });
 
     print(response.statusCode);
     print(response.body);
-
+    print(response.statusCode);
     switch (response.statusCode) {
       case 201:
+        print("ingresa a 201 asi es ${response.body}");
+        //print(User.fromJson(jsonDecode(response.body)));
         apiResponse.data = User.fromJson(jsonDecode(response.body));
-        print(apiResponse);
         break;
       case 422:
+        print("ingresa a 422");
         final errors = jsonDecode(response.body)['errors'];
         apiResponse.error = errors[errors.keys.elementAt(0)][0];
         break;
       case 403:
+        print("ingresa a 403");
         apiResponse.error = jsonDecode(response.body)['message'];
         break;
       default:

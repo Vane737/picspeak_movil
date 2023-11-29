@@ -28,19 +28,20 @@ class User {
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
+    DateTime? birthDate = json['user']['birthDate'] != null
+        ? DateTime.parse(json['user']['birthDate'])
+        : null;
     return User(
-      id: json['user']['id'],
-      photourl: json['user']['photo_url'],
-      name: json['user']['name'],
-      lastname: json['user']['lastname'],
-      username: json['user']['username'],
-      birthDate: json['user']['birthDate'],
-      email: json['user']['email'],
-      password: json['user']['password'],
-      activationToken: json['user']['activationToken'],
-      gender: json['user']['gender'],
-      nationality: json['user']['nationality'],
-      token: json['token']
-    );
+        id: json['user']['id'],
+        photourl: json['user']['photo_url'],
+        name: json['user']['name'],
+        lastname: json['user']['lastname'],
+        username: json['user']['username'],
+        birthDate: birthDate,
+        gender: json['user']['gender'],
+        nationality: json['user']['nationality'],
+        email: json['user']['email'],
+        password: json['user']['password'],
+        token: json['token']);
   }
 }

@@ -9,29 +9,50 @@ import '../widgets/custom_button.dart';
 import '../widgets/multi_select_tags.dart';
 import 'language_selection_screen.dart';
 
+import 'package:flutter/material.dart';
+
+import '../../config/theme/app_colors.dart';
+import '../../config/theme/app_fonts.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
+import '../widgets/custom_button.dart';
+import '../widgets/multi_select_tags.dart';
+import 'language_selection_screen.dart';
+import '../../services/configuration_service.dart';
+
 class InterestSelectionScreen extends StatelessWidget {
   const InterestSelectionScreen({
     super.key,
   });
 
   @override
+
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.only(
-            bottom: 16.0, top: 50, left: 16.0, right: 16.0),
-        width: double.infinity,
-        height: double.infinity,
-        color: AppColors.primaryColor,
-        child: Column(
-          children: [
-            const CustomTitle(
-                headingText: 'Intereses', styles: AppFonts.heading1Style),
-            const MainContent(),
-            Expanded(child: Container()),
-            const FooterContent(),
-          ],
-        ),
+      body: Column(
+        children: [
+          const CustomTitle(
+            headingText: 'Intereses',
+            styles: AppFonts.heading1Style,
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.only(
+                bottom: 16.0,
+                top: 16.0,
+                left: 16.0,
+                right: 16.0,
+              ),
+              child: Column(
+                children: [
+                  const MainContent(),
+                
+                  //const FooterContent(),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -45,19 +66,30 @@ class MainContent extends StatefulWidget {
 }
 
 class _MainContentState extends State<MainContent> {
-  List<String> allTags = [
-    'Animales',
-    'Música',
-    'Cine',
-    'Futbol',
-    'Comedia',
-    'Tecnologia',
-    'Idiomas',
-    'Electronica',
-    'Lectura'
-  ];
-
+  List<String> allTags = [];
   List<String> selectedTags = [];
+  //['Animales', 'Música', 'Cine', 'Futbol', 'Comedia', 'Tecnologia', 'Idiomas', 'Electronica', 'Lectura'];
+
+  @override
+  void initState() {
+    super.initState();
+    _getInterests().then((tags) {
+      setState(() {
+        allTags = tags;
+      });
+    });
+  }
+
+  Future<List<String>> _getInterests() async {
+    final response = await getInterests();
+    final List<String> result = [];
+    if (response != null) {
+      for (final interest in response) {
+        result.add(interest['name']);
+      }
+    }
+    return result;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,27 +98,24 @@ class _MainContentState extends State<MainContent> {
       const CustomTitle(
           headingText: '¿Qué tipo de intereses tienes?',
           styles: AppFonts.heading2Style),
-      const SizedBox(
-        height: 30,
-      ),
       MultiSelectTags(
         tags: allTags,
         selectedTags: selectedTags,
         onSelectionChanged: (tags) {
           setState(() {
             selectedTags = tags;
-            // print(selectedTags);
+             print(selectedTags);
           });
         },
       ),
+      FooterContent(selectedTags: selectedTags),
     ]);
   }
 }
 
 class FooterContent extends StatelessWidget {
-  const FooterContent({
-    super.key,
-  });
+  final List<String> selectedTags;
+  const FooterContent({super.key, required this.selectedTags});
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +139,13 @@ class FooterContent extends StatelessWidget {
             icon: Icons.arrow_forward_ios,
             color: AppColors.bgSecondaryColor,
             // width: 150,
-            onPressed: () {
+            onPressed: () async {
+               SharedPreferences pref = await SharedPreferences.getInstance();
+              print("user id: ${pref.getInt('userId')}");
+              print("tags seleccionados en FooterContent: $selectedTags");
+              //  print("contexto: ${MainContent.selectedTags}");
+            final response = await setInterestUser(pref.getInt('userId'), selectedTags);
+
               Navigator.push(
                 context,
                 MaterialPageRoute(

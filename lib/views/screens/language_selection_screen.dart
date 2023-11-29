@@ -8,6 +8,16 @@ import 'package:picspeak_front/views/widgets/custom_title.dart';
 
 import '../widgets/custom_button.dart';
 
+import 'package:flutter/material.dart';
+import 'package:picspeak_front/config/theme/app_text_style.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../config/theme/app_colors.dart';
+import '../../config/theme/app_fonts.dart';
+import '../../services/configuration_service.dart';
+
+import '../widgets/custom_button.dart';
+
 class LanguageSelectionScreen extends StatelessWidget {
   const LanguageSelectionScreen({
     super.key,
@@ -18,7 +28,11 @@ class LanguageSelectionScreen extends StatelessWidget {
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.only(
-            bottom: 16.0, top: 50, left: 20.0, right: 20.0),
+          bottom: 16.0,
+          top: 50,
+          left: 16.0,
+          right: 16.0,
+        ),
         width: double.infinity,
         height: double.infinity,
         color: AppColors.primaryColor,
@@ -26,10 +40,11 @@ class LanguageSelectionScreen extends StatelessWidget {
           child: Column(
             children: [
               const CustomTitle(
-                  headingText: 'Idiomas', styles: AppFonts.heading1Style),
+                headingText: 'Idiomas',
+                styles: AppFonts.heading1Style,
+              ),
               const MainContent(),
-              Expanded(child: Container()),
-              const FooterContent(),
+              // FooterContent(),
             ],
           ),
         ),
@@ -46,17 +61,7 @@ class MainContent extends StatefulWidget {
 }
 
 class _MainContentState extends State<MainContent> {
-  List<String> allTags = [
-    'Animales',
-    'Música',
-    'Cine',
-    'Futbol',
-    'Comedia',
-    'Tecnologia',
-    'Idiomas',
-    'Electronica',
-    'Lectura'
-  ];
+  List<String> allTags = [];
   bool valuebool = false;
   List<String> selectedTags = [];
 
@@ -67,18 +72,14 @@ class _MainContentState extends State<MainContent> {
       CustomTitle(
           headingText: 'Elige tus idiomas preferidos',
           styles: AppFonts.heading2Style),
-      SizedBox(
-        height: 30,
-      ),
       DropdownTagSelector(),
     ]);
   }
 }
 
 class FooterContent extends StatelessWidget {
-  const FooterContent({
-    super.key,
-  });
+  final List<String> selectedTags;
+  const FooterContent({super.key, required this.selectedTags});
 
   @override
   Widget build(BuildContext context) {
@@ -93,12 +94,18 @@ class FooterContent extends StatelessWidget {
             text: 'TERMINAMOS',
             color: AppColors.bgPrimaryColor,
             // width: 200,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const LanguageSelectionScreen()),
-              );
+            onPressed: () async {
+              SharedPreferences pref = await SharedPreferences.getInstance();
+              print("user id: ${pref.getInt('userId')}");
+              print("lenguajes seleccionados: $selectedTags");
+
+             final response = await setLanguagesUser(pref.getInt('userId'), selectedTags);
+              print("RESPUESTA LANGUAGE USER: $response");
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //       builder: (context) => const LanguageSelectionScreen()),
+              // );
             },
           ),
         ],
@@ -116,13 +123,29 @@ class DropdownTagSelector extends StatefulWidget {
 
 class DropdownTagSelectorState extends State<DropdownTagSelector> {
   List<String> selectedOptions = [];
-  List<String> availableOptions = [
-    'Opción 1',
-    'Opción 2',
-    'Opción 3',
-    'Opción 4',
-    'Opción 5'
-  ];
+  List<String> availableOptions = [];
+  @override
+  void initState() {
+    super.initState();
+    _getLanguages().then((tags) {
+      setState(() {
+        availableOptions = tags;
+      });
+    });
+  }
+
+  Future<List<String>> _getLanguages() async {
+
+      final response = await getLanguage();
+      final List<String> result = [];
+      if (response != null) {
+        for (final language in response) {
+          result.add(language['name']);
+        }
+      }
+      return result;
+   
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -140,6 +163,7 @@ class DropdownTagSelectorState extends State<DropdownTagSelector> {
               setState(() {
                 selectedOptions.add(selectedOption);
               });
+              print("valor seleccionado: $selectedOption");
             }
           },
           items: availableOptions.map((option) {
@@ -174,6 +198,7 @@ class DropdownTagSelectorState extends State<DropdownTagSelector> {
             );
           }).toList(),
         ),
+        FooterContent(selectedTags: selectedOptions)
       ],
     );
   }
