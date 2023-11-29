@@ -4,7 +4,7 @@ class User {
   String? name;
   String? lastname;
   String? username;
-  String? birthDate;
+  DateTime? birthDate;
   String? gender;
   String? nationality;
   String? email;
@@ -31,6 +31,7 @@ class User {
     DateTime? birthDate = json['user']['birthDate'] != null
         ? DateTime.parse(json['user']['birthDate'])
         : null;
+
     return User(
         id: json['user']['id'],
         photourl: json['user']['photo_url'],
