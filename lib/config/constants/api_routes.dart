@@ -1,5 +1,5 @@
 // ------- STRINGS ------------------
-const baseUrl = "http://10.29.8.157:3000/api/v1";
+const baseUrl = "https://app-picspeak-66m7tu3mma-uc.a.run.app/api/v1";
 const loginUrl = '$baseUrl/auth/login';
 const registerUrl = '$baseUrl/auth/register';
 const logoutUrl = '${baseUrl}logout';
