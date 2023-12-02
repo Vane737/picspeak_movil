@@ -54,7 +54,6 @@ Future<ApiResponse> register(String name, String lastname, String username,
       'photo_url': photourl
     });
 
-    print(response.statusCode);
     print(response.body);
     print(response.statusCode);
     switch (response.statusCode) {
@@ -77,7 +76,6 @@ Future<ApiResponse> register(String name, String lastname, String username,
         break;
     }
   } catch (e) {
-    print(e);
     apiResponse.error = serverError;
   }
 

@@ -4,12 +4,11 @@ class User {
   String? name;
   String? lastname;
   String? username;
-  String? birthDate;
+  DateTime? birthDate;
   String? gender;
   String? nationality;
   String? email;
   String? password;
-  String? activationToken;
   String? token;
 
   User({
@@ -23,7 +22,6 @@ class User {
     this.nationality,
     this.email, 
     this.password,
-    this.activationToken,
     this.token
   });
 

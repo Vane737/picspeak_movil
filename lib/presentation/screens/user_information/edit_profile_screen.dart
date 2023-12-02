@@ -17,7 +17,7 @@ class EditProfileScreen extends StatefulWidget {
     name: 'John',
     lastname: 'Doe',
     username: 'johndoe123',
-    birthDate: '1990, 5, 15',
+    birthDate: DateTime(1990, 5, 15),
   );
   
   EditProfileScreen({super.key});
@@ -36,7 +36,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _selectedDate = widget.userData.birthDate as DateTime?;
+    _selectedDate = widget.userData.birthDate;
     user = widget.userData;
   }
 
