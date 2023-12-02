@@ -29,6 +29,7 @@ class User {
     DateTime? birthDate = json['user']['birthDate'] != null
         ? DateTime.parse(json['user']['birthDate'])
         : null;
+
     return User(
         id: json['user']['id'],
         photourl: json['user']['photo_url'],
