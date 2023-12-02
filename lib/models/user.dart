@@ -11,23 +11,25 @@ class User {
   String? password;
   String? token;
 
-  User(
-      {this.id,
-      this.photourl,
-      this.name,
-      this.lastname,
-      this.username,
-      this.birthDate,
-      this.gender,
-      this.nationality,
-      this.email,
-      this.password,
-      this.token});
+  User({
+    this.id, 
+    this.photourl,
+    this.name, 
+    this.lastname,
+    this.username,
+    this.birthDate,
+    this.gender,
+    this.nationality,
+    this.email, 
+    this.password,
+    this.token
+  });
 
   factory User.fromJson(Map<String, dynamic> json) {
     DateTime? birthDate = json['user']['birthDate'] != null
         ? DateTime.parse(json['user']['birthDate'])
         : null;
+
     return User(
         id: json['user']['id'],
         photourl: json['user']['photo_url'],
