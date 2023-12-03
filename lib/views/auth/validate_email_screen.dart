@@ -96,7 +96,8 @@ class ValidateEmailScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const NationalityScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const NationalityScreen()),
                     );
                   },
                 ),

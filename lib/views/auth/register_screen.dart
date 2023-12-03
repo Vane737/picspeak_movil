@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/views/auth/save_password_screen.dart';
 import 'package:picspeak_front/config/theme/app_colors.dart';
+import 'package:picspeak_front/views/chat/ChatList.dart';
 import 'package:picspeak_front/views/widgets/custom_button.dart';
 
 class RegisterScreen extends StatefulWidget {
-  
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
@@ -98,17 +98,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         onPressed: () {
                           String userEmail = emailController.text;
 
-                          if (userEmail.isNotEmpty) {  
+                          if (userEmail.isNotEmpty) {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => SavePasswordScreen(userEmail: userEmail),
+                                builder: (context) =>
+                                    SavePasswordScreen(userEmail: userEmail),
                               ),
                             );
-                          } else {    
+                          } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text('El campo de correo electrónico no puede estar vacío.'),
+                                content: Text(
+                                    'El campo de correo electrónico no puede estar vacío.'),
                               ),
                             );
                           }

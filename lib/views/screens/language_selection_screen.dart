@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/config/theme/app_text_style.dart';
+import 'package:picspeak_front/views/chat/ChatList.dart';
 
 import '../../config/theme/app_colors.dart';
 import '../../config/theme/app_fonts.dart';
@@ -99,13 +100,13 @@ class FooterContent extends StatelessWidget {
               print("user id: ${pref.getInt('userId')}");
               print("lenguajes seleccionados: $selectedTags");
 
-             final response = await setLanguagesUser(pref.getInt('userId'), selectedTags);
+              final response =
+                  await setLanguagesUser(pref.getInt('userId'), selectedTags);
               print("RESPUESTA LANGUAGE USER: $response");
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //       builder: (context) => const LanguageSelectionScreen()),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChatList()),
+              );
             },
           ),
         ],
@@ -135,16 +136,14 @@ class DropdownTagSelectorState extends State<DropdownTagSelector> {
   }
 
   Future<List<String>> _getLanguages() async {
-
-      final response = await getLanguage();
-      final List<String> result = [];
-      if (response != null) {
-        for (final language in response) {
-          result.add(language['name']);
-        }
+    final response = await getLanguage();
+    final List<String> result = [];
+    if (response != null) {
+      for (final language in response) {
+        result.add(language['name']);
       }
-      return result;
-   
+    }
+    return result;
   }
 
   @override
