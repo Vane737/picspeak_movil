@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/views/auth/save_password_screen.dart';
 import 'package:picspeak_front/config/theme/app_colors.dart';
-import 'package:picspeak_front/views/chat/ChatList.dart';
 import 'package:picspeak_front/views/widgets/custom_button.dart';
 
 class RegisterScreen extends StatefulWidget {

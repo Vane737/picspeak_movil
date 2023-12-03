@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:picspeak_front/views/interfaces/DropdownObject.dart';
+import 'package:picspeak_front/views/interfaces/dropdown_object.dart';
 
 import '../../config/theme/app_text_style.dart';
 

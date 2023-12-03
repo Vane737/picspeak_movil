@@ -1,10 +1,9 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: use_key_in_widget_constructors
 
-import 'package:flutter_chat_bubble/chat_bubble.dart';
-import 'package:flutter_chat_bubble/bubble_type.dart';
-import 'package:picspeak_front/views/chat/Chat.dart';
-import 'package:picspeak_front/views/chat/IndividualChat.dart';
-import 'package:picspeak_front/views/chat/chatListItem.dart';
+import 'package:flutter/material.dart';
+import 'package:picspeak_front/models/chat.dart';
+import 'package:picspeak_front/views/chat/individual_chat.dart';
+import 'package:picspeak_front/views/chat/chat_list_item.dart';
 
 void main() => runApp(ChatList());
 
@@ -31,9 +30,9 @@ class ChatListScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Color.fromARGB(255, 11, 121, 158),
+        backgroundColor: const Color.fromARGB(255, 11, 121, 158),
 
-        title: Text(
+        title: const Text(
           '¡PickSpeak!',
           style: TextStyle(
             color: Colors.white,
@@ -45,11 +44,11 @@ class ChatListScreen extends StatelessWidget {
           Container(
             // Este es el "segundo AppBar" que emulamos en el ejemplo anterior.
             height: 50,
-            color: Color.fromARGB(255, 11, 121, 158),
+            color: const Color.fromARGB(255, 11, 121, 158),
             child: Row(
               children: [
                 IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.search,
                     size: 30,
                   ),
@@ -91,7 +90,7 @@ class ChatListScreen extends StatelessWidget {
         children: [
           Container(
             height: 50,
-            color: Color.fromARGB(255, 11, 121, 158),
+            color: const Color.fromARGB(255, 11, 121, 158),
             child: Row(
               mainAxisAlignment:
                   MainAxisAlignment.spaceAround, // Alineación de los botones
@@ -104,14 +103,14 @@ class ChatListScreen extends StatelessWidget {
                       },
                       style: ButtonStyle(
                         textStyle: MaterialStateProperty.all<TextStyle>(
-                          TextStyle(
+                          const TextStyle(
                             fontSize: 16, // Cambia el tamaño de la letra
                             color: Color.fromARGB(255, 248, 248,
                                 248), // Cambia el color del texto
                           ),
                         ),
                       ),
-                      child: Text(
+                      child: const Text(
                         "Chat",
                         style: TextStyle(
                           color: Colors.white,
@@ -130,14 +129,14 @@ class ChatListScreen extends StatelessWidget {
                       },
                       style: ButtonStyle(
                         textStyle: MaterialStateProperty.all<TextStyle>(
-                          TextStyle(
+                          const TextStyle(
                             fontSize: 16, // Cambia el tamaño de la letra
                             color: Color.fromARGB(255, 248, 248,
                                 248), // Cambia el color del texto
                           ),
                         ),
                       ),
-                      child: Text(
+                      child: const Text(
                         "Grupo",
                         style: TextStyle(
                           color: Colors.white,
@@ -156,14 +155,14 @@ class ChatListScreen extends StatelessWidget {
                       },
                       style: ButtonStyle(
                         textStyle: MaterialStateProperty.all<TextStyle>(
-                          TextStyle(
+                          const TextStyle(
                             fontSize: 16, // Cambia el tamaño de la letra
                             color: Color.fromARGB(255, 255, 255,
                                 255), // Cambia el color del texto
                           ),
                         ),
                       ),
-                      child: Text(
+                      child: const Text(
                         "Amigos",
                         style: TextStyle(
                           color: Colors.white,
@@ -195,7 +194,7 @@ class ChatListScreen extends StatelessWidget {
 class IndividualChatScreen extends StatefulWidget {
   final Chat chat;
 
-  IndividualChatScreen(this.chat);
+  const IndividualChatScreen(this.chat);
 
   @override
   IndividualChatScreenState createState() => IndividualChatScreenState();

@@ -1,16 +1,18 @@
+// ignore_for_file: file_names, use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
-import 'package:picspeak_front/views/chat/Chat.dart';
-import 'package:picspeak_front/views/chat/ChatList.dart';
+import 'package:picspeak_front/models/chat.dart';
+import 'package:picspeak_front/views/chat/chat_list.dart';
 
 class ChatListItem extends StatelessWidget {
   final Chat chat;
 
-  ChatListItem(this.chat);
+  const ChatListItem(this.chat);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: EdgeInsets.symmetric(
+      contentPadding: const EdgeInsets.symmetric(
         vertical: 10.0,
         horizontal: 20.0,
       ),
@@ -31,11 +33,11 @@ class ChatListItem extends StatelessWidget {
             right: 5,
             child: Container(
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 95, 228, 99),
+                color: const Color.fromARGB(255, 95, 228, 99),
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-              child: Text(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              child: const Text(
                 "En línea",
                 style: TextStyle(
                   color: Colors.white,
@@ -48,16 +50,16 @@ class ChatListItem extends StatelessWidget {
       ),
       title: Row(
         children: [
-          Text(
+          const Text(
             "🇺🇸",
             style: TextStyle(
               fontSize: 22.0,
             ),
           ),
-          SizedBox(width: 10.0),
+          const SizedBox(width: 10.0),
           Text(
             chat.senderName,
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),

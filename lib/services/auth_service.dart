@@ -128,3 +128,34 @@ String? getStringImage(File? file) {
   if (file == null) return null;
   return base64Encode(file.readAsBytesSync());
 }
+
+Future<ApiResponse> verifyEmail(String token) async {
+  ApiResponse apiResponse = ApiResponse();
+  try {
+    final response = await http.post(Uri.parse(verifyEmailUrl),
+        headers: headers, body: {'token': token});
+
+    print('Response${response.body}');
+    print(response.statusCode);
+
+    switch (response.statusCode) {
+      case 201:
+        apiResponse.data = User.fromJson(jsonDecode(response.body));
+        break;
+      case 422:
+        final errors = jsonDecode(response.body)['errors'];
+        apiResponse.error = errors[errors.keys.elementAt(0)][0];
+        break;
+      case 403:
+        apiResponse.error = jsonDecode(response.body)['message'];
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+  } catch (e) {
+    apiResponse.error = serverError;
+  }
+
+  return apiResponse;
+}

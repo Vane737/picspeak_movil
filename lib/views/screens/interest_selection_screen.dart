@@ -1,23 +1,13 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: avoid_print, unused_local_variable, use_build_context_synchronously
 
+import 'package:flutter/material.dart';
 import '../../config/theme/app_colors.dart';
 import '../../config/theme/app_fonts.dart';
-
 import 'package:picspeak_front/views/widgets/custom_title.dart';
-
 import '../widgets/custom_button.dart';
 import '../widgets/multi_select_tags.dart';
 import 'language_selection_screen.dart';
-
-import 'package:flutter/material.dart';
-
-import '../../config/theme/app_colors.dart';
-import '../../config/theme/app_fonts.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
-import '../widgets/custom_button.dart';
-import '../widgets/multi_select_tags.dart';
-import 'language_selection_screen.dart';
 import '../../services/configuration_service.dart';
 
 class InterestSelectionScreen extends StatelessWidget {
@@ -26,18 +16,17 @@ class InterestSelectionScreen extends StatelessWidget {
   });
 
   @override
-
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Column(
         children: [
-          const CustomTitle(
+          CustomTitle(
             headingText: 'Intereses',
             styles: AppFonts.heading1Style,
           ),
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.only(
+              padding: EdgeInsets.only(
                 bottom: 16.0,
                 top: 16.0,
                 left: 16.0,
@@ -45,9 +34,7 @@ class InterestSelectionScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  const MainContent(),
-                
-                  //const FooterContent(),
+                  MainContent(),
                 ],
               ),
             ),
@@ -104,7 +91,7 @@ class _MainContentState extends State<MainContent> {
         onSelectionChanged: (tags) {
           setState(() {
             selectedTags = tags;
-             print(selectedTags);
+            print(selectedTags);
           });
         },
       ),
@@ -140,11 +127,12 @@ class FooterContent extends StatelessWidget {
             color: AppColors.bgSecondaryColor,
             // width: 150,
             onPressed: () async {
-               SharedPreferences pref = await SharedPreferences.getInstance();
+              SharedPreferences pref = await SharedPreferences.getInstance();
               print("user id: ${pref.getInt('userId')}");
               print("tags seleccionados en FooterContent: $selectedTags");
               //  print("contexto: ${MainContent.selectedTags}");
-            final response = await setInterestUser(pref.getInt('userId'), selectedTags);
+              final response =
+                  await setInterestUser(pref.getInt('userId'), selectedTags);
 
               Navigator.push(
                 context,

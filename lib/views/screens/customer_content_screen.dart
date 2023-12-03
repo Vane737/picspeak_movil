@@ -1,17 +1,13 @@
+// ignore_for_file: unused_local_variable, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/views/screens/interest_selection_screen.dart';
-
 import '../../config/theme/app_colors.dart';
 import '../../config/theme/app_fonts.dart';
-
 import 'package:picspeak_front/views/widgets/custom_title.dart';
-
 import '../widgets/custom_button.dart';
 import '../widgets/multi_select_tags.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
-import '../widgets/custom_button.dart';
-import '../widgets/multi_select_tags.dart';
 import '../../services/configuration_service.dart';
 
 class CustomerContentScreen extends StatelessWidget {
@@ -26,12 +22,12 @@ class CustomerContentScreen extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(8.0),
           color: AppColors.primaryColor, // No establezcas una altura aquí
-          child: Column(
+          child: const Column(
             children: [
-              const CustomTitle(
+              CustomTitle(
                   headingText: 'Ayúdanos a configurar tu perfil',
                   styles: AppFonts.heading1Style),
-              const MainContent(),
+              MainContent(),
             ],
           ),
         ),
@@ -84,9 +80,7 @@ class _MainContentState extends State<MainContent> {
         selectedTags: selectedTags,
         onSelectionChanged: (tags) {
           setState(() {
-            print("ANTES tags seleccionados: ${selectedTags}");
             selectedTags = tags;
-            print("DESPUÉS tags seleccionados: ${selectedTags}");
           });
         },
       ),
@@ -123,12 +117,8 @@ class FooterContent extends StatelessWidget {
             // width: 150,
             onPressed: () async {
               SharedPreferences pref = await SharedPreferences.getInstance();
-
-              print("tags seleccionados en FooterContent: $selectedTags");
-              //  print("contexto: ${MainContent.selectedTags}");
               final response = await setInappropiateContentUser(
                   pref.getInt('userId'), selectedTags);
-              print("response: $response");
               Navigator.push(
                 context,
                 MaterialPageRoute(

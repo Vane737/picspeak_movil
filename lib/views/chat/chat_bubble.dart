@@ -1,14 +1,15 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: use_key_in_widget_constructors
 
-import 'package:flutter_chat_bubble/chat_bubble.dart';
+import 'package:flutter/material.dart';
 
 class ChatBubble extends StatelessWidget {
   final String message;
   final bool isSender;
   final String time; // Agrega el tiempo
 
-  ChatBubble(
+  const ChatBubble(
       {required this.message, required this.isSender, required this.time});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -16,17 +17,17 @@ class ChatBubble extends StatelessWidget {
         Align(
           alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
           child: Container(
-            margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-            padding: EdgeInsets.all(12.0),
+            margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+            padding: const EdgeInsets.all(12.0),
             decoration: BoxDecoration(
-              color: isSender ? Color.fromARGB(255, 255, 215, 0) : Colors.grey,
+              color: isSender ? const Color.fromARGB(255, 255, 215, 0) : Colors.grey,
               borderRadius: isSender
-                  ? BorderRadius.only(
+                  ? const BorderRadius.only(
                       topLeft: Radius.circular(12.0),
                       topRight: Radius.circular(12.0),
                       bottomLeft: Radius.circular(12.0),
                     )
-                  : BorderRadius.only(
+                  : const BorderRadius.only(
                       topLeft: Radius.circular(12.0),
                       topRight: Radius.circular(12.0),
                       bottomRight: Radius.circular(12.0),
@@ -34,7 +35,7 @@ class ChatBubble extends StatelessWidget {
             ),
             child: Text(
               message,
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
             ),
           ),
         ),
@@ -44,7 +45,7 @@ class ChatBubble extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               time, // Muestra la hora debajo de la burbuja de chat
-              style: TextStyle(fontSize: 12.0),
+              style: const TextStyle(fontSize: 12.0),
             ),
           ),
         ),

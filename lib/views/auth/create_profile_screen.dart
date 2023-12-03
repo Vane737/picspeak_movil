@@ -1,11 +1,15 @@
 // ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, use_build_context_synchronously
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:picspeak_front/models/api_response.dart';
 import 'package:picspeak_front/models/user.dart';
 import 'package:picspeak_front/services/auth_service.dart';
 import 'package:picspeak_front/views/auth/validate_email_screen.dart';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
 import 'package:picspeak_front/config/theme/app_colors.dart';
 import 'package:picspeak_front/views/widgets/custom_button.dart';
@@ -45,6 +49,19 @@ class _PerfilState extends State<CreateProfileScreen> {
     }
   }
 
+  Future<String> compressImage(File imageFile) async {
+    final Uint8List? result = await FlutterImageCompress.compressWithFile(
+      imageFile.absolute.path,
+      quality: 20, 
+    );
+
+    if (result != null && result.isNotEmpty) {
+      return base64Encode(Uint8List.fromList(result));
+    } else {
+      return '';
+    }
+  }
+
   Future<void> _selectDate(BuildContext context) async {
     DateTime? picked = await showDatePicker(
       context: context,
@@ -61,7 +78,8 @@ class _PerfilState extends State<CreateProfileScreen> {
   }
 
   void _registerUser() async {
-    String? image = _image == null ? null : getStringImage(_image);
+    String? compressedImage =
+        _image == null ? null : await compressImage(_image!);
     String formattedBirthday =
         _selectedDate != null ? _selectedDate!.toIso8601String() : '';
     ApiResponse response = await register(
@@ -71,14 +89,11 @@ class _PerfilState extends State<CreateProfileScreen> {
         formattedBirthday,
         widget.userEmail,
         widget.userPassword,
-        image);
-   
+        compressedImage);
+
     if (response.error == null) {
-    
       _saveAndRedirectToHome(response.data as User);
     } else {
-      
-    
       setState(() {
         loading = false;
       });

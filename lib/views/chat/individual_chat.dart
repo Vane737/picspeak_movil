@@ -1,8 +1,10 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
-import 'package:picspeak_front/views/chat/ChatBubbleReply.dart';
-import 'package:picspeak_front/views/chat/ChatList.dart';
-import 'package:picspeak_front/views/chat/chatBubble.dart';
+import 'package:picspeak_front/views/chat/chat_bubble_reply.dart';
+import 'package:picspeak_front/views/chat/chat_bubble.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:picspeak_front/views/chat/chat_list.dart';
 
 class IndividualChatScreenState extends State<IndividualChatScreen> {
   final TextEditingController _messageController = TextEditingController();
@@ -18,7 +20,7 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return EmojiPicker();
+        return const EmojiPicker();
       },
     );
   }
@@ -27,7 +29,7 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 11, 121, 158),
+        backgroundColor: const Color.fromARGB(255, 11, 121, 158),
         title: Row(
           children: [
             Padding(
@@ -43,7 +45,7 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
                 ),
               ),
             ),
-            SizedBox(width: 8.0),
+            const SizedBox(width: 8.0),
             Text(widget.chat.senderName),
           ],
         ),
@@ -67,14 +69,14 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
                   child: Row(
                     children: [
                       IconButton(
-                        icon: Icon(
+                        icon: const Icon(
                             Icons.camera_alt), // Icono para abrir la cámara
                         onPressed: () {
                           // Lógica para abrir la cámara y enviar una imagen
                         },
                       ),
                       IconButton(
-                        icon: Icon(Icons.emoji_emotions), // Icono para emojis
+                        icon: const Icon(Icons.emoji_emotions), // Icono para emojis
                         onPressed: () {
                           showEmojiPicker(context);
                         },
@@ -82,13 +84,13 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
                       Expanded(
                         child: TextField(
                           controller: _messageController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText: 'Escribe un mensaje...',
                           ),
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.send),
+                        icon: const Icon(Icons.send),
                         onPressed: () {
                           String message = _messageController.text;
                           if (message.isNotEmpty) {

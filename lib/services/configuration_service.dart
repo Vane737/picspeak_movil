@@ -1,10 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:picspeak_front/config/constants/api_routes.dart';
 import 'package:http/http.dart' as http;
-import 'package:picspeak_front/models/api_response.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 Future<dynamic> getNacionalidades() async {
   final Uri uri = Uri.parse(nationalities);
@@ -56,17 +53,17 @@ Future<dynamic> getInterests() async {
 }
 
 Future<dynamic> setLanguageNationalityUser(
-    int? user_id, int? language_id, int? nationality_id) async {
-  if (user_id == null || language_id == null || nationality_id == null) {
+    int? userId, int? languageId, int? nationalityId) async {
+  if (userId == null || languageId == null || nationalityId == null) {
     throw Exception('Alguno de los valores es nulo (null).');
   }
 
-  final Uri uri = Uri.parse('$configuration/$user_id/language-nacionality');
+  final Uri uri = Uri.parse('$configuration/$userId/language-nacionality');
   final response = await http.post(uri,
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({
-        'nationality_id': nationality_id,
-        'language_id': language_id,
+        'nationality_id': nationalityId,
+        'language_id': languageId,
       }));
   final jsonResponse = jsonDecode(response.body);
   if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -77,21 +74,19 @@ Future<dynamic> setLanguageNationalityUser(
 }
 
 Future<dynamic> setInappropiateContentUser(
-    int? user_id, List<String> inapropiado) async {
-  if (user_id == null || inapropiado == null) {
+    int? userId, List<String> inapropiado) async {
+  if (userId == null) {
     throw Exception('Alguno de los valores es nulo (null).');
   }
 
   final Uri uri =
-      Uri.parse('$configuration/$user_id/inappropriate-contents-user');
+      Uri.parse('$configuration/$userId/inappropriate-contents-user');
   final response = await http.post(
     uri,
     headers: {"Content-Type": "application/json"},
     body: jsonEncode(inapropiado),
   );
   final jsonResponse = jsonDecode(response.body);
-  print("respuesta json: ${jsonResponse}");
-  print("response: ${response.statusCode}");
   if (response.statusCode >= 200 && response.statusCode < 300) {
     return jsonResponse['data'];
   } else {
@@ -99,20 +94,18 @@ Future<dynamic> setInappropiateContentUser(
   }
 }
 
-Future<dynamic> setInterestUser(int? user_id, List<String> interests) async {
-  if (user_id == null || interests == null) {
+Future<dynamic> setInterestUser(int? userId, List<String> interests) async {
+  if (userId == null) {
     throw Exception('Alguno de los valores es nulo (null).');
   }
 
-  final Uri uri = Uri.parse('$configuration/$user_id/interests-user');
+  final Uri uri = Uri.parse('$configuration/$userId/interests-user');
   final response = await http.post(
     uri,
     headers: {"Content-Type": "application/json"}, // Añadir el encabezado JSON
     body: jsonEncode(interests),
   );
   final jsonResponse = jsonDecode(response.body);
-  print("respuesta json: ${jsonResponse}");
-  print("response: ${response.statusCode}");
   if (response.statusCode >= 200 && response.statusCode < 300) {
     return jsonResponse['data'];
   } else {
@@ -120,13 +113,13 @@ Future<dynamic> setInterestUser(int? user_id, List<String> interests) async {
   }
 }
 
-Future<dynamic> setLanguagesUser(int? user_id, List<String> languages) async {
-  if (user_id == null || languages == null) {
+Future<dynamic> setLanguagesUser(int? userId, List<String> languages) async {
+  if (userId == null) {
     throw Exception('Alguno de los valores es nulo (null).');
   }
 
   final Uri uri = Uri.parse(
-      '$configuration/$user_id/language-user');
+      '$configuration/$userId/language-user');
   final response = await http.post(
     uri,
     headers: {"Content-Type": "application/json"}, // Añadir el encabezado JSON
