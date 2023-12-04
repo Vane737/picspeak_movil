@@ -167,6 +167,7 @@ class ChatListScreen extends StatelessWidget {
                     TextButton(
                       onPressed: () {
                         // Lógica para abrir la pantalla de chats.
+                        
                       },
                       style: ButtonStyle(
                         textStyle: MaterialStateProperty.all<TextStyle>(
