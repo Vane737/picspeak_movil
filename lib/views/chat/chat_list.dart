@@ -2,6 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/models/chat.dart';
+import 'package:picspeak_front/presentation/screens/user_information/edit_profile_screen.dart';
+import 'package:picspeak_front/presentation/screens/user_information/user_information.dart';
+import 'package:picspeak_front/presentation/screens/user_information/view_profile_screen.dart';
 import 'package:picspeak_front/views/chat/individual_chat.dart';
 import 'package:picspeak_front/views/chat/chat_list_item.dart';
 
@@ -60,8 +63,20 @@ class ChatListScreen extends StatelessWidget {
                   onSelected: (choice) {
                     // Manejar las opciones del menú.
                     if (choice == 'Perfil') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditProfileScreen(),
+                        ),
+                      );
                       // Lógica para abrir la pantalla de chat.
                     } else if (choice == 'Informacion') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ViewProfileScreen(),
+                        ),
+                      );
                       // Lógica para abrir la pantalla de grupos.
                     } else if (choice == 'Ajustes') {
                       // Lógica par
