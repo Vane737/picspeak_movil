@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:picspeak_front/config/constants/api_routes.dart';
 import 'package:picspeak_front/models/api_response.dart';
 import 'package:picspeak_front/models/user.dart';
+import 'package:picspeak_front/views/interfaces/Login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<ApiResponse> login(String email, String password) async {
@@ -20,6 +21,18 @@ Future<ApiResponse> login(String email, String password) async {
     switch (response.statusCode) {
       case 200:
         apiResponse.data = User.fromJson(jsonDecode(response.body));
+
+         final loginData = Login.fromJson(jsonDecode(response.body));
+        // apiResponse.data = loginData;
+        print(loginData.user);
+        print("Token de user al loguear: ${loginData.user.token}");
+        // Guardar el token en el local storage
+        token = loginData.user.token;
+        print("Token del login con variable lgobal ${token}");
+        await saveTokenToLocalStorage(loginData.user.token);
+        // String? tokenizer = await getTokenFromLocalStorage();
+        // print("Token obtenido con el getToken en el login: ${loginData.user.token}");
+
         break;
       case 422:
         final errors = jsonDecode(response.body)['errors'];
@@ -82,25 +95,97 @@ Future<ApiResponse> register(String name, String lastname, String username,
   return apiResponse;
 }
 
-Future<ApiResponse> getUserDetail() async {
+
+Future<ApiResponse> updateUser(
+  String name,
+  String lastname,
+  String username,
+  String birthDate,
+  String? photourl,
+  String? email
+) async {
+  print(name);
+  print(lastname);
+  print(username);
+  print(birthDate);
+  print(photourl);
+  print(email);
+
   ApiResponse apiResponse = ApiResponse();
   try {
-    String token = await getToken();
-    final response = await http.get(Uri.parse(profileUrl), headers: {
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token'
-    });
+    final response = await http.put(
+      Uri.parse(updateProfileUrl), // Utiliza la URL adecuada para actualizar un usuario específico
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+      body: {
+        if (name.isNotEmpty) 'name': name,
+        if (lastname.isNotEmpty) 'lastname': lastname,
+        if (username.isNotEmpty) 'username': username,
+        if (birthDate.isNotEmpty) 'birthDate': birthDate,
+        if (photourl != null) 'photo_url': photourl,
+        'email': email,
+      },
+    );
 
+    print(response.body);
+    print(response.statusCode);
     switch (response.statusCode) {
-      case 200:
+      case 200: // Cambiado a 200 para representar una actualización exitosa
+        print(response.body);
         apiResponse.data = User.fromJson(jsonDecode(response.body));
         break;
-      case 401:
-        apiResponse.error = unauthorized;
+      case 422:
+        print(response.body);
+        final errors = jsonDecode(response.body)['errors'];
+        apiResponse.error = errors[errors.keys.elementAt(0)][0];
+        break;
+      case 403:
+        print(response.body);
+        apiResponse.error = jsonDecode(response.body)['message'];
         break;
       default:
         apiResponse.error = somethingWentWrong;
         break;
+    }
+  } catch (e) {
+    print(e);
+    apiResponse.error = serverError;
+  }
+
+  return apiResponse;
+}
+
+Future<ApiResponse> getUserDetail() async {
+  ApiResponse apiResponse = ApiResponse();
+  // print("Este es el token desde getuserDetail: ${tokenizer}");
+  print("Este es el token global token");
+  try {
+    
+    if (token != null && token.isNotEmpty) {
+      print("Este es el token desde getuserDetail con func de nicol: $token");
+      
+      final response = await http.get(Uri.parse(profileUrl), headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      });
+
+      switch (response.statusCode) {
+        case 200:
+          apiResponse.data = User.fromJson(jsonDecode(response.body));
+          break;
+        case 401:
+          apiResponse.error = unauthorized;
+          break;
+        default:
+          apiResponse.error = somethingWentWrong;
+          break;
+      }
+    } else {
+      // Manejar el caso en el que no se pueda obtener el token
+      print("No se pudo obtener el token de SharedPreferences.");
+      apiResponse.error = "No se pudo obtener el token de SharedPreferences.";
     }
   } catch (e) {
     apiResponse.error = serverError;
@@ -127,4 +212,49 @@ Future<bool> logout() async {
 String? getStringImage(File? file) {
   if (file == null) return null;
   return base64Encode(file.readAsBytesSync());
+}
+
+Future<ApiResponse> verifyEmail(String token) async {
+  ApiResponse apiResponse = ApiResponse();
+  try {
+    final response = await http.post(Uri.parse(verifyEmailUrl),
+        headers: headers, body: {'token': token});
+
+    print('Response${response.body}');
+    print(response.statusCode);
+
+    switch (response.statusCode) {
+      case 201:
+        apiResponse.data = User.fromJson(jsonDecode(response.body));
+        break;
+      case 422:
+        final errors = jsonDecode(response.body)['errors'];
+        apiResponse.error = errors[errors.keys.elementAt(0)][0];
+        break;
+      case 403:
+        apiResponse.error = jsonDecode(response.body)['message'];
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+  } catch (e) {
+    apiResponse.error = serverError;
+  }
+
+  return apiResponse;
+}
+
+
+Future<void> saveTokenToLocalStorage(String token) async {
+  print("Desde el saveTonek: ${token}");
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('token', token);
+}
+
+
+// Para obtener el token almacenado
+Future<String?> getTokenFromLocalStorage() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('token');
 }

@@ -31,14 +31,16 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_svg: ^0.23.0
-
+  intl: ^0.17.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   image_picker: ^1.0.4
   http: ^1.1.0
   logger: ^2.0.2+1
-  shared_preferences: ^2.2.2
+  shared_preferences: ^2.2.2 
+  emoji_picker_flutter: ^1.6.3
+  flutter_image_compress: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -50,6 +52,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  flutter_chat_bubble: 2.0.2
+  
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -70,6 +74,8 @@ flutter:
     - assets/language.svg
     - assets/imagenes/first.png
     - assets/imagenes/inicio.png
+    - assets/imagenes/avatar1.png
+    - assets/imagenes/avatar2.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

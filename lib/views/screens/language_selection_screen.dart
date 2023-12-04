@@ -1,22 +1,14 @@
+// ignore_for_file: use_build_context_synchronously, unused_local_variable
+
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/config/theme/app_text_style.dart';
-
+import 'package:picspeak_front/views/chat/chat_list.dart';
 import '../../config/theme/app_colors.dart';
 import '../../config/theme/app_fonts.dart';
-
 import 'package:picspeak_front/views/widgets/custom_title.dart';
-
 import '../widgets/custom_button.dart';
-
-import 'package:flutter/material.dart';
-import 'package:picspeak_front/config/theme/app_text_style.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../config/theme/app_colors.dart';
-import '../../config/theme/app_fonts.dart';
 import '../../services/configuration_service.dart';
-
-import '../widgets/custom_button.dart';
 
 class LanguageSelectionScreen extends StatelessWidget {
   const LanguageSelectionScreen({
@@ -36,15 +28,14 @@ class LanguageSelectionScreen extends StatelessWidget {
         width: double.infinity,
         height: double.infinity,
         color: AppColors.primaryColor,
-        child: Center(
+        child: const Center(
           child: Column(
             children: [
-              const CustomTitle(
+              CustomTitle(
                 headingText: 'Idiomas',
                 styles: AppFonts.heading1Style,
               ),
-              const MainContent(),
-              // FooterContent(),
+              MainContent(),
             ],
           ),
         ),
@@ -96,16 +87,12 @@ class FooterContent extends StatelessWidget {
             // width: 200,
             onPressed: () async {
               SharedPreferences pref = await SharedPreferences.getInstance();
-              print("user id: ${pref.getInt('userId')}");
-              print("lenguajes seleccionados: $selectedTags");
-
-             final response = await setLanguagesUser(pref.getInt('userId'), selectedTags);
-              print("RESPUESTA LANGUAGE USER: $response");
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //       builder: (context) => const LanguageSelectionScreen()),
-              // );
+              final response =
+                  await setLanguagesUser(pref.getInt('userId'), selectedTags);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChatList()),
+              );
             },
           ),
         ],
@@ -135,16 +122,14 @@ class DropdownTagSelectorState extends State<DropdownTagSelector> {
   }
 
   Future<List<String>> _getLanguages() async {
-
-      final response = await getLanguage();
-      final List<String> result = [];
-      if (response != null) {
-        for (final language in response) {
-          result.add(language['name']);
-        }
+    final response = await getLanguage();
+    final List<String> result = [];
+    if (response != null) {
+      for (final language in response) {
+        result.add(language['name']);
       }
-      return result;
-   
+    }
+    return result;
   }
 
   @override
@@ -163,7 +148,6 @@ class DropdownTagSelectorState extends State<DropdownTagSelector> {
               setState(() {
                 selectedOptions.add(selectedOption);
               });
-              print("valor seleccionado: $selectedOption");
             }
           },
           items: availableOptions.map((option) {

@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, use_key_in_widget_constructors
+// ignore_for_file: file_names, use_key_in_widget_constructors, use_build_context_synchronously
 
 import 'package:flutter/material.dart'
     show
@@ -17,7 +17,8 @@ import 'package:flutter/material.dart'
         Navigator,
         OutlineInputBorder,
         Scaffold,
-        StatelessWidget,
+        ScaffoldMessenger,
+        SnackBar,
         Text,
         TextAlign,
         TextField,
@@ -26,10 +27,46 @@ import 'package:flutter/material.dart'
         Widget;
 import 'package:flutter/widgets.dart';
 import 'package:picspeak_front/config/theme/app_colors.dart';
+import 'package:picspeak_front/models/api_response.dart';
+import 'package:picspeak_front/models/user.dart';
+import 'package:picspeak_front/services/auth_service.dart';
 import 'package:picspeak_front/views/screens/nationalitity_screen.dart';
 import 'package:picspeak_front/views/widgets/custom_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ValidateEmailScreen extends StatelessWidget {
+class ValidateEmailScreen extends StatefulWidget {
+  @override
+  State<ValidateEmailScreen> createState() => _ValidateEmailScreen();
+}
+
+class _ValidateEmailScreen extends State<ValidateEmailScreen> {
+  TextEditingController txtCodeEmail = TextEditingController();
+  bool loading = false;
+
+  void _verifyEmail() async {
+    ApiResponse response = await verifyEmail(txtCodeEmail.text);
+    if (response.error == null) {
+      _saveAndRedirectToNext(response.data as User);
+    } else {
+      setState(() {
+        loading = false;
+      });
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('${response.error}')));
+    }
+  }
+
+  void _saveAndRedirectToNext(User user) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    await pref.setString('token', user.token ?? '');
+    await pref.setInt('userId', user.id ?? 0);
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => const NationalityScreen(),
+        ),
+        (route) => false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,8 +100,10 @@ class ValidateEmailScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: TextField(
+                  keyboardType: TextInputType.number,
+                  controller: txtCodeEmail,
                   obscureText: false,
-                  autofocus: false,
+                  autofocus: true,
                   style: const TextStyle(
                       fontSize: 22.0, color: Color.fromARGB(255, 5, 5, 6)),
                   decoration: InputDecoration(
@@ -94,10 +133,10 @@ class ValidateEmailScreen extends StatelessWidget {
                   text: 'VERIFICAR',
                   color: AppColors.bgPrimaryColor,
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const NationalityScreen()),
-                    );
+                    setState(() {
+                      loading = true;
+                    });
+                    _verifyEmail();
                   },
                 ),
               )

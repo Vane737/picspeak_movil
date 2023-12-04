@@ -1,10 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
-import 'package:picspeak_front/views/interfaces/DropdownObject.dart';
+// ignore_for_file: avoid_print, non_constant_identifier_names, use_build_context_synchronously
 
+import 'package:flutter/material.dart';
+import 'package:picspeak_front/views/interfaces/dropdown_object.dart';
 import '../../config/theme/app_colors.dart';
 import '../../config/theme/app_fonts.dart';
-
 import '../widgets/dropdown_button_options.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_title.dart';
@@ -25,7 +24,6 @@ class _NationalityState extends State<NationalityScreen> {
   final List<DropdownObject> languageList = [];
   final ValueNotifier<int?> selectedNationality = ValueNotifier<int?>(null);
   final ValueNotifier<int?> selectedLanguage = ValueNotifier<int?>(null);
-  static final Logger logger = Logger();
   Future<List<DropdownObject>>? nationalityFuture; // Nuevo
   Future<List<DropdownObject>>? languageFuture;
   Future<dynamic>? nationalities;
@@ -36,64 +34,70 @@ class _NationalityState extends State<NationalityScreen> {
     nationalityFuture = _getNacionalidades();
   }
 
-Future<List<DropdownObject>> _getNacionalidades() async {
-  try {
-    final response = await getNacionalidades();
-    final List<DropdownObject> result = [];
+  Future<List<DropdownObject>> _getNacionalidades() async {
+    try {
+      final response = await getNacionalidades();
+      final List<DropdownObject> result = [];
 
-    if (response != null && response is List) {
-      for (final nacionalidad in response) {
-        if (nacionalidad is Map && nacionalidad.containsKey('id') && nacionalidad.containsKey('name')) {
-          result.add(DropdownObject(id: nacionalidad['id'], name: nacionalidad['name']));
+      if (response != null && response is List) {
+        for (final nacionalidad in response) {
+          if (nacionalidad is Map &&
+              nacionalidad.containsKey('id') &&
+              nacionalidad.containsKey('name')) {
+            result.add(DropdownObject(
+                id: nacionalidad['id'], name: nacionalidad['name']));
+          }
         }
-      }
 
-      if (result.isNotEmpty) {
-        selectedNationality.value = result.first.id;
-        languageList.addAll(await _getLanguages());
-        print('La longitud de la lista de language es: ${languageList.length}');
-        selectedLanguage.value = languageList.first.id;
-        print('El language seleccionado es: ${selectedLanguage.value}');
-        nationalityList.addAll(result);
-        return result;
+        if (result.isNotEmpty) {
+          selectedNationality.value = result.first.id;
+          languageList.addAll(await _getLanguages());
+          print(
+              'La longitud de la lista de language es: ${languageList.length}');
+          selectedLanguage.value = languageList.first.id;
+          print('El language seleccionado es: ${selectedLanguage.value}');
+          nationalityList.addAll(result);
+          return result;
+        } else {
+          // Manejar el caso en que la lista resultante esté vacía o no tenga el formato esperado.
+          print('La lista de nacionalidades no tiene el formato esperado.');
+          return [];
+        }
       } else {
-        // Manejar el caso en que la lista resultante esté vacía o no tenga el formato esperado.
-        print('La lista de nacionalidades no tiene el formato esperado.');
+        // Manejar el caso en que la respuesta sea nula o no tenga el formato esperado.
+        print(
+            'La respuesta de getNacionalidades no tiene el formato esperado.');
         return [];
       }
-    } else {
-      // Manejar el caso en que la respuesta sea nula o no tenga el formato esperado.
-      print('La respuesta de getNacionalidades no tiene el formato esperado.');
+    } catch (e) {
+      // Manejar cualquier excepción que pueda ocurrir durante la ejecución.
+      print('Error durante la obtención de nacionalidades: $e');
       return [];
     }
-  } catch (e) {
-    // Manejar cualquier excepción que pueda ocurrir durante la ejecución.
-    print('Error durante la obtención de nacionalidades: $e');
-    return [];
   }
-}
 
+  Future<List<DropdownObject>> _getLanguages() async {
+    try {
+      final response = await getLanguage();
+      final List<DropdownObject> result = [];
 
-Future<List<DropdownObject>> _getLanguages() async {
-  try {
-    final response = await getLanguage();
-    final List<DropdownObject> result = [];
-
-    if (response != null && response is List) {
-      for (final language in response) {
-        if (language is Map && language.containsKey('id') && language.containsKey('name')) {
-          result.add(DropdownObject(id: language['id'], name: language['name']));
+      if (response != null && response is List) {
+        for (final language in response) {
+          if (language is Map &&
+              language.containsKey('id') &&
+              language.containsKey('name')) {
+            result.add(
+                DropdownObject(id: language['id'], name: language['name']));
+          }
         }
       }
+      return result;
+    } catch (e) {
+      // Manejar cualquier excepción que pueda ocurrir durante la ejecución.
+      print('Error durante la obtención de idiomas: $e');
+      return [];
     }
-    return result;
-  } catch (e) {
-    // Manejar cualquier excepción que pueda ocurrir durante la ejecución.
-    print('Error durante la obtención de idiomas: $e');
-    return [];
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +118,7 @@ Future<List<DropdownObject>> _getLanguages() async {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   // Muestra un indicador de carga mientras se obtienen los datos
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 } else if (snapshot.hasError) {
                   // Maneja errores
                   return Text('Error: ${snapshot.error}');
@@ -126,7 +130,7 @@ Future<List<DropdownObject>> _getLanguages() async {
                       languageList: languageList);
                 } else {
                   // En caso de otro estado, muestra un mensaje genérico
-                  return Text('Esperando carga');
+                  return const Text('Esperando carga');
                 }
               },
             ),
@@ -134,7 +138,7 @@ Future<List<DropdownObject>> _getLanguages() async {
             ValueListenableBuilder(
                 valueListenable: selectedNationality,
                 builder: (context, int? selectedNationalityValue, child) {
-                  print('Cambió la nacionalidad: ${selectedNationalityValue}');
+                  print('Cambió la nacionalidad: $selectedNationalityValue');
 
                   return ValueListenableBuilder(
                     valueListenable: selectedLanguage,
@@ -223,7 +227,7 @@ class FooterContent extends StatelessWidget {
               print("usuario id: ${pref.getInt('userId')}");
               final response = await setLanguageNationalityUser(
                   pref.getInt('userId'), language_id, nationality_id);
-              print("Response: ${response}");
+              print("Response: $response");
               Navigator.push(
                 context,
                 MaterialPageRoute(

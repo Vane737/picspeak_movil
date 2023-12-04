@@ -5,7 +5,7 @@ import 'package:picspeak_front/config/theme/app_colors.dart';
 import 'package:picspeak_front/models/api_response.dart';
 import 'package:picspeak_front/models/user.dart';
 import 'package:picspeak_front/services/auth_service.dart';
-import 'package:picspeak_front/views/screens/nationalitity_screen.dart';
+import 'package:picspeak_front/views/chat/chat_list.dart';
 import 'package:picspeak_front/views/widgets/custom_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
     await pref.setInt('userId', user.id ?? 0);
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
-          builder: (context) => const NationalityScreen(),
+          builder: (context) => ChatList(),
         ),
         (route) => false);
   }

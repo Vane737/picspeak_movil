@@ -10,6 +10,7 @@ class User {
   String? email;
   String? password;
   String? token;
+  String? activationToken;
 
   User({
     this.id, 
@@ -22,7 +23,8 @@ class User {
     this.nationality,
     this.email, 
     this.password,
-    this.token
+    this.token,
+    this.activationToken
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -41,6 +43,7 @@ class User {
         nationality: json['user']['nationality'],
         email: json['user']['email'],
         password: json['user']['password'],
-        token: json['token']);
+        token: json['token'],
+        activationToken: json['user']['activationToken'],);        
   }
 }
