@@ -93,19 +93,64 @@ Future<void> _initializeData() async {
   print("Este es el result: ${result}");
   return result;
 }
-  
-  // Future<User> _getProfileUser() async {
-  //   ApiResponse response = await getUserDetail();
-  //   final User result = {}
-  //   if (response != null) {
-  //     print("Esto devuelve  el perfil del usuario: ${response.data}");
-  //     // for (final interestUser in response) {
-  //     //   print("Esto es un objeto del array : ${interestUser['interest']['name']}");
-  //     //   result.add(interestUser['interest']['name']);
-  //     // }
-  //   }
-  //   return result;
-  // }
+
+void _mostrarMensaje(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: const Color.fromARGB(255, 58, 156, 189),
+          // title: Text('Pregunta'),
+          content: Container(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8), // Bordes redondeados
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1), // Color de la sombra
+                  spreadRadius: 1, // Cuánto se extiende la sombra
+                  blurRadius: 2, // Suavidad de la sombra
+                  offset: Offset(0, 2), // Desplazamiento de la sombra
+                ),
+              ],
+            ),
+            child: const Text('¿Desear eliminar a este amigo?', style: AppFonts.smallTextStyle),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Cierra el cuadro de diálogo
+                // Acción al cancelar
+                print('Cancelado');
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(AppColors.bgPrimaryColor), // Color de fondo rojo
+              ),
+              child: Text(
+                'Cancelar',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Cierra el cuadro de diálogo
+                // Acción al aceptar
+                print('Guardado');
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(AppColors.bgYellow), // Color de fondo verde
+              ),
+              child: Text(
+                'Aceptar',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -265,7 +310,9 @@ Future<void> _initializeData() async {
     persistentFooterButtons: [
       
       Center(
-        child: TextButton( onPressed: () {  },
+        child: TextButton( onPressed: () { 
+          _mostrarMensaje(context);
+         },
         style: ButtonStyle(
         // radius: MaterialStateProperty.all<Radius>(Radius.circular(10.0)),
           foregroundColor: MaterialStateProperty.all<Color>(AppColors.textColor),
