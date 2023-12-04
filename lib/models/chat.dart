@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:picspeak_front/views/chat/chat_bubble.dart';
 
 class Chat {
   final String senderName;

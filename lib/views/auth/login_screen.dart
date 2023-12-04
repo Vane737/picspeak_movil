@@ -40,9 +40,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _saveAndRedirectToHome(User user) async {
+    print("usuario del response.data: $user");
     SharedPreferences pref = await SharedPreferences.getInstance();
     await pref.setString('token', user.token ?? '');
     await pref.setInt('userId', user.id ?? 0);
+
+    print("LUEGO DEL INICIO DE SESCION GUARDADO DEL userID");
+    print(pref.getInt("userId"));
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (context) => ChatList(),
