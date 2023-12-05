@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/config/theme/app_colors.dart';
 import 'package:picspeak_front/config/theme/app_fonts.dart';
@@ -71,7 +73,7 @@ Future<void> _initializeData() async {
   ApiResponse response = await getUserDetail();
   User result = User(); // Inicializa un nuevo objeto User
 
-  if (response != null && response.data != null) {
+  if (response.data != null) {
     dynamic responseData = response.data;
 
     if (responseData is User) {
@@ -90,7 +92,7 @@ Future<void> _initializeData() async {
       print("Error: La respuesta no es del tipo esperado.");
     }
   }
-  print("Este es el result: ${result}");
+  print("Este es el result: $result");
   return result;
 }
 
@@ -111,7 +113,7 @@ void _mostrarMensaje(BuildContext context) {
                   color: Colors.black.withOpacity(0.1), // Color de la sombra
                   spreadRadius: 1, // Cuánto se extiende la sombra
                   blurRadius: 2, // Suavidad de la sombra
-                  offset: Offset(0, 2), // Desplazamiento de la sombra
+                  offset: const Offset(0, 2), // Desplazamiento de la sombra
                 ),
               ],
             ),
@@ -127,7 +129,7 @@ void _mostrarMensaje(BuildContext context) {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(AppColors.bgPrimaryColor), // Color de fondo rojo
               ),
-              child: Text(
+              child: const Text(
                 'Cancelar',
                 style: TextStyle(color: Colors.white),
               ),
@@ -141,7 +143,7 @@ void _mostrarMensaje(BuildContext context) {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(AppColors.bgYellow), // Color de fondo verde
               ),
-              child: Text(
+              child: const Text(
                 'Aceptar',
                 style: TextStyle(color: Colors.white),
               ),
@@ -152,6 +154,7 @@ void _mostrarMensaje(BuildContext context) {
     );
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

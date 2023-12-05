@@ -7,9 +7,9 @@ import 'package:picspeak_front/models/chat_model.dart';
 import 'package:picspeak_front/views/chat/chat_list_item.dart';
 import 'dart:convert';
 import 'package:picspeak_front/presentation/screens/user_information/edit_profile_screen.dart';
-import 'package:picspeak_front/presentation/screens/user_information/user_information.dart';
 import 'package:picspeak_front/presentation/screens/user_information/view_profile_screen.dart';
 import 'package:picspeak_front/views/chat/individual_chat.dart';
+import 'package:socket_io_client/socket_io_client.dart' as io;
 
 void main() => runApp(ChatList());
 
@@ -29,6 +29,8 @@ class ChatListScreen extends StatefulWidget {
 }
 
 class _ChatListScreenState extends State<ChatListScreen> {
+  late io.Socket socket;
+  bool isConnected = false;
 
   Future<List<Map<String, dynamic>>> fetchChatData() async {
     final urlChat = '{$chatsByUserUrl$userId}';
@@ -47,6 +49,36 @@ class _ChatListScreenState extends State<ChatListScreen> {
   void initState() {
     super.initState();
     fetchChatData();
+    initSocket();
+  }
+
+  initSocket() {
+    socket = io.io('http://10.0.2.2:3000', <String, dynamic>{
+      'transports': ['websocket'],
+      'autoConnect': false,
+      'query': {'userId': userId},
+    });
+    socket.connect();
+
+    socket.on('connect', (_) {
+      setState(() {
+        isConnected = true;
+      });
+      print('Conectado al socket $userId');
+    });
+
+    socket.on('disconnect', (_) {
+      setState(() {
+        isConnected = false;
+      });
+      print('Desconectado del socket');
+    });
+  }
+
+  @override
+  void dispose() {
+    socket.dispose();
+    super.dispose();
   }
 
   @override
@@ -86,7 +118,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => EditProfileScreen(),
+                          builder: (context) => const EditProfileScreen(),
                         ),
                       );
                       // Lógica para abrir la pantalla de chat.
@@ -166,32 +198,6 @@ class _ChatListScreenState extends State<ChatListScreen> {
                         textStyle: MaterialStateProperty.all<TextStyle>(
                           const TextStyle(
                             fontSize: 16, // Cambia el tamaño de la letra
-                            color: Color.fromARGB(255, 248, 248,
-                                248), // Cambia el color del texto
-                          ),
-                        ),
-                      ),
-                      child: const Text(
-                        "Grupo",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        // Lógica para abrir la pantalla de chats.
-                      },
-                      style: ButtonStyle(
-                        textStyle: MaterialStateProperty.all<TextStyle>(
-                          const TextStyle(
-                            fontSize: 16, // Cambia el tamaño de la letra
                             color: Color.fromARGB(255, 255, 255,
                                 255), // Cambia el color del texto
                           ),
@@ -250,7 +256,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
 }
 
 class IndividualChatScreen extends StatefulWidget {
-  final ChatList chat;
+  final ChatListModel chat;
 
   const IndividualChatScreen(this.chat);
 

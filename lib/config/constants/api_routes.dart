@@ -25,3 +25,4 @@ const somethingWentWrong = 'Something went wrong, try again';
 
 String token = "";
 int userId = 0;
+int chatId = 0;

@@ -52,8 +52,8 @@ Future<dynamic> getInterests() async {
   }
 }
 
-Future<dynamic> getInterestsUser( int? user_id) async {
-  final Uri uri = Uri.parse('$configurationUser/interest-user/$user_id');
+Future<dynamic> getInterestsUser( int? userId) async {
+  final Uri uri = Uri.parse('$configurationUser/interest-user/$userId');
   final response = await http.get(uri);
   final jsonResponse = jsonDecode(response.body);
 

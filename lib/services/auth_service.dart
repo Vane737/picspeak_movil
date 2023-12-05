@@ -22,11 +22,12 @@ Future<ApiResponse> login(String email, String password) async {
       case 200:
         apiResponse.data = User.fromJson(jsonDecode(response.body));
         User user = User.fromJson(jsonDecode(response.body));
+        print('USER $user');
         userId = user.id ?? 0;
         print("User ID: $userId");
         final loginData = Login.fromJson(jsonDecode(response.body));
         token = loginData.user.token;
-        print("Token del login con variable lgobal ${token}");
+        print("Token del login con variable lgobal $token");
         await saveTokenToLocalStorage(loginData.user.token);
         break;
       case 422:
@@ -160,7 +161,7 @@ Future<ApiResponse> getUserDetail() async {
   print("Este es el token global token");
   try {
     
-    if (token != null && token.isNotEmpty) {
+    if (token.isNotEmpty) {
       print("Este es el token desde getuserDetail con func de nicol: $token");
       
       final response = await http.get(Uri.parse(profileUrl), headers: {
@@ -251,7 +252,7 @@ Future<void> saveUserInfo(User user) async {
 
 
 Future<void> saveTokenToLocalStorage(String token) async {
-  print("Desde el saveTonek: ${token}");
+  print("Desde el saveTonek: $token");
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.setString('token', token);
 }

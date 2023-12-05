@@ -1,4 +1,4 @@
-// ignore_for_file: use_key_in_widget_constructors, use_build_context_synchronously
+// ignore_for_file: use_key_in_widget_constructors, use_build_context_synchronously, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/config/theme/app_colors.dart';
@@ -16,13 +16,9 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
   TextEditingController txtEmailController = TextEditingController();
-
   TextEditingController txtPasswordController = TextEditingController();
-
   bool loading = false;
-
   bool passwordVisibility = false;
 
   void _loginUser() async {
@@ -53,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    passwordVisibility = false;
+    passwordVisibility = false;   
   }
 
   @override

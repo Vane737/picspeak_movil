@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/models/chat_model.dart';
+import 'package:picspeak_front/views/chat/chat_list.dart';
 
 class ChatListItem extends StatelessWidget {
   final ChatListModel chat;
@@ -64,9 +65,9 @@ class ChatListItem extends StatelessWidget {
       subtitle: Text(chat.message!),
       trailing: Text('${chat.timeMessage!.hour.toString()}:${chat.timeMessage!.minute.toString()}'),
       onTap: () {
-        /* Navigator.of(context).push(MaterialPageRoute(
+        Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => IndividualChatScreen(chat),
-        )); */
+        ));
       },
     );
   }
