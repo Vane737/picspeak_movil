@@ -1,9 +1,12 @@
-// ignore_for_file: use_key_in_widget_constructors
+// ignore_for_file: use_key_in_widget_constructors, avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:picspeak_front/models/chat.dart';
-import 'package:picspeak_front/views/chat/individual_chat.dart';
+import 'package:picspeak_front/config/constants/api_routes.dart';
+import 'package:http/http.dart' as http;
+import 'package:picspeak_front/models/chat_model.dart';
 import 'package:picspeak_front/views/chat/chat_list_item.dart';
+import 'dart:convert';
+import 'package:picspeak_front/views/chat/individual_chat.dart';
 
 void main() => runApp(ChatList());
 
@@ -12,18 +15,36 @@ class ChatList extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: ChatListScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class ChatListScreen extends StatelessWidget {
-  final List<Chat> chatList = [
-    Chat("Usuario 1", "Hola, ¿cómo estás?", "10:00 AM",
-        'assets/imagenes/avatar1.png'),
-    Chat("Usuario 2", "¡Hola! Estoy bien, ¿y tú?", "10:15 AM",
-        'assets/imagenes/avatar2.png'),
-    // Agrega más chats aquí...
-  ];
+class ChatListScreen extends StatefulWidget {
+  @override
+  State<ChatListScreen> createState() => _ChatListScreenState();
+}
+
+class _ChatListScreenState extends State<ChatListScreen> {
+
+  Future<List<Map<String, dynamic>>> fetchChatData() async {
+    final urlChat = '{$chatsByUserUrl$userId}';
+    print(urlChat);
+    final response = await http.get(Uri.parse('$chatsByUserUrl$userId'));
+    print(response.body);
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = json.decode(response.body);
+      return jsonData.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Failed to load chat data');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchChatData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +52,6 @@ class ChatListScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: const Color.fromARGB(255, 11, 121, 158),
-
         title: const Text(
           '¡PickSpeak!',
           style: TextStyle(
@@ -176,15 +196,38 @@ class ChatListScreen extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: chatList.length,
-              itemBuilder: (context, index) {
-                final chat = chatList[index];
-                return ChatListItem(chat);
-              },
-            ),
-          ),
+          FutureBuilder<List<Map<String, dynamic>>>(
+              future: fetchChatData(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  final List<Map<String, dynamic>> chatData = snapshot.data!;
+                  print(chatData); // Add this line to print the data
+                  return Expanded(
+                    child: ListView.builder(
+                      itemCount: chatData.length,
+                      itemBuilder: (context, index) {
+                        final chatMap = chatData[index];
+                        final chat = ChatListModel(
+                          id: chatMap['chatid'],
+                          receivingUserId: chatMap['resuserid'],
+                          receivingUsername: chatMap['resusername'],
+                          receivingUserPhoto: chatMap['resuserphoto'],
+                          receivingUserNation: chatMap['resusernation'],
+                          message: chatMap['message'],
+                          timeMessage: chatMap['hora'] != null
+                              ? DateTime.parse(chatMap['hora'])
+                              : null,
+                        );
+                        return ChatListItem(chat);
+                      },
+                    ),
+                  );
+                }
+              })
         ],
       ),
     );
@@ -192,7 +235,7 @@ class ChatListScreen extends StatelessWidget {
 }
 
 class IndividualChatScreen extends StatefulWidget {
-  final Chat chat;
+  final ChatList chat;
 
   const IndividualChatScreen(this.chat);
 

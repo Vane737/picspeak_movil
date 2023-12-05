@@ -30,23 +30,22 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 11, 121, 158),
-        title: Row(
+        title: const Row(
           children: [
-            Padding(
+            /* Padding(
               padding: const EdgeInsets.only(right: 2.0),
               child: CircleAvatar(
                 radius: 20.0,
                 child: Image.asset(
-                  widget.chat
-                      .imageAsset, // Accede a la ruta de la imagen de perfil
+                  widget.chat.imageAsset, // Accede a la ruta de la imagen de perfil
                   width: 50.0,
                   height: 50.0,
                   fit: BoxFit.cover,
                 ),
               ),
-            ),
-            const SizedBox(width: 8.0),
-            Text(widget.chat.senderName),
+            ), */
+            SizedBox(width: 8.0),
+            /* Text(widget.chat.senderName), */
           ],
         ),
         automaticallyImplyLeading: true,

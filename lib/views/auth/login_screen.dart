@@ -68,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Padding(
-                padding: EdgeInsets.only(top: 70.0),
+                padding: EdgeInsets.only(top: 50.0),
                 child: Text(
                   'Iniciar Sesión',
                   textAlign: TextAlign.center,
@@ -90,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 100.0, right: 20, left: 20),
+                padding: const EdgeInsets.only(top: 80.0, right: 20, left: 20),
                 child: TextFormField(
                   keyboardType: TextInputType.emailAddress,
                   controller: txtEmailController,

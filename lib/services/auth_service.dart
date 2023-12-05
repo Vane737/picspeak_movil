@@ -15,11 +15,15 @@ Future<ApiResponse> login(String email, String password) async {
     final response = await http.post(Uri.parse(loginUrl),
         headers: headers, body: {'email': email, 'password': password});
 
-    print('Response${response.body}');
+    print('Response${response.body} ${response.statusCode}');
 
     switch (response.statusCode) {
       case 200:
         apiResponse.data = User.fromJson(jsonDecode(response.body));
+        saveUserInfo(apiResponse.data as User);
+        User user = User.fromJson(jsonDecode(response.body));
+        userId = user.id ?? 0;
+        print("User ID: $userId");
         break;
       case 422:
         final errors = jsonDecode(response.body)['errors'];
@@ -54,13 +58,15 @@ Future<ApiResponse> register(String name, String lastname, String username,
       'photo_url': photourl
     });
 
-    print(response.body);
     print(response.statusCode);
     switch (response.statusCode) {
       case 201:
-        print("ingresa a 201 asi es ${response.body}");
-        //print(User.fromJson(jsonDecode(response.body)));
+        print("ingresa a 201 ${response.body}");
         apiResponse.data = User.fromJson(jsonDecode(response.body));
+        saveUserInfo(apiResponse.data as User);
+        User user = User.fromJson(jsonDecode(response.body));
+        userId = user.id ?? 0;
+        print("User ID: $userId");
         break;
       case 422:
         print("ingresa a 422");
@@ -158,4 +164,11 @@ Future<ApiResponse> verifyEmail(String token) async {
   }
 
   return apiResponse;
+}
+
+// Save user information in SharedPreferences
+Future<void> saveUserInfo(User user) async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  pref.setString('token', user.token ?? '');
+  pref.setInt('userId', user.id ?? 0);
 }
