@@ -13,35 +13,42 @@ class ContactListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: EdgeInsets.symmetric(
+      contentPadding: const EdgeInsets.symmetric(
         vertical: 10.0,
         horizontal: 20.0,
       ),
-      leading: Stack(
+       leading: Stack(
         children: [
           CircleAvatar(
             radius: 30.0,
-            child: Image.asset(
-              contact.contactImageAsset,
+            child: Container(
               width: 60.0,
               height: 60.0,
-              fit: BoxFit.cover,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(
+                    contact.imageAsset,
+                  ),
+                ),
+              ),
             ),
           ),
         ],
       ),
       title: Row(
         children: [
-          Text(
+          const Text(
             "🇺🇸",
             style: TextStyle(
               fontSize: 22.0,
             ),
           ),
-          SizedBox(width: 10.0),
+          const SizedBox(width: 10.0),
           Text(
-            contact.contactName,
-            style: TextStyle(
+            contact.nickname,
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -49,11 +56,11 @@ class ContactListItem extends StatelessWidget {
       ),
       trailing: IconButton(
         icon:
-            Icon(Icons.chat), // Icono del botón de chat (puedes personalizarlo)
+           const Icon(Icons.chat), // Icono del botón de chat (puedes personalizarlo)
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => IndividualChatScreen(
-                Chat(contact.contactName, "", "", contact.contactImageAsset)),
+                Chat(contact.nickname, "", "", contact.imageAsset)),
           ));
         },
       ),

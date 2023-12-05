@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:picspeak_front/views/chat/chat_bubble.dart';
 
 class Contact {
-  final String contactName;
-  final String contactImageAsset;
+  final int id;
+  final String nickname;
+  final String imageAsset;
+  final int contactId;
 
-  Contact(this.contactName, this.contactImageAsset);
+  Contact(this.id, this.nickname, this.imageAsset, this.contactId);
 }

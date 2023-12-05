@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:picspeak_front/models/api_response.dart';
 import 'package:picspeak_front/views/chat/FriendSuggestion.dart';
+import 'package:picspeak_front/services/chat_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FriendSuggestionItem extends StatelessWidget {
   final FriendSuggestion suggestion;
+  final VoidCallback onPressed;
 
-  FriendSuggestionItem(this.suggestion);
+  FriendSuggestionItem({required this.suggestion, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +55,17 @@ class FriendSuggestionItem extends StatelessWidget {
         ],
       ),
       trailing: IconButton(
-        icon: const Icon(Icons
-            .person_add_alt), // Icono del botón de chat (puedes personalizarlo)
-        onPressed: () {},
+        icon: const Icon(Icons.person_add_alt), // Icono del botón de chat (puedes personalizarlo)
+        onPressed: () async {
+          SharedPreferences pref = await SharedPreferences.getInstance();
+          ApiResponse response =
+              await addSuggest(pref.getInt('userId'), suggestion.id);
+          if (response.error == null) {
+            onPressed(); // Llama a la función de devolución de llamada después de realizar la acción
+          } else {
+            print("ERROR on press: ${response.error}");
+          }
+        },
       ),
       onTap: () {
         // Puedes mantener esta lógica si también quieres que algo suceda cuando se toca el ListTile

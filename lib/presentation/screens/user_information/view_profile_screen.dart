@@ -127,7 +127,7 @@ void _mostrarMensaje(BuildContext context) {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(AppColors.bgPrimaryColor), // Color de fondo rojo
               ),
-              child: Text(
+              child: const Text(
                 'Cancelar',
                 style: TextStyle(color: Colors.white),
               ),
@@ -141,7 +141,7 @@ void _mostrarMensaje(BuildContext context) {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(AppColors.bgYellow), // Color de fondo verde
               ),
-              child: Text(
+              child: const Text(
                 'Aceptar',
                 style: TextStyle(color: Colors.white),
               ),

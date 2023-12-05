@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:flutter_chat_bubble/bubble_type.dart';
+import 'package:picspeak_front/config/constants/api_routes.dart';
 import 'package:picspeak_front/models/api_response.dart';
 import 'package:picspeak_front/models/chat.dart';
 import 'package:picspeak_front/models/user.dart';
@@ -33,7 +34,7 @@ Future<List<FriendSuggestion>> getSuggestFriends() async {
               item['id'] ?? 0, item['name'] ?? "", item['photo_url'] ?? ""))
           .toList();
     } else {
-      print("Error: ${response.error}");
+      print("Error getSuggestFriends: ${response.error}");
     }
   } catch (e) {
     print('$e');
@@ -41,6 +42,33 @@ Future<List<FriendSuggestion>> getSuggestFriends() async {
   }
 
   return friendSuggestions;
+}
+
+Future<List<Contact>> getContacts() async {
+  List<Contact> contacts = [];
+
+  try {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    print("EN GET CONTACTOS");
+    ApiResponse response = await getContact(pref.getInt('userId'));
+
+    if (response.error == null) {
+      var list = response.data as List;
+      print("ENTRA EN IF CONTACTOS");
+      contacts = list
+          .map((item) => Contact(item['id'] ?? 0, item['nickname'] ?? "",
+              item['photo_url'] ?? "", item["contactId"] ?? 0))
+          .toList();
+    } else {
+      print("Error contacto: ${response.error}");
+    }
+  } catch (e) {
+    print('$e');
+    // Handle error if needed
+  }
+
+  return contacts;
 }
 
 class ChatList extends StatelessWidget {
@@ -60,12 +88,13 @@ class ChatListScreen extends StatefulWidget {
 class _ChatListScreenState extends State<ChatListScreen> {
   List<FriendSuggestion> friendSuggestions = [];
   //List<Chat> chatList = [];
-  //List<Contact> contactList = [];
+  List<Contact> contactList = [];
 
   @override
   void initState() {
     super.initState();
     loadFriendSuggestions();
+    loadContacts();
     // Load other data like chatList and contactList if needed
   }
 
@@ -80,6 +109,17 @@ class _ChatListScreenState extends State<ChatListScreen> {
     }
   }
 
+  Future<void> loadContacts() async {
+    try {
+      List<Contact> contacts = await getContacts();
+      setState(() {
+        contactList = contacts;
+      });
+    } catch (e) {
+      print("Error loading friend suggestions: $e");
+    }
+  }
+
   final List<Chat> chatList = [
     Chat("Usuario 1", "Hola, ¿cómo estás?", "10:00 AM",
         'assets/imagenes/avatar1.png'),
@@ -88,10 +128,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
     // Agrega más chats aquí...
   ];
 
-  final List<Contact> contactList = [
-    Contact("Contacto 1", 'assets/imagenes/avatar1.png'),
-    Contact("Contacto 2", 'assets/imagenes/avatar2.png')
-  ];
+  // final List<Contact> contactList = [
+  //   Contact("Contacto 1", 'assets/imagenes/avatar1.png'),
+  //   Contact("Contacto 2", 'assets/imagenes/avatar2.png')
+  // ];
 
   // final List<FriendSuggestion> friendSuggestions = [
   //   FriendSuggestion("Amigo Sugerido 1", 'assets/imagenes/avatar2.png'),
@@ -208,45 +248,74 @@ class _ChatListScreenState extends State<ChatListScreen> {
             // Vista de Amigos
             Column(
               children: [
-                // Lista de contactos
                 Expanded(
                   child: ListView.builder(
-                    itemCount: contactList.length,
+                    itemCount: contactList.length +
+                        (friendSuggestions.isNotEmpty ? 2 : 1),
                     itemBuilder: (context, index) {
-                      final contact = contactList[index];
-                      return ContactListItem(contact);
+                      if (index == 0) {
+                        // Primer elemento: Lista de contactos
+                        return Column(
+                          children: [
+                            for (final contact in contactList)
+                              ContactListItem(contact),
+                          ],
+                        );
+                      } else if (index == 1 && friendSuggestions.isNotEmpty) {
+                        // Segundo elemento: Título "Sugerencias"
+                        return Container(
+                          padding: const EdgeInsets.only(
+                              left: 16.0), // Ajusta según sea necesario
+                          child: const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Sugerencias",
+                              style: TextStyle(
+                                fontSize: 19.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        // Resto de elementos: Lista de sugerencias de amigos o mensaje de no hay sugerencias
+                        final friendIndex =
+                            index - (friendSuggestions.isNotEmpty ? 2 : 1);
+                        return friendIndex < friendSuggestions.length
+                            ? FriendSuggestionItem(
+                                suggestion: friendSuggestions[friendIndex],
+                                onPressed: () {
+                                  loadFriendSuggestions();
+                                  loadContacts();
+                                },
+                              )
+                            : friendSuggestions.isEmpty &&
+                                    index ==
+                                        contactList.length +
+                                            (friendSuggestions.isNotEmpty
+                                                ? 1
+                                                : 0)
+                                ? Container(
+                                    padding: const EdgeInsets.only(
+                                        left: 16.0, top: 16.0),
+                                    child: const Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        "No hay sugerencias de amigos",
+                                        style: TextStyle(
+                                          fontSize: 19.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : Container(); // Elemento vacío para cuando no haya sugerencias y no se quiera mostrar nada más
+                      }
                     },
                   ),
                 ),
-                // Lista de sugerencias de amigos
-                Expanded(
-                  child: Column(
-                    children: [
-                      const Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Sugerencias",
-                          style: TextStyle(
-                            fontSize: 19.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      // Add some spacing between the title and the ListView
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: friendSuggestions.length,
-                          itemBuilder: (context, index) {
-                            final friend = friendSuggestions[index];
-                            return FriendSuggestionItem(friend);
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ],
-            ),
+            )
           ],
         ),
       ),
