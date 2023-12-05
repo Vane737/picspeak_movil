@@ -52,6 +52,18 @@ Future<dynamic> getInterests() async {
   }
 }
 
+Future<dynamic> getInterestsUser( int? user_id) async {
+  final Uri uri = Uri.parse('$configurationUser/interest-user/$user_id');
+  final response = await http.get(uri);
+  final jsonResponse = jsonDecode(response.body);
+
+  if (response.statusCode == 200) {
+    return jsonResponse['data'];
+  } else {
+    throw Exception('Error en la solicitud: ${response.reasonPhrase}');
+  }
+}
+
 Future<dynamic> setLanguageNationalityUser(
     int? userId, int? languageId, int? nationalityId) async {
   if (userId == null || languageId == null || nationalityId == null) {

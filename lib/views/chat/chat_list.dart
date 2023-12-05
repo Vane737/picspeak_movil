@@ -6,6 +6,9 @@ import 'package:http/http.dart' as http;
 import 'package:picspeak_front/models/chat_model.dart';
 import 'package:picspeak_front/views/chat/chat_list_item.dart';
 import 'dart:convert';
+import 'package:picspeak_front/presentation/screens/user_information/edit_profile_screen.dart';
+import 'package:picspeak_front/presentation/screens/user_information/user_information.dart';
+import 'package:picspeak_front/presentation/screens/user_information/view_profile_screen.dart';
 import 'package:picspeak_front/views/chat/individual_chat.dart';
 
 void main() => runApp(ChatList());
@@ -80,8 +83,20 @@ class _ChatListScreenState extends State<ChatListScreen> {
                   onSelected: (choice) {
                     // Manejar las opciones del menú.
                     if (choice == 'Perfil') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditProfileScreen(),
+                        ),
+                      );
                       // Lógica para abrir la pantalla de chat.
                     } else if (choice == 'Informacion') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ViewProfileScreen(),
+                        ),
+                      );
                       // Lógica para abrir la pantalla de grupos.
                     } else if (choice == 'Ajustes') {
                       // Lógica par
