@@ -6,6 +6,8 @@ class ChatListModel {
   String? receivingUserNation;
   String? message;
   DateTime? timeMessage;
+  String? senderMotherLanguage;
+  String? receiverMotherLanguage;
 
   ChatListModel(
       {required this.id,
@@ -14,7 +16,9 @@ class ChatListModel {
       this.receivingUserPhoto,
       this.receivingUserNation,
       this.message,
-      this.timeMessage});
+      this.timeMessage,
+      this.senderMotherLanguage,
+      this.receiverMotherLanguage});
 
   factory ChatListModel.fromJson(Map<String, dynamic> json) {
     return ChatListModel(
@@ -24,6 +28,8 @@ class ChatListModel {
       receivingUserPhoto: json['resuserphoto'],
       receivingUserNation: json['resusernation'],
       message: json['message'],
+      senderMotherLanguage: json['sendermotherlanguage'],
+      receiverMotherLanguage: json['receivermotherlanguage'],
       timeMessage: json['hora'] != null
           ? DateTime.tryParse(
               json['hora'] ?? '') // Use tryParse to handle null or invalid date

@@ -8,7 +8,6 @@ import 'package:picspeak_front/views/chat/chat_list_item.dart';
 import 'dart:convert';
 import 'package:picspeak_front/presentation/screens/user_information/edit_profile_screen.dart';
 import 'package:picspeak_front/presentation/screens/user_information/view_profile_screen.dart';
-import 'package:picspeak_front/views/chat/individual_chat.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 void main() => runApp(ChatList());
@@ -243,7 +242,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                               ? DateTime.parse(chatMap['hora'])
                               : null,
                         );
-                        return ChatListItem(chat);
+                        return ChatListItem(chat, socket);
                       },
                     ),
                   );
@@ -255,11 +254,12 @@ class _ChatListScreenState extends State<ChatListScreen> {
   }
 }
 
-class IndividualChatScreen extends StatefulWidget {
+/* class IndividualChatScreen extends StatefulWidget {
   final ChatListModel chat;
+  //final io.Socket connectionSocket;
 
-  const IndividualChatScreen(this.chat);
+  const IndividualChatScreen(this.chat, socket);
 
   @override
   IndividualChatScreenState createState() => IndividualChatScreenState();
-}
+} */
