@@ -1,0 +1,36 @@
+"filename", "language", "C++", "Swift", "Dart", "YAML", "XML", "comment", "blank", "total"
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\android\app\src\main\AndroidManifest.xml", "XML", 0, 0, 0, 0, 2, 0, 0, 2
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\config\constants\api_routes.dart", "Dart", 0, 0, 5, 0, 0, 1, 0, 6
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\models\chat.dart", "Dart", 0, 0, 9, 0, 0, 0, 3, 12
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\models\contact.dart", "Dart", 0, 0, 15, 0, 0, 0, 3, 18
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\models\user.dart", "Dart", 0, 0, 4, 0, 0, 0, 1, 5
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\presentation\screens\user_information\edit_profile_screen.dart", "Dart", 0, 0, 90, 0, 0, 8, 15, 113
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\presentation\screens\user_information\view_profile_screen.dart", "Dart", 0, 0, 275, 0, 0, 34, 18, 327
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\services\auth_service.dart", "Dart", 0, 0, 105, 0, 0, 7, 16, 128
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\services\chat_service.dart", "Dart", 0, 0, 70, 0, 0, 3, 4, 77
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\services\configuration_service.dart", "Dart", 0, 0, 3, 0, 0, 0, 2, 5
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\views\auth\login_screen.dart", "Dart", 0, 0, 3, 0, 0, 0, 1, 4
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\views\auth\register_screen.dart", "Dart", 0, 0, 2, 0, 0, 0, -1, 1
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\views\auth\validate_email_screen.dart", "Dart", 0, 0, 35, 0, 0, 0, 4, 39
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\views\chat\Contact.dart", "Dart", 0, 0, 9, 0, 0, 0, 3, 12
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\views\chat\ContactListItem.dart", "Dart", 0, 0, 66, 0, 0, 6, 4, 76
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\views\chat\FriendSuggestion.dart", "Dart", 0, 0, 6, 0, 0, 0, 2, 8
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\views\chat\FriendSuggestionItem.dart", "Dart", 0, 0, 71, 0, 0, 4, 4, 79
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\views\chat\chat_bubble.dart", "Dart", 0, 0, 50, 0, 0, 1, 5, 56
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\views\chat\chat_bubble_reply.dart", "Dart", 0, 0, 30, 0, 0, 1, 5, 36
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\views\chat\chat_list.dart", "Dart", 0, 0, 277, 0, 0, 30, 27, 334
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\views\chat\chat_list_item.dart", "Dart", 0, 0, 72, 0, 0, 1, 5, 78
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\views\chat\individual_chat.dart", "Dart", 0, 0, 114, 0, 0, 2, 8, 124
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\views\interfaces\DropdownObject.dart", "Dart", 0, 0, -5, 0, 0, 0, -2, -7
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\views\interfaces\Login.dart", "Dart", 0, 0, 28, 0, 0, 2, 5, 35
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\views\interfaces\dropdown_object.dart", "Dart", 0, 0, 5, 0, 0, 0, 2, 7
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\views\screens\customer_content_screen.dart", "Dart", 0, 0, -6, 0, 0, 0, -4, -10
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\views\screens\interest_selection_screen.dart", "Dart", 0, 0, -5, 0, 0, 0, -7, -12
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\views\screens\language_selection_screen.dart", "Dart", 0, 0, -3, 0, 0, -5, -8, -16
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\views\screens\nationalitity_screen.dart", "Dart", 0, 0, 6, 0, 0, 1, -3, 4
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\lib\views\widgets\seleted_tags_display.dart", "Dart", 0, 0, 30, 0, 0, 0, 3, 33
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\linux\flutter\generated_plugin_registrant.cc", "C++", 4, 0, 0, 0, 0, 0, 0, 4
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\macos\Flutter\GeneratedPluginRegistrant.swift", "Swift", 0, 4, 0, 0, 0, 0, 0, 4
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\pubspec.yaml", "YAML", 0, 0, 0, 6, 0, 0, 0, 6
+"d:\2-2023\SOFTWARE 1\PROYECTO_DE_LA_MATERIA\PICSPEAK\nuevo\movil-sin-union-devChristian\picspeak_movil\windows\flutter\generated_plugin_registrant.cc", "C++", 3, 0, 0, 0, 0, 0, 0, 3
+"Total", "-", 7, 4, 1361, 6, 2, 96, 115, 1591
