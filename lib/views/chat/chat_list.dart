@@ -120,7 +120,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
   }
 
   initSocket() {
-    socket = io.io('http://192.168.0.18:3000', <String, dynamic>{
+    socket = io.io('http://192.168.1.140:3000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
       'query': {'userId': userId},
