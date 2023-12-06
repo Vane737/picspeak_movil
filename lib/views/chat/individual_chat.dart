@@ -5,10 +5,11 @@ import 'package:picspeak_front/views/chat/chat_bubble_reply.dart';
 import 'package:picspeak_front/views/chat/chat_bubble.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:picspeak_front/views/chat/chat_list.dart';
-
+import 'package:image_picker/image_picker.dart';
 class IndividualChatScreenState extends State<IndividualChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   List<Widget> chatBubbles = [];
+  final ImagePicker _imagePicker = ImagePicker();
 
   void sendReply(String message) {
     setState(() {
@@ -24,6 +25,25 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
       },
     );
   }
+
+
+  Future<void> _getImageFromGallery() async {
+    final XFile? image =
+        await _imagePicker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      // Aquí puedes manejar la imagen seleccionada, por ejemplo, mostrarla en un widget de imagen.
+      // image.path contiene la ruta de la imagen seleccionada.
+      print('Ruta de la imagen seleccionada: ${image.path}');
+    } else {
+      // El usuario canceló la selección de la imagen.
+      print('Selección de imagen cancelada.');
+    }
+  }
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -71,9 +91,7 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
                       IconButton(
                         icon: const Icon(
                             Icons.camera_alt), // Icono para abrir la cámara
-                        onPressed: () {
-                          // Lógica para abrir la cámara y enviar una imagen
-                        },
+                        onPressed: _getImageFromGallery,
                       ),
                       IconButton(
                         icon: const Icon(Icons.emoji_emotions), // Icono para emojis
