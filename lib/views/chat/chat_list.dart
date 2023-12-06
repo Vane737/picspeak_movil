@@ -1,19 +1,21 @@
-// ignore_for_file: use_key_in_widget_constructors
+// ignore_for_file: use_key_in_widget_constructors, avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_bubble/chat_bubble.dart';
-import 'package:flutter_chat_bubble/bubble_type.dart';
 import 'package:picspeak_front/config/constants/api_routes.dart';
-import 'package:picspeak_front/models/api_response.dart';
+import 'package:http/http.dart' as http;
+import 'package:picspeak_front/models/chat_model.dart';
+import 'package:picspeak_front/views/chat/chat_list_item.dart';
+import 'dart:convert';
+import 'package:picspeak_front/presentation/screens/user_information/edit_profile_screen.dart';
+import 'package:picspeak_front/presentation/screens/user_information/view_profile_screen.dart';
+import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:picspeak_front/models/chat.dart';
-import 'package:picspeak_front/models/user.dart';
 // import 'package:picspeak_front/views/chat/Chat.dart';
+import 'package:picspeak_front/models/api_response.dart';
 import 'package:picspeak_front/views/chat/Contact.dart';
 import 'package:picspeak_front/views/chat/ContactListItem.dart';
 import 'package:picspeak_front/views/chat/FriendSuggestion.dart';
 import 'package:picspeak_front/views/chat/FriendSuggestionItem.dart';
-import 'package:picspeak_front/views/chat/individual_chat.dart';
-import 'package:picspeak_front/views/chat/chat_list_item.dart';
 import 'package:picspeak_front/services/chat_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -76,19 +78,38 @@ class ChatList extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: ChatListScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
 
 class ChatListScreen extends StatefulWidget {
   @override
-  _ChatListScreenState createState() => _ChatListScreenState();
+  State<ChatListScreen> createState() => _ChatListScreenState();
 }
 
 class _ChatListScreenState extends State<ChatListScreen> {
   List<FriendSuggestion> friendSuggestions = [];
   //List<Chat> chatList = [];
   List<Contact> contactList = [];
+  State<ChatListScreen> createState() => _ChatListScreenState();
+  late io.Socket socket;
+  bool isConnected = false;
+
+  Future<List<Map<String, dynamic>>> fetchChatData() async {
+     SharedPreferences pref = await SharedPreferences.getInstance();
+    final urlChat = '{$chatsByUserUrl${pref.getInt("userId")}';
+    print("URL CHAT: $urlChat");
+
+    final response = await http.get(Uri.parse('$chatsByUserUrl$userId'));
+    print(response.body);
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = json.decode(response.body);
+      return jsonData.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Failed to load chat data');
+    }
+  }
 
   @override
   void initState() {
@@ -96,6 +117,35 @@ class _ChatListScreenState extends State<ChatListScreen> {
     loadFriendSuggestions();
     loadContacts();
     // Load other data like chatList and contactList if needed
+  }
+
+  initSocket() {
+    socket = io.io('http://192.168.0.18:3000', <String, dynamic>{
+      'transports': ['websocket'],
+      'autoConnect': false,
+      'query': {'userId': userId},
+    });
+    socket.connect();
+
+    socket.on('connect', (_) {
+      setState(() {
+        isConnected = true;
+      });
+      print('Conectado al socket $userId');
+    });
+
+    socket.on('disconnect', (_) {
+      setState(() {
+        isConnected = false;
+      });
+      print('Desconectado del socket');
+    });
+  }
+
+  @override
+  void dispose() {
+    socket.dispose();
+    super.dispose();
   }
 
   Future<void> loadFriendSuggestions() async {
@@ -141,113 +191,108 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: const Color.fromARGB(255, 11, 121, 158),
-
-          title: const Text(
-            '¡PickSpeak!',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 25,
-            ),
-          ), // Título principal
-          actions: [
-            Container(
-              // Este es el "segundo AppBar" que emulamos en el ejemplo anterior.
-              height: 50,
-              color: const Color.fromARGB(255, 11, 121, 158),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.search,
-                      size: 30,
-                    ),
-                    onPressed: () {
-                      // Agregar aquí la lógica para la búsqueda.
-                    },
-                  ),
-                  PopupMenuButton<String>(
-                    onSelected: (choice) {
-                      // Manejar las opciones del menú.
-                      if (choice == 'Perfil') {
-                        // Lógica para abrir la pantalla de chat.
-                      } else if (choice == 'Informacion') {
-                        // Lógica para abrir la pantalla de grupos.
-                      } else if (choice == 'Ajustes') {
-                        // Lógica par
-                        //a abrir la pantalla de amigos.
-                      } else if (choice == 'Cerrar Sesion') {
-                        // Lógica par
-                        //a abrir la pantalla de amigos.
-                      }
-                    },
-                    itemBuilder: (BuildContext context) {
-                      return [
-                        'Perfil',
-                        'Informacion',
-                        'Ajustes',
-                        'Cerrar Sesion'
-                      ].map((String choice) {
-                        return PopupMenuItem<String>(
-                          value: choice,
-                          child: Text(choice),
-                        );
-                      }).toList();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ],
-          bottom: const TabBar(
-            tabs: [
-              Tab(
-                child: Text(
-                  'Chat',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-              Tab(
-                  child: Text(
-                'Contactos',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              )),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: const Color.fromARGB(255, 11, 121, 158),
+        title: const Text(
+          '¡PickSpeak!',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 25,
           ),
         ),
-        body: TabBarView(
-          children: [
-            // Vista de Chat
-            Column(
+        actions: [
+          Container(
+            height: 50,
+            color: const Color.fromARGB(255, 11, 121, 158),
+            child: Row(
               children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: chatList.length,
-                    itemBuilder: (context, index) {
-                      final chat = chatList[index];
-                      return ChatListItem(chat);
-                    },
+                IconButton(
+                  icon: const Icon(
+                    Icons.search,
+                    size: 30,
                   ),
+                  onPressed: () {
+                    // Agregar aquí la lógica para la búsqueda.
+                  },
+                ),
+                PopupMenuButton<String>(
+                  onSelected: (choice) {
+                    // Manejar las opciones del menú.
+                    if (choice == 'Perfil') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const EditProfileScreen(),
+                        ),
+                      );
+                      // Lógica para abrir la pantalla de chat.
+                    } else if (choice == 'Informacion') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ViewProfileScreen(),
+                        ),
+                      );
+                      // Lógica para abrir la pantalla de grupos.
+                    } else if (choice == 'Ajustes') {
+                      // Lógica par
+                      //a abrir la pantalla de amigos.
+                    } else if (choice == 'Cerrar Sesion') {
+                      // Lógica par
+                      //a abrir la pantalla de amigos.
+                    }
+                  },
+                  itemBuilder: (BuildContext context) {
+                    return ['Perfil', 'Informacion', 'Ajustes', 'Cerrar Sesion']
+                        .map((String choice) {
+                      return PopupMenuItem<String>(
+                        value: choice,
+                        child: Text(choice),
+                      );
+                    }).toList();
+                  },
                 ),
               ],
             ),
-            // Vista de Amigos
-            Column(
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          Container(
+            height: 50,
+            color: const Color.fromARGB(255, 11, 121, 158),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
+                Column(
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        // Lógica para abrir la pantalla de chats.
+                      },
+                      style: ButtonStyle(
+                        textStyle: MaterialStateProperty.all<TextStyle>(
+                          const TextStyle(
+                            fontSize: 16,
+                            color: Color.fromARGB(255, 248, 248, 248),
+                          ),
+                        ),
+                      ),
+                      child: const Text(
+                        "Chat",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 Expanded(
                   child: ListView.builder(
                     itemCount: contactList.length +
@@ -315,19 +360,53 @@ class _ChatListScreenState extends State<ChatListScreen> {
                   ),
                 ),
               ],
-            )
-          ],
-        ),
+            ),
+          ),
+          Expanded(
+            child: FutureBuilder<List<Map<String, dynamic>>>(
+              future: fetchChatData(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  final List<Map<String, dynamic>> chatData = snapshot.data!;
+                  print("IMPRIMIENDO CHATDATA***********: $chatData"); // Agrega esta línea para imprimir los datos
+                  return ListView.builder(
+                    itemCount: chatData.length,
+                    itemBuilder: (context, index) {
+                      final chatMap = chatData[index];
+                      final chat = ChatListModel(
+                        id: chatMap['chatId'],
+                        receivingUserId: chatMap['resuserid'],
+                        receivingUsername: chatMap['resusername'],
+                        receivingUserPhoto: chatMap['resuserphoto'],
+                        receivingUserNation: chatMap['resusernation'],
+                        message: chatMap['message'],
+                        timeMessage: chatMap['hora'] != null
+                            ? DateTime.parse(chatMap['hora'])
+                            : null,
+                      );
+                      return ChatListItem(chat, socket);
+                    },
+                  );
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-class IndividualChatScreen extends StatefulWidget {
-  final Chat chat;
+/* class IndividualChatScreen extends StatefulWidget {
+  final ChatListModel chat;
+  //final io.Socket connectionSocket;
 
-  const IndividualChatScreen(this.chat);
+  const IndividualChatScreen(this.chat, socket);
 
   @override
   IndividualChatScreenState createState() => IndividualChatScreenState();
-}
+} */

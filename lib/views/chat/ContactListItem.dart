@@ -4,6 +4,7 @@ import 'package:picspeak_front/models/chat.dart';
 // import 'package:picspeak_front/views/chat/ChatList.dart';
 import 'package:picspeak_front/views/chat/Contact.dart';
 import 'package:picspeak_front/views/chat/chat_list.dart';
+import 'package:picspeak_front/views/chat/individual_chat.dart';
 
 class ContactListItem extends StatelessWidget {
   final Contact contact;
@@ -58,10 +59,11 @@ class ContactListItem extends StatelessWidget {
         icon:
            const Icon(Icons.chat), // Icono del botón de chat (puedes personalizarlo)
         onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => IndividualChatScreen(
-                Chat(contact.nickname, "", "", contact.imageAsset)),
-          ));
+          // Navigator.of(context).push(
+          //   MaterialPageRoute(
+          //   builder: (context) => IndividualChatScreen(
+          //       Chat(contact.nickname, "", "", contact.imageAsset)),
+          // ));
         },
       ),
       onTap: () {

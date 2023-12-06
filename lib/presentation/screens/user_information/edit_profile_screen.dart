@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, use_build_context_synchronously
+
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -96,7 +98,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
     String username = _usernameController.text;
 
     String? email = user.email ;
-    print("Email despues de pasar a otra variable ${email}");
+    print("Email despues de pasar a otra variable $email");
     ApiResponse response = await updateUser(
       name,
       lastname,
@@ -151,7 +153,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
     ApiResponse response = await getUserDetail();
     User result = User(); // Inicializa un nuevo objeto User
 
-    if (response != null && response.data != null) {
+    if (response.data != null) {
       dynamic responseData = response.data;
 
       if (responseData is User) {
@@ -174,7 +176,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
         print("Error: La respuesta no es del tipo esperado.");
       }
     }
-    print("Este es el result: ${result}");
+    print("Este es el result: $result");
     return result;
   }
 

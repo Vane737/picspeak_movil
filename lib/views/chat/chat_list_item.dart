@@ -1,13 +1,16 @@
 // ignore_for_file: file_names, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
-import 'package:picspeak_front/models/chat.dart';
+import 'package:picspeak_front/models/chat_model.dart';
 import 'package:picspeak_front/views/chat/chat_list.dart';
+import 'package:picspeak_front/views/chat/individual_chat.dart';
+import 'package:socket_io_client/socket_io_client.dart' as io;
 
 class ChatListItem extends StatelessWidget {
-  final Chat chat;
+  final ChatListModel chat;
+  final io.Socket socket; // Agrega la instancia del socket como un parámetro
 
-  const ChatListItem(this.chat);
+  const ChatListItem(this.chat, this.socket); 
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +23,8 @@ class ChatListItem extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 30.0,
-            child: Image.asset(
-              chat.imageAsset, // Utiliza la ruta de la imagen del chat actual
-              width: 60.0,
-              height: 60.0,
-              fit: BoxFit.cover,
+            child: Image.network(
+              chat.receivingUserPhoto!, // Utiliza la ruta de la imagen del chat actual
             ),
           ),
           Positioned(
@@ -58,18 +58,18 @@ class ChatListItem extends StatelessWidget {
           ),
           const SizedBox(width: 10.0),
           Text(
-            chat.senderName,
+            chat.receivingUsername!,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
         ],
       ),
-      subtitle: Text(chat.lastMessage),
-      trailing: Text(chat.time),
+      subtitle: Text(chat.message!),
+      trailing: Text('${chat.timeMessage!.hour.toString()}:${chat.timeMessage!.minute.toString()}'),
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => IndividualChatScreen(chat),
+          builder: (context) => IndividualChatScreen(chat, socket),
         ));
       },
     );

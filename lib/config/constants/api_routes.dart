@@ -16,6 +16,7 @@ const configuration='$baseUrl/configuration/user'; //para settear con solicitude
 const configurationUser='$baseUrl/configuration'; //para settear con solicitudes post
 const suggestUser='$baseUrl/users/suggest';//para la sugerencia de usuarios
 const contact='$baseUrl/contact';//para los contactos
+const chatsByUserUrl = '$baseUrl/chat/';
 
 const Map<String, String> headers = {"Accept": "application/json"};
 
@@ -25,3 +26,5 @@ const unauthorized = 'Unauthorized';
 const somethingWentWrong = 'Something went wrong, try again';
 
 String token = "";
+int userId = 0;
+int chatId = 0;

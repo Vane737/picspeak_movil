@@ -74,3 +74,18 @@ Future<ApiResponse> addSuggest(int? userId, int? contactId) async {
   }
   return apiResponse;
 }
+// ignore_for_file: avoid_print
+
+Future<dynamic> getAllChatByUser() async {
+  print('USER ID $userId');
+  
+  final Uri uri = Uri.parse('$chatsByUserUrl$userId');
+  final response = await http.get(uri);
+  final jsonResponse = jsonDecode(response.body);
+
+  if (response.statusCode == 200) {
+    return jsonResponse['data'];
+  } else {
+    throw Exception('Error en la solicitud: ${response.reasonPhrase}');
+  }
+}

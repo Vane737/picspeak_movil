@@ -1,20 +1,29 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, use_key_in_widget_constructors, avoid_print
+
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:picspeak_front/config/constants/api_routes.dart';
+import 'package:picspeak_front/models/chat_model.dart';
+import 'package:picspeak_front/models/message_model.dart';
 import 'package:picspeak_front/views/chat/chat_bubble_reply.dart';
 import 'package:picspeak_front/views/chat/chat_bubble.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
-import 'package:picspeak_front/views/chat/chat_list.dart';
+import 'package:socket_io_client/socket_io_client.dart' as io;
+
+class IndividualChatScreen extends StatefulWidget {
+  final ChatListModel chat;
+  final io.Socket socket;
+
+  const IndividualChatScreen(this.chat, this.socket);
+
+  @override
+  IndividualChatScreenState createState() => IndividualChatScreenState();
+}
 
 class IndividualChatScreenState extends State<IndividualChatScreen> {
   final TextEditingController _messageController = TextEditingController();
-  List<Widget> chatBubbles = [];
-
-  void sendReply(String message) {
-    setState(() {
-      chatBubbles.add(ChatBubbleReply(message: message));
-    });
-  }
+  List<ChatBubble> chatBubbles = [];
 
   void showEmojiPicker(BuildContext context) {
     showModalBottomSheet(
@@ -23,6 +32,84 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
         return const EmojiPicker();
       },
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    joinChat();
+    setupSocketListeners();
+  }
+
+  // Método para unirse al chat
+  void joinChat() {
+    if (widget.socket.connected) {
+      var joinChatData = {
+        'chat': widget.chat.id.toString(),
+        'senderUserId': userId,
+        'receivingUserId': widget.chat.receivingUserId,
+        'fondo': 'tuFondo',
+      };
+
+      print('JOIN DATA $joinChatData');
+
+      // Emitir el evento 'chatJoined' con los datos del evento
+      widget.socket.emit('chatJoined', joinChatData);
+    }
+  }
+
+  void sendMessage(String message) {
+    if (widget.socket.connected) {
+      //language to translate
+      String? languageTranslate = userId == widget.chat.receivingUserId
+          ? widget.chat.senderMotherLanguage
+          : widget.chat.receiverMotherLanguage;
+      // Datos del mensaje que quieres enviar
+      var messageData = {
+        'receivingUserId': widget.chat.receivingUserId,
+        'message': {
+          'userId': userId,
+          'chatId': widget.chat.id,
+          'resources': [
+            {
+              'type': 'T',
+              'textOrigin': message,
+              'languageTarget': languageTranslate
+            }
+          ]
+        },
+      };
+
+      print('MESSAGE $messageData');
+
+      // Emitir el evento 'sendMessage' con los datos del mensaje
+      widget.socket.emit('sendMessage', messageData);
+    }
+  }
+
+  void setupSocketListeners() {
+    // Manejar los mensajes cargados al unirse al chat
+    widget.socket.on('messagesLoaded', (data) {
+      print('Received data from server (messagesLoaded): $data');
+
+      if (data is List) {
+        List<ChatMessage> chatMessages =
+            data.map((item) => ChatMessage.fromJson(item)).toList();
+
+        setState(() {
+          chatBubbles.addAll(chatMessages.map(
+            (message) => ChatBubble(
+              message: message.textOrigin ?? '',
+              isSender: userId == message.individualUserId,
+              time: '${message.createdAt!.hour}:${message.createdAt!.minute}',
+              textTranslate: message.textTranslate,
+            ),
+          ));
+        });
+      } else {
+        print('Invalid data format: $data');
+      }
+    });
   }
 
   @override
@@ -36,17 +123,13 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
               padding: const EdgeInsets.only(right: 2.0),
               child: CircleAvatar(
                 radius: 20.0,
-                child: Image.asset(
-                  widget.chat
-                      .imageAsset, // Accede a la ruta de la imagen de perfil
-                  width: 50.0,
-                  height: 50.0,
-                  fit: BoxFit.cover,
+                child: Image.network(
+                  widget.chat.receivingUserPhoto!, 
                 ),
               ),
             ),
             const SizedBox(width: 8.0),
-            Text(widget.chat.senderName),
+            Text(widget.chat.receivingUsername!),
           ],
         ),
         automaticallyImplyLeading: true,
@@ -76,7 +159,8 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
                         },
                       ),
                       IconButton(
-                        icon: const Icon(Icons.emoji_emotions), // Icono para emojis
+                        icon: const Icon(
+                            Icons.emoji_emotions), // Icono para emojis
                         onPressed: () {
                           showEmojiPicker(context);
                         },
@@ -93,20 +177,11 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
                         icon: const Icon(Icons.send),
                         onPressed: () {
                           String message = _messageController.text;
+                          print('printMessage $_messageController.text');
                           if (message.isNotEmpty) {
-                            sendReply(message);
-
-                            setState(() {
-                              chatBubbles.add(
-                                ChatBubble(
-                                  message: message,
-                                  isSender: true,
-                                  time: '10:00',
-                                ),
-                              );
-
-                              _messageController.clear();
-                            });
+                            sendMessage(message);
+                            setupSocketListeners();
+                            _messageController.clear();
                           }
                         },
                       ),

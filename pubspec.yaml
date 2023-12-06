@@ -41,6 +41,7 @@ dependencies:
   shared_preferences: ^2.2.2 
   emoji_picker_flutter: ^1.6.3
   flutter_image_compress: ^2.1.0
+  socket_io_client: ^2.0.3+1
 
 dev_dependencies:
   flutter_test:
