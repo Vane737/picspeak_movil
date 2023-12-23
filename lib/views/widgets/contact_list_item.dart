@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/models/contact_model.dart';
-// import 'package:picspeak_front/views/chat/Chat.dart';
-// import 'package:picspeak_front/views/chat/ChatList.dart';
+
 
 class ContactListItem extends StatelessWidget {
   final ContactModel contact;

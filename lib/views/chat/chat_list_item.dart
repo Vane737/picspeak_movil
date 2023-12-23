@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/models/chat_model.dart';
-import 'package:picspeak_front/views/chat/chat_list.dart';
 import 'package:picspeak_front/views/chat/individual_chat.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 

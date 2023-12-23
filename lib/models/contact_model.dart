@@ -4,5 +4,5 @@ class ContactModel {
   final String imageAsset;
   final int contactId;
 
-  Contact(this.id, this.nickname, this.imageAsset, this.contactId);
+  ContactModel(this.id, this.nickname, this.imageAsset, this.contactId);
 }
