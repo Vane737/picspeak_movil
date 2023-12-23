@@ -15,6 +15,8 @@ const interests='$baseUrl/interest';
 const configuration='$baseUrl/configuration/user'; //para settear con solicitudes post
 const configurationUser='$baseUrl/configuration'; //para settear con solicitudes post
 const chatsByUserUrl = '$baseUrl/chat/';
+const suggestUser='$baseUrl/users/suggest';//para la sugerencia de usuarios
+const contact='$baseUrl/contact';//para los contactos
 
 const Map<String, String> headers = {"Accept": "application/json"};
 
