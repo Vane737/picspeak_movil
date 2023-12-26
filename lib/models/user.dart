@@ -43,7 +43,8 @@ class User {
         nationality: json['user']['nationality'],
         email: json['user']['email'],
         password: json['user']['password'],
+        activationToken: json['user']['activationToken'],
         token: json['token'],
-        activationToken: json['user']['activationToken'],);        
+      );        
   }
 }
