@@ -7,6 +7,8 @@ import 'package:picspeak_front/services/auth_service.dart';
 import 'package:picspeak_front/views/auth/login_screen.dart';
 import 'package:picspeak_front/views/chat/chat_list.dart';
 
+import '../../main.dart';
+
 class Loading extends StatefulWidget {
   @override
   _LoadingState createState() => _LoadingState();
@@ -19,7 +21,7 @@ class _LoadingState extends State<Loading> {
     print('TOKEN LOADING $token');
     if (token == '') {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => LoginScreen()),
+          MaterialPageRoute(builder: (context) => HomeScreen()),
           (route) => false);
     } else {
       ApiResponse response = await getUserDetail();
@@ -29,7 +31,7 @@ class _LoadingState extends State<Loading> {
             (route) => false);
       } else if (response.error == unauthorized) {
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => LoginScreen()),
+            MaterialPageRoute(builder: (context) => HomeScreen()),
             (route) => false);
       } else {
         ScaffoldMessenger.of(context)
