@@ -143,6 +143,34 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
       widget.socket.emit('sendMessage', messageData);
     }
   }
+  void sendNotification(String message) {
+    if (widget.socket.connected) {
+      //language to translate
+      String? languageTranslate = userId == widget.chat.receivingUserId
+          ? widget.chat.senderMotherLanguage
+          : widget.chat.receiverMotherLanguage;
+      // Datos del mensaje que quieres enviar
+      var messageData = {
+        'receivingUserId': widget.chat.receivingUserId,
+        'message': {
+          'userId': userId,
+          'chatId': widget.chat.id,
+          'resources': [
+            {
+              'type': 'T',
+              'textOrigin': message,
+              'languageTarget': languageTranslate
+            }
+          ]
+        },
+      };
+
+      print('MESSAGE $messageData');
+
+      // Emitir el evento 'sendMessage' con los datos del mensaje
+      widget.socket.emit('sendMessage', messageData);
+    }
+  }
 
   void setupSocketListeners() {
     // Manejar los mensajes cargados al unirse al chat
@@ -235,6 +263,7 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
                           print('printMessage $_messageController.text');
                           if (message.isNotEmpty) {
                             sendMessage(message);
+                            // Aqui se debe emitir el evento para que se genere la notificacion
                             setupSocketListeners();
                             _messageController.clear();
                           }

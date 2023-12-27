@@ -18,3 +18,4 @@ Future<dynamic> getAllChatByUser() async {
     throw Exception('Error en la solicitud: ${response.reasonPhrase}');
   }
 }
+
