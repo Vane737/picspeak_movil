@@ -1,6 +1,7 @@
 // ignore_for_file: use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
+import 'package:picspeak_front/views/auth/loading_screen.dart';
 import 'views/auth/register_screen.dart';
 import 'views/auth/login_screen.dart';
 import 'config/theme/app_colors.dart';
@@ -19,9 +20,11 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
       ),
-      home: Scaffold(
-        body: HomeScreen(),
-      ),
+      /* home: Scaffold(
+        //body: HomeScreen(),
+        body: Loading(),
+      ), */
+      home: Loading(),
     );
   }
 }

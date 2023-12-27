@@ -16,14 +16,15 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  TextEditingController txtEmailController = TextEditingController();
-  TextEditingController txtPasswordController = TextEditingController();
+  final TextEditingController txtEmailController = TextEditingController();
+  final TextEditingController txtPasswordController = TextEditingController();
   bool loading = false;
   bool passwordVisibility = false;
 
   void _loginUser() async {
     ApiResponse response =
         await login(txtEmailController.text, txtPasswordController.text);
+    print('LOGIN SCREEN ${response.data}');
     if (response.error == null) {
       _saveAndRedirectToHome(response.data as User);
     } else {
@@ -36,20 +37,30 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _saveAndRedirectToHome(User user) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    await pref.setString('token', user.token ?? '');
-    await pref.setInt('userId', user.id ?? 0);
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (context) => ChatList(),
-        ),
-        (route) => false);
+    try {
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      await pref.setString('token', user.token ?? '');
+      await pref.setInt('userId', user.id ?? 0);
+      print('GET TOKEN ${pref.getString('token')}');
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => ChatList(),
+          ),
+          (route) => false);
+    } catch (e) {
+      print('Error al guardar el token: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text(
+                'Error al iniciar sesión. Por favor, inténtelo de nuevo.')),
+      );
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    passwordVisibility = false;   
+    passwordVisibility = false;
   }
 
   @override

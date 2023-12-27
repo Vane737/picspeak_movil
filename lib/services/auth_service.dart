@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:picspeak_front/config/constants/api_routes.dart';
 import 'package:picspeak_front/models/api_response.dart';
 import 'package:picspeak_front/models/user.dart';
-import 'package:picspeak_front/views/interfaces/Login.dart';
+//import 'package:picspeak_front/views/interfaces/Login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<ApiResponse> login(String email, String password) async {
@@ -15,20 +15,14 @@ Future<ApiResponse> login(String email, String password) async {
   try {
     final response = await http.post(Uri.parse(loginUrl),
         headers: headers, body: {'email': email, 'password': password});
-
-    print('Response${response.body} ${response.statusCode}');
-
+    print('LOGIN ${response.body}');
     switch (response.statusCode) {
       case 200:
         apiResponse.data = User.fromJson(jsonDecode(response.body));
-        User user = User.fromJson(jsonDecode(response.body));
-        print('USER $user');
-        userId = user.id ?? 0;
-        print("User ID: $userId");
-        final loginData = Login.fromJson(jsonDecode(response.body));
+        /* final loginData = Login.fromJson(jsonDecode(response.body));
         token = loginData.user.token;
         print("Token del login con variable lgobal $token");
-        await saveTokenToLocalStorage(loginData.user.token);
+        await saveTokenToLocalStorage(loginData.user.token); */
         break;
       case 422:
         final errors = jsonDecode(response.body)['errors'];
@@ -42,6 +36,7 @@ Future<ApiResponse> login(String email, String password) async {
         break;
     }
   } catch (e) {
+    print('ERROR $e');
     apiResponse.error = serverError;
   }
 
@@ -63,23 +58,19 @@ Future<ApiResponse> register(String name, String lastname, String username,
       'photo_url': photourl
     });
 
-    print(response.statusCode);
     switch (response.statusCode) {
-      case 201:
-        print("ingresa a 201 ${response.body}");
+      case 201:      
         apiResponse.data = User.fromJson(jsonDecode(response.body));
-        saveUserInfo(apiResponse.data as User);
+        /* saveUserInfo(apiResponse.data as User);
         User user = User.fromJson(jsonDecode(response.body));
         userId = user.id ?? 0;
-        print("User ID: $userId");
+        print("User ID: $userId"); */
         break;
       case 422:
-        print("ingresa a 422");
         final errors = jsonDecode(response.body)['errors'];
         apiResponse.error = errors[errors.keys.elementAt(0)][0];
         break;
       case 403:
-        print("ingresa a 403");
         apiResponse.error = jsonDecode(response.body)['message'];
         break;
       default:
@@ -158,17 +149,15 @@ Future<ApiResponse> updateUser(
 Future<ApiResponse> getUserDetail() async {
   ApiResponse apiResponse = ApiResponse();
   // print("Este es el token desde getuserDetail: ${tokenizer}");
-  print("Este es el token global token");
+  //print("Este es el token global token");
   try {
-    
+    String token = await getToken(); 
     if (token.isNotEmpty) {
-      print("Este es el token desde getuserDetail con func de nicol: $token");
-      
       final response = await http.get(Uri.parse(profileUrl), headers: {
         'Accept': 'application/json',
         'Authorization': 'Bearer $token'
       });
-
+      print('USER DETAIL ${response.body}');
       switch (response.statusCode) {
         case 200:
           apiResponse.data = User.fromJson(jsonDecode(response.body));
@@ -181,8 +170,7 @@ Future<ApiResponse> getUserDetail() async {
           break;
       }
     } else {
-      // Manejar el caso en el que no se pueda obtener el token
-      print("No se pudo obtener el token de SharedPreferences.");
+      //print("No se pudo obtener el token de SharedPreferences.");
       apiResponse.error = "No se pudo obtener el token de SharedPreferences.";
     }
   } catch (e) {
@@ -243,7 +231,7 @@ Future<ApiResponse> verifyEmail(String token) async {
   return apiResponse;
 }
 
-// Save user information in SharedPreferences
+/* // Save user information in SharedPreferences
 Future<void> saveUserInfo(User user) async {
   SharedPreferences pref = await SharedPreferences.getInstance();
   pref.setString('token', user.token ?? '');
@@ -259,7 +247,7 @@ Future<void> saveTokenToLocalStorage(String token) async {
 
 
 // Para obtener el token almacenado
-Future<String?> getTokenFromLocalStorage() async {
+Future<String?> getTokenFromLocalStorage() async { 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getString('token');
-}
+}*/

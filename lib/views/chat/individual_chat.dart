@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:picspeak_front/config/constants/api_routes.dart';
 import 'package:picspeak_front/models/chat_model.dart';
 import 'package:picspeak_front/models/message_model.dart';
-import 'package:picspeak_front/views/chat/chat_bubble_reply.dart';
 import 'package:picspeak_front/views/chat/chat_bubble.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
+import 'package:image_picker/image_picker.dart';
 
 class IndividualChatScreen extends StatefulWidget {
   final ChatListModel chat;
@@ -24,12 +24,69 @@ class IndividualChatScreen extends StatefulWidget {
 class IndividualChatScreenState extends State<IndividualChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   List<ChatBubble> chatBubbles = [];
+  final ImagePicker _imagePicker = ImagePicker();
+  XFile? _selectedImage;
 
   void showEmojiPicker(BuildContext context) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
         return const EmojiPicker();
+      },
+    );
+  }
+
+  Future<void> _getImageFromGallery() async {
+    final XFile? image =
+        await _imagePicker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      setState(() {
+        _selectedImage = image;
+      });
+
+      _showSendImageDialog();
+    } else {
+      print('Selección de imagen cancelada.');
+    }
+  }
+
+  void _showSendImageDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Enviar imagen'),
+          content: Column(
+            children: [
+              Image.file(
+                File(_selectedImage!.path),
+                height: 100,
+                width: 100,
+                fit: BoxFit.cover,
+              ),
+              const SizedBox(height: 16),
+              const Text('¿Deseas enviar esta imagen?'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Cerrar el diálogo
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Lógica para enviar la imagen
+                // Puedes agregar tu lógica aquí para enviar la imagen
+                print('Enviar imagen: ${_selectedImage!.path}');
+                Navigator.of(context).pop(); // Cerrar el diálogo
+              },
+              child: const Text('Enviar'),
+            ),
+          ],
+        );
       },
     );
   }
@@ -124,7 +181,7 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
               child: CircleAvatar(
                 radius: 20.0,
                 child: Image.network(
-                  widget.chat.receivingUserPhoto!, 
+                  widget.chat.receivingUserPhoto!,
                 ),
               ),
             ),
@@ -154,9 +211,7 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
                       IconButton(
                         icon: const Icon(
                             Icons.camera_alt), // Icono para abrir la cámara
-                        onPressed: () {
-                          // Lógica para abrir la cámara y enviar una imagen
-                        },
+                        onPressed: _getImageFromGallery,
                       ),
                       IconButton(
                         icon: const Icon(
