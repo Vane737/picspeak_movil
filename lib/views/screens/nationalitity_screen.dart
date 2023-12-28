@@ -45,7 +45,7 @@ class _NationalityState extends State<NationalityScreen> {
               nacionalidad.containsKey('id') &&
               nacionalidad.containsKey('name')) {
             result.add(DropdownObject(
-                id: nacionalidad['id'], name: nacionalidad['name']));
+                id: nacionalidad['id'], name: nacionalidad['name'], img:nacionalidad['url']));
           }
         }
 
@@ -87,7 +87,7 @@ class _NationalityState extends State<NationalityScreen> {
               language.containsKey('id') &&
               language.containsKey('name')) {
             result.add(
-                DropdownObject(id: language['id'], name: language['name']));
+                DropdownObject(id: language['id'],name: language['name'], img: language['icon_image']));
           }
         }
       }

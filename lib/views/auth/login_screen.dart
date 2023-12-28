@@ -1,6 +1,7 @@
 // ignore_for_file: use_key_in_widget_constructors, use_build_context_synchronously, avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:picspeak_front/config/constants/api_routes.dart';
 import 'package:picspeak_front/config/theme/app_colors.dart';
 import 'package:picspeak_front/models/api_response.dart';
 import 'package:picspeak_front/models/user.dart';
@@ -41,6 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
       SharedPreferences pref = await SharedPreferences.getInstance();
       await pref.setString('token', user.token ?? '');
       await pref.setInt('userId', user.id ?? 0);
+      userId=user.id??0;
       print('GET TOKEN ${pref.getString('token')}');
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(

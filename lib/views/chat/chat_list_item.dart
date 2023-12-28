@@ -23,7 +23,7 @@ class ChatListItem extends StatelessWidget {
           CircleAvatar(
             radius: 30.0,
             child: Image.network(
-              chat.receivingUserPhoto!, // Utiliza la ruta de la imagen del chat actual
+              chat.otherUserPhoto!, // Utiliza la ruta de la imagen del chat actual
             ),
           ),
           Positioned(
@@ -57,15 +57,15 @@ class ChatListItem extends StatelessWidget {
           ),
           const SizedBox(width: 10.0),
           Text(
-            chat.receivingUsername!,
+            chat.otherUserUsername!,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
         ],
       ),
-      subtitle: Text(chat.message!),
-      trailing: Text('${chat.timeMessage!.hour.toString()}:${chat.timeMessage!.minute.toString()}'),
+      subtitle: Text(chat.messageTextTranslate!),
+      trailing: Text('${chat.messageDatetime!.hour.toString()}:${chat.messageDatetime!.minute.toString()}'),
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => IndividualChatScreen(chat, socket),

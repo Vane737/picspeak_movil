@@ -58,8 +58,17 @@ Future<List<ContactModel>> getContacts() async {
       var list = response.data as List;
       print("ENTRA EN IF CONTACTOS");
       contacts = list
-          .map((item) => ContactModel(item['id'] ?? 0, item['nickname'] ?? "",
-              item['photo_url'] ?? "", item["contactId"] ?? 0))
+          .map((item) => ContactModel(
+              item['id'] ?? 0,
+              item['nickname'] ?? "",
+              item['photo_url'] ?? "",
+              item["contactId"] ?? 0,
+              ChatListModel(
+                  chatId: item['chat']['id'],
+                  originalUserId: pref.getInt('userId') ?? 0,
+                  otherUserId: item['contactId'],
+                  otherUserPhoto: item['photo_url'],
+                  otherUserUsername: item['nickname'])))
           .toList();
     } else {
       print("Error contacto: ${response.error}");
@@ -99,9 +108,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
     SharedPreferences pref = await SharedPreferences.getInstance();
     int? userId = pref.getInt('userId');
     print("user id $userId");
-    final urlChat = '{$chatsByUserUrl$userId}';
+    final urlChat = '{$chatsByUserUrl/users/$userId}';
     print(urlChat);
-    final response = await http.get(Uri.parse('$chatsByUserUrl$userId'));
+    final response = await http.get(Uri.parse('$chatsByUserUrl/users/$userId'));
     print(response.body);
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = json.decode(response.body);
@@ -114,14 +123,15 @@ class _ChatListScreenState extends State<ChatListScreen> {
   @override
   void initState() {
     super.initState();
-    // fetchChatData();
+    fetchChatData();
     loadFriendSuggestions();
     loadContacts();
     initSocket();
   }
 
   initSocket() {
-    socket = io.io('https://app-picspeak-66m7tu3mma-uc.a.run.app:3000', <String, dynamic>{
+    // socket = io.io('https://app-picspeak-66m7tu3mma-uc.a.run.app:3000', <String, dynamic>{
+    socket = io.io('http://192.168.242.118:3000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
       'query': {'userId': userId},
@@ -294,16 +304,34 @@ class _ChatListScreenState extends State<ChatListScreen> {
                           itemBuilder: (context, index) {
                             final chatMap = chatData[index];
                             final chat = ChatListModel(
-                              id: chatMap['chatid'],
-                              receivingUserId: chatMap['resuserid'],
-                              receivingUsername: chatMap['resusername'],
-                              receivingUserPhoto: chatMap['resuserphoto'],
-                              receivingUserNation: chatMap['resusernation'],
-                              message: chatMap['message'],
-                              timeMessage: chatMap['hora'] != null
-                                  ? DateTime.parse(chatMap['hora'])
-                                  : null,
-                            );
+                                chatId: chatMap['chat_id'],
+                                originalUserId: chatMap['original_user_id'],
+                                originalUserMaternLanguage:
+                                    chatMap['original_user_matern_language'],
+                                otherUserId: chatMap['other_user_id'],
+                                otherUserName: chatMap['other_user_name'],
+                                otherUserLastname:
+                                    chatMap['other_user_lastname'],
+                                otherUserUsername:
+                                    chatMap['other_user_username'],
+                                otherUserPhoto: chatMap['other_user_photo'],
+                                otherUserNacionality:
+                                    chatMap['other_user_nacionality'],
+                                // otherUserNacionalityUrl:
+                                //     chatMap['other_user_nacionality_url'],
+                                otherUserMaternLanguage:
+                                    chatMap['other_user_matern_language'],
+                                messageUserId: chatMap['message_user_id'],
+                                messageDatetime: chatMap['message_datetime'] !=
+                                        null
+                                    ? DateTime.tryParse(chatMap[
+                                            'message_datetime'] ??
+                                        '') // Use tryParse to handle null or invalid date
+                                    : null,
+                                messageTextOrigin:
+                                    chatMap['message_text_origin'],
+                                messageTextTranslate:
+                                    chatMap['message_text_translate']);
                             return ChatListItem(chat, socket);
                           },
                         ),
@@ -322,7 +350,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                     itemCount: contactList.length,
                     itemBuilder: (context, index) {
                       final contact = contactList[index];
-                      return ContactListItem(contact);
+                      return ContactListItem(contact, socket);
                     },
                   ),
                 ),

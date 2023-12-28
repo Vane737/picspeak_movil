@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/models/contact_model.dart';
-
+import 'package:picspeak_front/views/chat/individual_chat.dart';
+import 'package:socket_io_client/socket_io_client.dart' as io;
 
 class ContactListItem extends StatelessWidget {
   final ContactModel contact;
+  final io.Socket socket;
 
-  ContactListItem(this.contact);
+  ContactListItem(this.contact, this.socket);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +16,7 @@ class ContactListItem extends StatelessWidget {
         vertical: 10.0,
         horizontal: 20.0,
       ),
-       leading: Stack(
+      leading: Stack(
         children: [
           CircleAvatar(
             radius: 30.0,
@@ -52,14 +54,13 @@ class ContactListItem extends StatelessWidget {
         ],
       ),
       trailing: IconButton(
-        icon:
-           const Icon(Icons.chat), // Icono del botón de chat (puedes personalizarlo)
+        icon: const Icon(
+            Icons.chat), // Icono del botón de chat (puedes personalizarlo)
         onPressed: () {
-          // Navigator.of(context).push(
-          //   MaterialPageRoute(
-          //   builder: (context) => IndividualChatScreen(
-          //       Chat(contact.nickname, "", "", contact.imageAsset)),
-          // ));
+          print("presiona el boton para entrar al chat");
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) =>
+                  IndividualChatScreen(contact.chat, socket)));
         },
       ),
       onTap: () {
