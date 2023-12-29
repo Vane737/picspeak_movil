@@ -2,27 +2,26 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {
   final FlutterLocalNotificationsPlugin notificationPlugin = FlutterLocalNotificationsPlugin();
+  
 
   Future<void> initNotification() async {
 
-    // 初始化本地通知插件
-    AndroidInitializationSettings initializationSettingsAndroid = const AndroidInitializationSettings('avatar1');
-    // DarwinInitializationSettings initializationSettingsIOS =  DarwinInitializationSettings(
-    //   requestAlertPermission: true,
-    //   requestBadgePermission: true,
-    //   requestSoundPermission: true,
-    //   onDidReceiveLocalNotification: (int id, String? title, String? body, String? payload) {}
-    // );
+    AndroidInitializationSettings initializationSettingsAndroid = const AndroidInitializationSettings("@mipmap/ic_launcher");
+    // 
     InitializationSettings initializationSettings = InitializationSettings
       (android: initializationSettingsAndroid);
 
     await notificationPlugin.initialize(initializationSettings);
   }
 
-  // notificationsDetails() {
-  //   return NotificationDetails(
-  //     android: AndroidNotificationDetails('channelId', 'ChannelName'),
-      
-  //   )
-  // }
+  notificationsDetails() {
+    return const NotificationDetails(
+      android: AndroidNotificationDetails('channelId', 'ChannelName',
+      channelDescription: 'channel_description', importance: Importance.max, priority: Priority.max, playSound: true),
+    );
+  }
+
+  Future showNotification({ int id = 0, String? title, required String message}) async {
+    return notificationPlugin.show(id, title, message, await notificationsDetails() );
+  }
 }

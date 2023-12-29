@@ -4,8 +4,10 @@ import 'dart:convert';
 
 import 'package:picspeak_front/config/constants/api_routes.dart';
 import 'package:http/http.dart' as http;
+import 'package:picspeak_front/services/auth_service.dart';
 
 Future<dynamic> getAllChatByUser() async {
+  final userId = getUserId();
   print('USER ID $userId');
   
   final Uri uri = Uri.parse('$chatsByUserUrl$userId');

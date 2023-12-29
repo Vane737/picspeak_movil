@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/views/auth/loading_screen.dart';
+import 'package:picspeak_front/views/screens/my_screen.dart';
 import 'views/auth/register_screen.dart';
 import 'views/auth/login_screen.dart';
 import 'config/theme/app_colors.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
         //body: HomeScreen(),
         body: Loading(),
       ), */
-      home: Loading(),
+      home: MyScreen(),
     );
   }
 }

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:picspeak_front/config/constants/api_routes.dart';
 import 'package:picspeak_front/models/chat_model.dart';
 import 'package:picspeak_front/models/message_model.dart';
+import 'package:picspeak_front/services/notification_service.dart';
 import 'package:picspeak_front/views/chat/chat_bubble.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
@@ -141,7 +142,9 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
 
       // Emitir el evento 'sendMessage' con los datos del mensaje
       widget.socket.emit('sendMessage', messageData);
+      // Enviar notificacion
     }
+
   }
   void sendNotification(String message) {
     if (widget.socket.connected) {
@@ -173,27 +176,27 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
   }
 
   void setupSocketListeners() {
-    // Manejar los mensajes cargados al unirse al chat
-    widget.socket.on('messagesLoaded', (data) {
-      print('Received data from server (messagesLoaded): $data');
+  // Manejar los mensajes cargados al unirse al chat
+  widget.socket.on('messagesLoaded', (data) {
+  print('Received data from server (messagesLoaded): $data');
 
-      if (data is List) {
-        List<ChatMessage> chatMessages =
-            data.map((item) => ChatMessage.fromJson(item)).toList();
+  if (data is List) {
+  List<ChatMessage> chatMessages =
+  data.map((item) => ChatMessage.fromJson(item)).toList();
 
-        setState(() {
-          chatBubbles.addAll(chatMessages.map(
-            (message) => ChatBubble(
-              message: message.textOrigin ?? '',
-              isSender: userId == message.individualUserId,
-              time: '${message.createdAt!.hour}:${message.createdAt!.minute}',
-              textTranslate: message.textTranslate,
-            ),
-          ));
-        });
-      } else {
-        print('Invalid data format: $data');
-      }
+  setState(() {
+  chatBubbles.addAll(chatMessages.map(
+  (message) => ChatBubble(
+  message: message.textOrigin ?? '',
+  isSender: userId == message.individualUserId,
+  time: '${message.createdAt!.hour}:${message.createdAt!.minute}',
+  textTranslate: message.textTranslate,
+  ),
+  ));
+  });
+  } else {
+  print('Invalid data format: $data');
+  }
     });
   }
 
@@ -260,10 +263,10 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
                         icon: const Icon(Icons.send),
                         onPressed: () {
                           String message = _messageController.text;
-                          print('printMessage $_messageController.text');
+print('printMessage $_messageController.text');
                           if (message.isNotEmpty) {
                             sendMessage(message);
-                            // Aqui se debe emitir el evento para que se genere la notificacion
+                                                          // Aqui se debe emitir el evento para que se genere la notificacion
                             setupSocketListeners();
                             _messageController.clear();
                           }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:picspeak_front/config/constants/api_routes.dart';
 import 'package:http/http.dart' as http;
 import 'package:picspeak_front/models/chat_model.dart';
+import 'package:picspeak_front/services/auth_service.dart';
 import 'package:picspeak_front/views/chat/chat_list_item.dart';
 import 'dart:convert';
 import 'package:picspeak_front/presentation/screens/user_information/edit_profile_screen.dart';
@@ -32,6 +33,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
   bool isConnected = false;
 
   Future<List<Map<String, dynamic>>> fetchChatData() async {
+    final userId = await getUserId();
     final urlChat = '{$chatsByUserUrl$userId}';
     print(urlChat);
     final response = await http.get(Uri.parse('$chatsByUserUrl$userId'));
@@ -52,8 +54,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
   }
 
   initSocket() {
-    socket = io.io('https://app-picspeak-66m7tu3mma-uc.a.run.app:3000', <String, dynamic>{
-      'transports': ['websocket'],
+    // socket = io.io('https://app-picspeak-66m7tu3mma-uc.a.run.app:3000', <String, dynamic>{
+    socket = io.io('https://192.168.0.13:3000', <String, dynamic>{'transports': ['websocket'],
       'autoConnect': false,
       'query': {'userId': userId},
     });

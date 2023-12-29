@@ -64,8 +64,10 @@ class ChatListItem extends StatelessWidget {
           ),
         ],
       ),
-      subtitle: Text(chat.message!),
-      trailing: Text('${chat.timeMessage!.hour.toString()}:${chat.timeMessage!.minute.toString()}'),
+      // subtitle: Text(chat.message!),
+      subtitle: Text("Hola mundo" ),
+      // trailing: Text('${chat.timeMessage!.hour.toString()}:${chat.timeMessage!.minute.toString()}'),
+      trailing: Text('12:00'),
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => IndividualChatScreen(chat, socket),
