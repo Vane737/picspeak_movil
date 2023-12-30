@@ -1,6 +1,7 @@
 // ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:picspeak_front/config/constants/api_routes.dart';
 import 'package:picspeak_front/models/api_response.dart';
 import 'package:picspeak_front/models/user.dart';
 import 'package:picspeak_front/services/auth_service.dart';
@@ -72,13 +73,10 @@ class _PerfilState extends State<CreateProfileScreen> {
         widget.userEmail,
         widget.userPassword,
         image);
-   
+
     if (response.error == null) {
-    
       _saveAndRedirectToHome(response.data as User);
     } else {
-      
-    
       setState(() {
         loading = false;
       });
@@ -91,6 +89,7 @@ class _PerfilState extends State<CreateProfileScreen> {
     SharedPreferences pref = await SharedPreferences.getInstance();
     await pref.setString('token', user.token ?? '');
     await pref.setInt('userId', user.id ?? 0);
+    userId = user.id ?? 0;
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (context) => ValidateEmailScreen(),

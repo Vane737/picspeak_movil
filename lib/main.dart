@@ -21,11 +21,11 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
       ),
-      /* home: Scaffold(
-        //body: HomeScreen(),
-        body: Loading(),
-      ), */
-      home: MyScreen(),
+       home: Scaffold(
+        body: HomeScreen(),
+        // body: Loading(),
+      ), 
+      // home: Loading(),
     );
   }
 }

@@ -99,13 +99,19 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
     setupSocketListeners();
   }
 
+  @override
+  void dispose() {
+    widget.socket.off('messagesLoaded');
+    super.dispose();
+  }
+
   // Método para unirse al chat
   void joinChat() {
     if (widget.socket.connected) {
       var joinChatData = {
-        'chat': widget.chat.id.toString(),
+        'chat': widget.chat.chatId.toString(),
         'senderUserId': userId,
-        'receivingUserId': widget.chat.receivingUserId,
+        'receivingUserId': widget.chat.otherUserId,
         'fondo': 'tuFondo',
       };
 
@@ -119,15 +125,15 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
   void sendMessage(String message) {
     if (widget.socket.connected) {
       //language to translate
-      String? languageTranslate = userId == widget.chat.receivingUserId
-          ? widget.chat.senderMotherLanguage
-          : widget.chat.receiverMotherLanguage;
+      String? languageTranslate = userId == widget.chat.otherUserId
+          ? widget.chat.originalUserMaternLanguage
+          : widget.chat.otherUserMaternLanguage;
       // Datos del mensaje que quieres enviar
       var messageData = {
-        'receivingUserId': widget.chat.receivingUserId,
+        'receivingUserId': widget.chat.otherUserId,
         'message': {
           'userId': userId,
-          'chatId': widget.chat.id,
+          'chatId': widget.chat.chatId,
           'resources': [
             {
               'type': 'T',
@@ -149,15 +155,15 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
   void sendNotification(String message) {
     if (widget.socket.connected) {
       //language to translate
-      String? languageTranslate = userId == widget.chat.receivingUserId
-          ? widget.chat.senderMotherLanguage
-          : widget.chat.receiverMotherLanguage;
+      String? languageTranslate = userId == widget.chat.otherUserId
+          ? widget.chat.originalUserMaternLanguage
+          : widget.chat.otherUserMaternLanguage;
       // Datos del mensaje que quieres enviar
       var messageData = {
-        'receivingUserId': widget.chat.receivingUserId,
+        'receivingUserId': widget.chat.otherUserId,
         'message': {
           'userId': userId,
-          'chatId': widget.chat.id,
+          'chatId': widget.chat.chatId,
           'resources': [
             {
               'type': 'T',
@@ -180,23 +186,35 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
   widget.socket.on('messagesLoaded', (data) {
   print('Received data from server (messagesLoaded): $data');
 
-  if (data is List) {
-  List<ChatMessage> chatMessages =
-  data.map((item) => ChatMessage.fromJson(item)).toList();
-
-  setState(() {
-  chatBubbles.addAll(chatMessages.map(
-  (message) => ChatBubble(
-  message: message.textOrigin ?? '',
-  isSender: userId == message.individualUserId,
-  time: '${message.createdAt!.hour}:${message.createdAt!.minute}',
-  textTranslate: message.textTranslate,
-  ),
-  ));
-  });
-  } else {
-  print('Invalid data format: $data');
-  }
+      if (data is List) {
+        List<ChatMessage> chatMessages =
+            data.map((item) => ChatMessage.fromJson(item)).toList();
+        print("ENTRA EN EL IF ${chatMessages}");
+        // setState(() {
+        //   chatBubbles.addAll(chatMessages.map(
+        //     (message) => ChatBubble(
+        //       message: message.textOrigin ?? '',
+        //       isSender: userId == message.individualUserId,
+        //       time: '${message.createdAt!.hour}:${message.createdAt!.minute}',
+        //       textTranslate: message.textTranslate,
+        //     ),
+        //   ));
+        // });
+        if (mounted) {
+          setState(() {
+            chatBubbles.addAll(chatMessages.map(
+              (message) => ChatBubble(
+                message: message.textOrigin ?? '',
+                isSender: userId == message.individualUserId,
+                time: '${message.createdAt!.hour}:${message.createdAt!.minute}',
+                textTranslate: message.textTranslate,
+              ),
+            ));
+          });
+        }
+      } else {
+        print('Invalid data format: $data');
+      }
     });
   }
 
@@ -212,12 +230,12 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
               child: CircleAvatar(
                 radius: 20.0,
                 child: Image.network(
-                  widget.chat.receivingUserPhoto!,
+                  widget.chat.otherUserPhoto!,
                 ),
               ),
             ),
             const SizedBox(width: 8.0),
-            Text(widget.chat.receivingUsername!),
+            Text(widget.chat.otherUserUsername!),
           ],
         ),
         automaticallyImplyLeading: true,
