@@ -130,7 +130,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
   }
 
   initSocket() {
-    socket = io.io('https://app-picspeak-66m7tu3mma-uc.a.run.app:3000', <String, dynamic>{
+    socket = io.io('https://app-picspeak-66m7tu3mma-uc.a.run.app', <String, dynamic>{
     // socket = io.io('http://192.168.242.118:3000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
