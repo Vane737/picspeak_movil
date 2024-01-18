@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:picspeak_front/config/constants/api_routes.dart';
 import 'package:picspeak_front/models/chat_model.dart';
 import 'package:picspeak_front/models/message_model.dart';
+import 'package:picspeak_front/presentation/screens/user_information/view_profile_screen.dart';
 import 'package:picspeak_front/views/chat/chat_bubble.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:image_picker/image_picker.dart';
 
@@ -196,10 +198,19 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.only(right: 2.0),
-              child: CircleAvatar(
-                radius: 20.0,
-                child: Image.network(
-                  widget.chat.otherUserPhoto!,
+              child: GestureDetector(
+                onTap: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ViewProfileScreen(id: widget.chat.otherUserId)),
+                  );
+                },
+                child: CircleAvatar(
+                  radius: 20.0,
+                  child: Image.network(
+                    widget.chat.otherUserPhoto!,
+                  ),
                 ),
               ),
             ),

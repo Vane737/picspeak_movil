@@ -87,6 +87,7 @@ class FooterContent extends StatelessWidget {
             // width: 200,
             onPressed: () async {
               SharedPreferences pref = await SharedPreferences.getInstance();
+              
               final response =
                   await setLanguagesUser(pref.getInt('userId'), selectedTags);
               Navigator.push(

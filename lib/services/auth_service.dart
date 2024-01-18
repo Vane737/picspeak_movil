@@ -59,7 +59,8 @@ Future<ApiResponse> register(String name, String lastname, String username,
     });
 
     switch (response.statusCode) {
-      case 201:      
+      case 201:
+        print("register: ${jsonDecode(response.body)}");
         apiResponse.data = User.fromJson(jsonDecode(response.body));
         /* saveUserInfo(apiResponse.data as User);
         User user = User.fromJson(jsonDecode(response.body));
@@ -84,15 +85,8 @@ Future<ApiResponse> register(String name, String lastname, String username,
   return apiResponse;
 }
 
-
-Future<ApiResponse> updateUser(
-  String name,
-  String lastname,
-  String username,
-  String birthDate,
-  String? photourl,
-  String? email
-) async {
+Future<ApiResponse> updateUser(String name, String lastname, String username,
+    String birthDate, String? photourl, String? email) async {
   print(name);
   print(lastname);
   print(username);
@@ -103,11 +97,9 @@ Future<ApiResponse> updateUser(
   ApiResponse apiResponse = ApiResponse();
   try {
     final response = await http.put(
-      Uri.parse(updateProfileUrl), // Utiliza la URL adecuada para actualizar un usuario específico
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      },
+      Uri.parse(
+          updateProfileUrl), // Utiliza la URL adecuada para actualizar un usuario específico
+      headers: {'Accept': 'application/json', 'Authorization': 'Bearer $token'},
       body: {
         if (name.isNotEmpty) 'name': name,
         if (lastname.isNotEmpty) 'lastname': lastname,
@@ -146,16 +138,16 @@ Future<ApiResponse> updateUser(
   return apiResponse;
 }
 
-Future<ApiResponse> getUserDetail() async {
+Future<ApiResponse> getUser(int? id) async {
   ApiResponse apiResponse = ApiResponse();
   // print("Este es el token desde getuserDetail: ${tokenizer}");
   //print("Este es el token global token");
   try {
-    String token = await getToken(); 
+    String token = await getToken();
     if (token.isNotEmpty) {
-      final response = await http.get(Uri.parse(profileUrl), headers: {
+      final response = await http.get(Uri.parse('$userUrl/find/$id'), headers: {
         'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
+        // 'Authorization': 'Bearer $token'
       });
       print('USER DETAIL ${response.body}');
       switch (response.statusCode) {
@@ -180,8 +172,46 @@ Future<ApiResponse> getUserDetail() async {
   return apiResponse;
 }
 
+Future<ApiResponse> getUserDetail() async {
+  ApiResponse apiResponse = ApiResponse();
+  // print("Este es el token desde getuserDetail: ${tokenizer}");
+  print("Este es el token global token");
+  try {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token') ?? '';
+    print(token);
+    if (token.isNotEmpty) {
+      print("TOKEEEE getUserDetail(): $token");
+      final response = await http.get(Uri.parse(profileUrl), headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      });
+      print('USER DETAIL ${response.body}');
+      switch (response.statusCode) {
+        case 200:
+          apiResponse.data = User.fromJson(jsonDecode(response.body));
+          break;
+        case 401:
+          apiResponse.error = unauthorized;
+          break;
+        default:
+          apiResponse.error = somethingWentWrong;
+          break;
+      }
+    } else {
+      print("No se pudo obtener el token de SharedPreferences.");
+      apiResponse.error = "No se pudo obtener el token de SharedPreferences.";
+    }
+  } catch (e) {
+    apiResponse.error = serverError;
+  }
+
+  return apiResponse;
+}
+
 Future<String> getToken() async {
   SharedPreferences pref = await SharedPreferences.getInstance();
+  print("entra al GET TOKEN ***********************");
   return pref.getString('token') ?? '';
 }
 

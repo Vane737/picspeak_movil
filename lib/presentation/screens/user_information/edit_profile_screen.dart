@@ -122,7 +122,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> _initializeData() async {
 
     await _getProfileUser().then((profile) {
-      print("Este es el id: ${profile.id}");
+      print("Este es el id: ${profile.photourl}");
       setState(() {
         user.photourl = profile.photourl ?? '';
         _nameController.text = profile.name ?? '';
@@ -150,10 +150,12 @@ class EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future<User> _getProfileUser() async {
+    print("ingresa a getProfileUser");
     ApiResponse response = await getUserDetail();
     User result = User(); // Inicializa un nuevo objeto User
 
     if (response.data != null) {
+      print("EL RESPONSE ES DISTINTO DE NULL");
       dynamic responseData = response.data;
 
       if (responseData is User) {
