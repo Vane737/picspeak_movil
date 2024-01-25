@@ -101,6 +101,7 @@ class ChatListScreen extends StatefulWidget {
 
 class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProviderStateMixin {
   List<FriendSuggestionModel> friendSuggestions = [];
+
   //List<Chat> chatList = [];
   List<ContactModel> contactList = [];
 
@@ -136,8 +137,8 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
 
   initSocket() {
     socket =
-        io.io('https://app-picspeak-66m7tu3mma-uc.a.run.app', <String, dynamic>{
-      // socket = io.io('http://192.168.242.118:3000', <String, dynamic>{
+        // io.io('https://app-picspeak-66m7tu3mma-uc.a.run.app', <String, dynamic>{
+      socket = io.io('http://192.168.0.18:3000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
       'query': {'userId': userId},
@@ -221,7 +222,7 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
                     },
                   ),
                   PopupMenuButton<String>(
-                    onSelected: (choice) {
+                    onSelected: (choice) async {
                       // Manejar las opciones del menú.
                       if (choice == 'Perfil') {
                         Navigator.push(
@@ -232,13 +233,16 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
                         );
                         // Lógica para abrir la pantalla de chat.
                       } else if (choice == 'Informacion') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ViewProfileScreen(),
-                          ),
-                        );
-                        // Lógica para abrir la pantalla de grupos.
+                        // SharedPreferences pref =
+                        //     await SharedPreferences.getInstance();
+                        // int? userId = pref.getInt('userId');
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => ViewProfileScreen(id: userId),
+                        //   ),
+                        // );
+                        //DEBE MOSTRAR LA PANTALLA DE INFORMACIONES DEL PERFIL, COMO ESTADO, INTERESES, CONTENIDO INAPROPIADO
                       } else if (choice == 'Ajustes') {
                         // Lógica para abrir la pantalla de amigos.
                       } else if (choice == 'Cerrar Sesion') {
@@ -304,6 +308,7 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
                     } else {
                       final List<Map<String, dynamic>> chatData =
                           snapshot.data!;
+                      print("chat data***********************");
                       print(chatData);
                       if (chatData.isEmpty) {
                         // Mostrar un mensaje de bienvenida y un botón
