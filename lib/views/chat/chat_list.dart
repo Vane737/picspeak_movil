@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/config/constants/api_routes.dart';
 import 'package:http/http.dart' as http;
+import 'package:picspeak_front/config/theme/app_colors.dart';
+import 'package:picspeak_front/config/theme/app_fonts.dart';
 // import 'package:picspeak_front/config/theme/app_fonts.dart';
 import 'package:picspeak_front/models/api_response.dart';
 import 'package:picspeak_front/models/chat_model.dart';
@@ -11,6 +13,7 @@ import 'package:picspeak_front/models/contact_model.dart';
 import 'dart:convert';
 import 'package:picspeak_front/presentation/screens/user_information/edit_profile_screen.dart';
 import 'package:picspeak_front/presentation/screens/user_information/view_profile_screen.dart';
+import 'package:picspeak_front/views/widgets/custom_button.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:picspeak_front/views/widgets/contact_list_item.dart';
 import 'package:picspeak_front/views/widgets/friend_suggestion_item.dart';
@@ -96,19 +99,20 @@ class ChatListScreen extends StatefulWidget {
   State<ChatListScreen> createState() => _ChatListScreenState();
 }
 
-class _ChatListScreenState extends State<ChatListScreen> {
+class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProviderStateMixin {
   List<FriendSuggestionModel> friendSuggestions = [];
   //List<Chat> chatList = [];
   List<ContactModel> contactList = [];
 
   late io.Socket socket;
   bool isConnected = false;
+  late TabController _tabController;
 
   Future<List<Map<String, dynamic>>> fetchChatData() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     int? userId = pref.getInt('userId');
     print("user id $userId");
-    final urlChat = '{$chatsByUserUrl/users/$userId}';
+    final urlChat = '$chatsByUserUrl/users/$userId';
     print(urlChat);
     final response = await http.get(Uri.parse('$chatsByUserUrl/users/$userId'));
     print(response.body);
@@ -123,6 +127,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
     fetchChatData();
     loadFriendSuggestions();
     loadContacts();
@@ -130,8 +135,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
   }
 
   initSocket() {
-    socket = io.io('https://app-picspeak-66m7tu3mma-uc.a.run.app', <String, dynamic>{
-    // socket = io.io('http://192.168.242.118:3000', <String, dynamic>{
+    socket =
+        io.io('https://app-picspeak-66m7tu3mma-uc.a.run.app', <String, dynamic>{
+      // socket = io.io('http://192.168.242.118:3000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
       'query': {'userId': userId},
@@ -155,6 +161,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
   @override
   void dispose() {
+    _tabController.dispose();
     socket.dispose();
     super.dispose();
   }
@@ -233,11 +240,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
                         );
                         // Lógica para abrir la pantalla de grupos.
                       } else if (choice == 'Ajustes') {
-                        // Lógica par
-                        //a abrir la pantalla de amigos.
+                        // Lógica para abrir la pantalla de amigos.
                       } else if (choice == 'Cerrar Sesion') {
-                        // Lógica par
-                        //a abrir la pantalla de amigos.
+                        // Lógica para abrir la pantalla de amigos.
                       }
                     },
                     itemBuilder: (BuildContext context) {
@@ -258,9 +263,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
               ),
             ),
           ],
-          bottom: const TabBar(
-            tabs: [
-              Tab(
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+               Tab(
                 child: Text(
                   'Chat',
                   style: TextStyle(
@@ -283,6 +289,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
           ),
         ),
         body: TabBarView(
+          controller: _tabController,
           children: [
             // Vista de Chat
             Column(
@@ -297,45 +304,78 @@ class _ChatListScreenState extends State<ChatListScreen> {
                     } else {
                       final List<Map<String, dynamic>> chatData =
                           snapshot.data!;
-                      print(chatData); // Add this line to print the data
-                      return Expanded(
-                        child: ListView.builder(
-                          itemCount: chatData.length,
-                          itemBuilder: (context, index) {
-                            final chatMap = chatData[index];
-                            final chat = ChatListModel(
-                                chatId: chatMap['chat_id'],
-                                originalUserId: chatMap['original_user_id'],
-                                originalUserMaternLanguage:
-                                    chatMap['original_user_matern_language'],
-                                otherUserId: chatMap['other_user_id'],
-                                otherUserName: chatMap['other_user_name'],
-                                otherUserLastname:
-                                    chatMap['other_user_lastname'],
-                                otherUserUsername:
-                                    chatMap['other_user_username'],
-                                otherUserPhoto: chatMap['other_user_photo'],
-                                otherUserNacionality:
-                                    chatMap['other_user_nacionality'],
-                                // otherUserNacionalityUrl:
-                                //     chatMap['other_user_nacionality_url'],
-                                otherUserMaternLanguage:
-                                    chatMap['other_user_matern_language'],
-                                messageUserId: chatMap['message_user_id'],
-                                messageDatetime: chatMap['message_datetime'] !=
-                                        null
-                                    ? DateTime.tryParse(chatMap[
-                                            'message_datetime'] ??
-                                        '') // Use tryParse to handle null or invalid date
-                                    : null,
-                                messageTextOrigin:
-                                    chatMap['message_text_origin'],
-                                messageTextTranslate:
-                                    chatMap['message_text_translate']);
-                            return ChatListItem(chat, socket);
-                          },
-                        ),
-                      );
+                      print(chatData);
+                      if (chatData.isEmpty) {
+                        // Mostrar un mensaje de bienvenida y un botón
+                        return Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const SizedBox(height: 60),
+                              const Text(
+                                '¡Bienvenido! Conéctate con personas de todos los lugares del mundo.',
+                                style: AppFonts.heading3Style,
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 20.0),
+                              CustomButton(
+                                alignment: MainAxisAlignment.spaceBetween,
+                                icon: Icons.person_add_alt_rounded,
+                                text: 'Conectar con amigos',
+                                color: AppColors.bgPrimaryColor,
+                                width: 240,
+                                onPressed: () {
+                                  _tabController.animateTo(1);
+                                  // Agregar la lógica para la acción del botón
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        // Add this line to print the data
+                        return Expanded(
+                          child: ListView.builder(
+                            itemCount: chatData.length,
+                            itemBuilder: (context, index) {
+                              final chatMap = chatData[index];
+                              final chat = ChatListModel(
+                                  chatId: chatMap['chat_id'],
+                                  originalUserId: chatMap['original_user_id'],
+                                  originalUserMaternLanguage:
+                                      chatMap['original_user_matern_language'],
+                                  otherUserId: chatMap['other_user_id'],
+                                  otherUserName: chatMap['other_user_name'],
+                                  otherUserLastname:
+                                      chatMap['other_user_lastname'],
+                                  otherUserUsername:
+                                      chatMap['other_user_username'],
+                                  otherUserPhoto: chatMap['other_user_photo'],
+                                  otherUserNacionality:
+                                      chatMap['other_user_nacionality'],
+                                  // otherUserNacionalityUrl:
+                                  //     chatMap['other_user_nacionality_url'],
+                                  otherUserMaternLanguage:
+                                      chatMap['other_user_matern_language'],
+                                  messageUserId: chatMap['message_user_id'],
+                                  messageDatetime: chatMap[
+                                              'message_datetime'] !=
+                                          null
+                                      ? DateTime.tryParse(chatMap[
+                                              'message_datetime'] ??
+                                          '') // Use tryParse to handle null or invalid date
+                                      : null,
+                                  messageTextOrigin:
+                                      chatMap['message_text_origin'],
+                                  messageTextTranslate:
+                                      chatMap['message_text_translate']);
+                              return ChatListItem(chat, socket);
+                            },
+                          ),
+                        );
+                      }
                     }
                   },
                 ),

@@ -102,6 +102,8 @@ Future<ApiResponse> updateUser(
 
   ApiResponse apiResponse = ApiResponse();
   try {
+    String token = await getToken(); 
+    print('Este es el token $token');
     final response = await http.put(
       Uri.parse(updateProfileUrl), // Utiliza la URL adecuada para actualizar un usuario específico
       headers: {

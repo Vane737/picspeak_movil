@@ -18,6 +18,7 @@ class LanguageSelectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.primaryColor,
       body: Container(
         padding: const EdgeInsets.only(
           bottom: 16.0,
@@ -35,7 +36,22 @@ class LanguageSelectionScreen extends StatelessWidget {
                 headingText: 'Idiomas',
                 styles: AppFonts.heading1Style,
               ),
-              MainContent(),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(
+                    bottom: 16.0,
+                    top: 16.0,
+                    left: 16.0,
+                    right: 16.0,
+                  ),
+                  child: Column(
+                    children: [
+                      MainContent(),
+                    ],
+                  ),
+                ),
+              ),
+              // MainContent(),
             ],
           ),
         ),
@@ -75,7 +91,7 @@ class FooterContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 30),
+      padding: const EdgeInsets.only(bottom: 30, top: 30),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
