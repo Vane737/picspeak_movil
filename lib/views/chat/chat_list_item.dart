@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/models/chat_model.dart';
+import 'package:picspeak_front/presentation/screens/user_information/view_profile_screen.dart';
 import 'package:picspeak_front/views/chat/individual_chat.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
@@ -9,7 +10,7 @@ class ChatListItem extends StatelessWidget {
   final ChatListModel chat;
   final io.Socket socket; // Agrega la instancia del socket como un parámetro
 
-  const ChatListItem(this.chat, this.socket); 
+  const ChatListItem(this.chat, this.socket);
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +21,23 @@ class ChatListItem extends StatelessWidget {
       ),
       leading: Stack(
         children: [
-          CircleAvatar(
-            radius: 30.0,
-            child: Image.network(
-              chat.otherUserPhoto!, // Utiliza la ruta de la imagen del chat actual
+          Padding(
+            padding: const EdgeInsets.only(right: 2.0),
+            child: GestureDetector(
+              onTap: () async {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ViewProfileScreen(id: chat.otherUserId)),
+                );
+              },
+              child: CircleAvatar(
+                radius: 30.0,
+                child: Image.network(
+                  chat.otherUserPhoto!, // Utiliza la ruta de la imagen del chat actual
+                ),
+              ),
             ),
           ),
           Positioned(
@@ -35,7 +49,8 @@ class ChatListItem extends StatelessWidget {
                 color: const Color.fromARGB(255, 95, 228, 99),
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
               child: const Text(
                 "En línea",
                 style: TextStyle(
@@ -65,7 +80,8 @@ class ChatListItem extends StatelessWidget {
         ],
       ),
       subtitle: Text(chat.messageTextTranslate!),
-      trailing: Text('${chat.messageDatetime!.hour.toString()}:${chat.messageDatetime!.minute.toString()}'),
+      trailing: Text(
+          '${chat.messageDatetime!.hour.toString()}:${chat.messageDatetime!.minute.toString()}'),
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => IndividualChatScreen(chat, socket),
