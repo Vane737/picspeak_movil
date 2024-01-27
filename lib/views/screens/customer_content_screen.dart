@@ -18,10 +18,11 @@ class CustomerContentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.primaryColor,
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(8.0),
-          color: AppColors.primaryColor, // No establezcas una altura aquí
+          // color: AppColors.primaryColor, // No establezcas una altura aquí
           child: const Column(
             children: [
               CustomTitle(
@@ -96,7 +97,7 @@ class FooterContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 30),
+      padding: const EdgeInsets.only(bottom: 30, top: 30),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

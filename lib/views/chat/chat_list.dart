@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/config/constants/api_routes.dart';
 import 'package:http/http.dart' as http;
+import 'package:picspeak_front/config/theme/app_colors.dart';
+import 'package:picspeak_front/config/theme/app_fonts.dart';
 import 'package:picspeak_front/models/api_response.dart';
 import 'package:picspeak_front/models/chat_model.dart';
 import 'package:picspeak_front/models/friend_suggestion_model.dart';
@@ -10,6 +12,7 @@ import 'package:picspeak_front/models/contact_model.dart';
 import 'dart:convert';
 import 'package:picspeak_front/presentation/screens/user_information/edit_profile_screen.dart';
 import 'package:picspeak_front/presentation/screens/user_information/view_profile_screen.dart';
+import 'package:picspeak_front/views/widgets/custom_button.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:picspeak_front/views/widgets/contact_list_item.dart';
 import 'package:picspeak_front/views/widgets/friend_suggestion_item.dart';
@@ -93,19 +96,21 @@ class ChatListScreen extends StatefulWidget {
   State<ChatListScreen> createState() => _ChatListScreenState();
 }
 
-class _ChatListScreenState extends State<ChatListScreen> {
+class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProviderStateMixin {
   List<FriendSuggestionModel> friendSuggestions = [];
+
   //List<Chat> chatList = [];
   List<ContactModel> contactList = [];
 
   late io.Socket socket;
   bool isConnected = false;
+  late TabController _tabController;
 
   Future<List<Map<String, dynamic>>> fetchChatData() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     int? userId = pref.getInt('userId');
     print("user id $userId");
-    final urlChat = '{$chatsByUserUrl/users/$userId}';
+    final urlChat = '$chatsByUserUrl/users/$userId';
     print(urlChat);
     final response = await http.get(Uri.parse('$chatsByUserUrl/users/$userId'));
     print(response.body);
@@ -120,6 +125,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
     fetchChatData();
     loadFriendSuggestions();
     loadContacts();
@@ -129,7 +135,6 @@ class _ChatListScreenState extends State<ChatListScreen> {
   initSocket() {
     socket = io.io('https://picspeak-api-production.up.railway.app:3000', <String, dynamic>{
     //socket = io.io('http://10.0.2.2:3000', <String, dynamic>{
-    //socket = io.io('http://192.168.0.16:3000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
       'query': {'userId': userId},
@@ -153,6 +158,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
   @override
   void dispose() {
+    _tabController.dispose();
     socket.dispose();
     super.dispose();
   }
@@ -211,7 +217,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                     },
                   ),
                   PopupMenuButton<String>(
-                    onSelected: (choice) {
+                    onSelected: (choice) async {
                       // Manejar las opciones del menú.
                       if (choice == 'Perfil') {
                         Navigator.push(
@@ -222,19 +228,20 @@ class _ChatListScreenState extends State<ChatListScreen> {
                         );
                         // Lógica para abrir la pantalla de chat.
                       } else if (choice == 'Informacion') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ViewProfileScreen(),
-                          ),
-                        );
-                        // Lógica para abrir la pantalla de grupos.
+                        // SharedPreferences pref =
+                        //     await SharedPreferences.getInstance();
+                        // int? userId = pref.getInt('userId');
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => ViewProfileScreen(id: userId),
+                        //   ),
+                        // );
+                        //DEBE MOSTRAR LA PANTALLA DE INFORMACIONES DEL PERFIL, COMO ESTADO, INTERESES, CONTENIDO INAPROPIADO
                       } else if (choice == 'Ajustes') {
-                        // Lógica par
-                        //a abrir la pantalla de amigos.
+                        // Lógica para abrir la pantalla de amigos.
                       } else if (choice == 'Cerrar Sesion') {
-                        // Lógica par
-                        //a abrir la pantalla de amigos.
+                        // Lógica para abrir la pantalla de amigos.
                       }
                     },
                     itemBuilder: (BuildContext context) {
@@ -255,9 +262,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
               ),
             ),
           ],
-          bottom: const TabBar(
-            tabs: [
-              Tab(
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+               Tab(
                 child: Text(
                   'Chat',
                   style: TextStyle(
@@ -280,6 +288,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
           ),
         ),
         body: TabBarView(
+          controller: _tabController,
           children: [
             // Vista de Chat
             Column(

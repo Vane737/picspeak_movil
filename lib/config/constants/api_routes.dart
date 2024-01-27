@@ -1,7 +1,6 @@
 // ------- STRINGS ------------------
 const baseUrl = "https://picspeak-api-production.up.railway.app/api/v1";
 //const baseUrl = "http://10.0.2.2:3000/api/v1";
-//const baseUrl = "http://192.168.0.16:3000/api/v1";
 const loginUrl = '$baseUrl/auth/login';
 const registerUrl = '$baseUrl/auth/register';
 const logoutUrl = '${baseUrl}logout';
@@ -9,6 +8,7 @@ const profileUrl = '$baseUrl/auth/profile';
 const updateProfileUrl = '$baseUrl/auth/update-profile';
 const verifyEmailUrl = '$baseUrl/auth/verify_email';
 
+const userUrl='$baseUrl/users';
 const nationalities='$baseUrl/nacionality';
 const languages='$baseUrl/language';
 const inappropriates='$baseUrl/inappropriate-content';

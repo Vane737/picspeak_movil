@@ -11,6 +11,8 @@ Future<dynamic> getNacionalidades() async {
   final jsonResponse = jsonDecode(response.body);
   print('NACIONALIDADES $jsonResponse');
   if (response.statusCode == 200) {
+    print("entra a status 200 de nacionality");
+        print("response nacionalidades: $jsonResponse");
     return jsonResponse['data'];
   } else {
     throw Exception('Error en la solicitud: ${response.reasonPhrase}');
