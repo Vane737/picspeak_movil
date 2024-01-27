@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 
 import 'package:picspeak_front/config/constants/api_routes.dart';
@@ -7,6 +9,7 @@ Future<dynamic> getNacionalidades() async {
   final Uri uri = Uri.parse(nationalities);
   final response = await http.get(uri);
   final jsonResponse = jsonDecode(response.body);
+  print('NACIONALIDADES $jsonResponse');
   if (response.statusCode == 200) {
     print("entra a status 200 de nacionality");
         print("response nacionalidades: $jsonResponse");

@@ -12,6 +12,7 @@ class ChatMessage {
   final String? url;
   final String? pathDevice;
   final dynamic content;
+  final bool? isShow;
 
   ChatMessage({
     this.id,
@@ -27,6 +28,7 @@ class ChatMessage {
     this.url,
     this.pathDevice,
     this.content,
+    this.isShow
   });
 
   // Un método de fábrica para crear una instancia de ChatMessage desde un mapa
@@ -45,6 +47,7 @@ class ChatMessage {
       url: json['url'],
       pathDevice: json['path_device'],
       content: json['content'],
+      isShow: json['is_showing']
     );
   }
 }

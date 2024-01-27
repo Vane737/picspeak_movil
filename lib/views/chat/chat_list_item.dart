@@ -21,22 +21,18 @@ class ChatListItem extends StatelessWidget {
       ),
       leading: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 2.0),
-            child: GestureDetector(
-              onTap: () async {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          ViewProfileScreen(id: chat.otherUserId)),
-                );
-              },
-              child: CircleAvatar(
-                radius: 30.0,
-                child: Image.network(
-                  chat.otherUserPhoto!, // Utiliza la ruta de la imagen del chat actual
-                ),
+          CircleAvatar(
+            radius: 30.0, // Define el radio del círculo
+            backgroundColor: Colors
+                .blue, // Puedes cambiar el color de fondo según tus necesidades
+            child: ClipOval(
+              child: Image.network(
+                chat.otherUserPhoto!, // Utiliza la ruta de la imagen del chat actual
+                fit: BoxFit.cover,
+                width: 2 *
+                    30.0, // Asegura que la imagen tenga el doble del radio como ancho
+                height: 2 *
+                    30.0, // Asegura que la imagen tenga el doble del radio como altura
               ),
             ),
           ),
