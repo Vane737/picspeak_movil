@@ -9,7 +9,7 @@ class ChatListItem extends StatelessWidget {
   final ChatListModel chat;
   final io.Socket socket; // Agrega la instancia del socket como un parámetro
 
-  const ChatListItem(this.chat, this.socket); 
+  const ChatListItem(this.chat, this.socket);
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +21,18 @@ class ChatListItem extends StatelessWidget {
       leading: Stack(
         children: [
           CircleAvatar(
-            radius: 30.0,
-            child: Image.network(
-              chat.otherUserPhoto!, // Utiliza la ruta de la imagen del chat actual
+            radius: 30.0, // Define el radio del círculo
+            backgroundColor: Colors
+                .blue, // Puedes cambiar el color de fondo según tus necesidades
+            child: ClipOval(
+              child: Image.network(
+                chat.otherUserPhoto!, // Utiliza la ruta de la imagen del chat actual
+                fit: BoxFit.cover,
+                width: 2 *
+                    30.0, // Asegura que la imagen tenga el doble del radio como ancho
+                height: 2 *
+                    30.0, // Asegura que la imagen tenga el doble del radio como altura
+              ),
             ),
           ),
           Positioned(
@@ -35,7 +44,8 @@ class ChatListItem extends StatelessWidget {
                 color: const Color.fromARGB(255, 95, 228, 99),
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
               child: const Text(
                 "En línea",
                 style: TextStyle(
@@ -65,7 +75,8 @@ class ChatListItem extends StatelessWidget {
         ],
       ),
       subtitle: Text(chat.messageTextTranslate!),
-      trailing: Text('${chat.messageDatetime!.hour.toString()}:${chat.messageDatetime!.minute.toString()}'),
+      trailing: Text(
+          '${chat.messageDatetime!.hour.toString()}:${chat.messageDatetime!.minute.toString()}'),
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => IndividualChatScreen(chat, socket),

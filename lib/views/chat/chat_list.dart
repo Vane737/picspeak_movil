@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/config/constants/api_routes.dart';
 import 'package:http/http.dart' as http;
-// import 'package:picspeak_front/config/theme/app_fonts.dart';
 import 'package:picspeak_front/models/api_response.dart';
 import 'package:picspeak_front/models/chat_model.dart';
 import 'package:picspeak_front/models/friend_suggestion_model.dart';
@@ -39,7 +38,6 @@ Future<List<FriendSuggestionModel>> getSuggestFriends() async {
     }
   } catch (e) {
     print('$e');
-    // Handle error if needed
   }
 
   return friendSuggestions;
@@ -75,7 +73,6 @@ Future<List<ContactModel>> getContacts() async {
     }
   } catch (e) {
     print('$e');
-    // Handle error if needed
   }
 
   return contacts;
@@ -130,8 +127,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
   }
 
   initSocket() {
-    // socket = io.io('https://app-picspeak-66m7tu3mma-uc.a.run.app:3000', <String, dynamic>{
-    socket = io.io('http://192.168.242.118:3000', <String, dynamic>{
+    socket = io.io('https://picspeak-api-production.up.railway.app:3000', <String, dynamic>{
+    //socket = io.io('http://10.0.2.2:3000', <String, dynamic>{
+    //socket = io.io('http://192.168.0.16:3000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
       'query': {'userId': userId},
@@ -196,10 +194,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
               fontWeight: FontWeight.bold,
               fontSize: 25,
             ),
-          ), // Título principal
+          ),
           actions: [
             Container(
-              // Este es el "segundo AppBar" que emulamos en el ejemplo anterior.
               height: 50,
               color: const Color.fromARGB(255, 11, 121, 158),
               child: Row(
@@ -272,7 +269,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
               ),
               Tab(
                   child: Text(
-                'Contactos',
+                'Amigos',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -329,9 +326,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
                                         '') // Use tryParse to handle null or invalid date
                                     : null,
                                 messageTextOrigin:
-                                    chatMap['message_text_origin'],
+                                    chatMap['message_text_origin'] ?? 'send Image',
                                 messageTextTranslate:
-                                    chatMap['message_text_translate']);
+                                    chatMap['message_text_translate'] ?? 'send Image'
+                            );
                             return ChatListItem(chat, socket);
                           },
                         ),
@@ -399,13 +397,3 @@ class _ChatListScreenState extends State<ChatListScreen> {
     );
   }
 }
-
-/* class IndividualChatScreen extends StatefulWidget {
-  final ChatListModel chat;
-  //final io.Socket connectionSocket;
-
-  const IndividualChatScreen(this.chat, socket);
-
-  @override
-  IndividualChatScreenState createState() => IndividualChatScreenState();
-} */
