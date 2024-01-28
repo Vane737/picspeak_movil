@@ -11,7 +11,6 @@ import 'package:picspeak_front/services/auth_service.dart';
 import 'package:picspeak_front/presentation/screens/user_information/view_profile_screen.dart';
 import 'package:picspeak_front/views/chat/chat_bubble.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:image_picker/image_picker.dart';
 
