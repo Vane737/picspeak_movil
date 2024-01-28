@@ -3,16 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/config/constants/api_routes.dart';
 import 'package:http/http.dart' as http;
-import 'package:picspeak_front/config/theme/app_colors.dart';
-import 'package:picspeak_front/config/theme/app_fonts.dart';
 import 'package:picspeak_front/models/api_response.dart';
 import 'package:picspeak_front/models/chat_model.dart';
 import 'package:picspeak_front/models/friend_suggestion_model.dart';
 import 'package:picspeak_front/models/contact_model.dart';
 import 'dart:convert';
 import 'package:picspeak_front/presentation/screens/user_information/edit_profile_screen.dart';
-import 'package:picspeak_front/presentation/screens/user_information/view_profile_screen.dart';
-import 'package:picspeak_front/views/widgets/custom_button.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:picspeak_front/views/widgets/contact_list_item.dart';
 import 'package:picspeak_front/views/widgets/friend_suggestion_item.dart';
@@ -133,8 +129,9 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
   }
 
   initSocket() {
-    socket = io.io('https://picspeak-api-production.up.railway.app:3000', <String, dynamic>{
+    //socket = io.io('https://picspeak-api-production.up.railway.app:3000', <String, dynamic>{
     //socket = io.io('http://10.0.2.2:3000', <String, dynamic>{
+    socket = io.io('http://192.168.0.16:3000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
       'query': {'userId': userId},
@@ -335,9 +332,9 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
                                         '') // Use tryParse to handle null or invalid date
                                     : null,
                                 messageTextOrigin:
-                                    chatMap['message_text_origin'] ?? 'send Image',
+                                    chatMap['message_text_origin'] ?? '📷 Foto',
                                 messageTextTranslate:
-                                    chatMap['message_text_translate'] ?? 'send Image'
+                                    chatMap['message_text_translate'] ?? '📷 Foto'
                             );
                             return ChatListItem(chat, socket);
                           },

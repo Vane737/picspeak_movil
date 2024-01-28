@@ -75,8 +75,6 @@ class _PerfilState extends State<CreateProfileScreen> {
         image);
 
     if (response.error == null) {
-      print("extrae bien el register");
-      print("response REGISTER: ${response.data}");
       _saveAndRedirectToHome(response.data as User);
     } else {
       setState(() {
@@ -89,9 +87,7 @@ class _PerfilState extends State<CreateProfileScreen> {
 
   void _saveAndRedirectToHome(User user) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    print("entra a guardar el token y el userID");
     await pref.setString('token', user.token ?? '');
-    print("ESTE ES EL TOKEN GUARDADO ${pref.get("token")}");
     await pref.setInt('userId', user.id ?? 0);
     userId = user.id ?? 0;
     Navigator.of(context).pushAndRemoveUntil(

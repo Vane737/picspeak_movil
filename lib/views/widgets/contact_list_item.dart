@@ -1,3 +1,5 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/models/contact_model.dart';
 import 'package:picspeak_front/presentation/screens/user_information/view_profile_screen.dart';
@@ -8,7 +10,7 @@ class ContactListItem extends StatelessWidget {
   final ContactModel contact;
   final io.Socket socket;
 
-  ContactListItem(this.contact, this.socket);
+  const ContactListItem(this.contact, this.socket);
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +69,7 @@ class ContactListItem extends StatelessWidget {
           ),
         ],
       ),
-      trailing: IconButton(
+      /* trailing: IconButton(
         icon: const Icon(
             Icons.chat), // Icono del botón de chat (puedes personalizarlo)
         onPressed: () {
@@ -76,12 +78,10 @@ class ContactListItem extends StatelessWidget {
               builder: (context) =>
                   IndividualChatScreen(contact.chat, socket)));
         },
-      ),
+      ), */
       onTap: () {
-        // Puedes mantener esta lógica si también quieres que algo suceda cuando se toca el ListTile
-        // Navigator.of(context).push(MaterialPageRoute(
-        //   builder: (context) => IndividualChatScreen(chat),
-        // ));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => IndividualChatScreen(contact.chat, socket)));
       },
     );
   }

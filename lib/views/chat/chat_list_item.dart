@@ -1,8 +1,8 @@
 // ignore_for_file: file_names, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
+import 'package:picspeak_front/config/constants/api_routes.dart';
 import 'package:picspeak_front/models/chat_model.dart';
-import 'package:picspeak_front/presentation/screens/user_information/view_profile_screen.dart';
 import 'package:picspeak_front/views/chat/individual_chat.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
@@ -36,7 +36,7 @@ class ChatListItem extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(
+          /* Positioned(
             top: 38,
             bottom: 0,
             right: 5,
@@ -55,14 +55,14 @@ class ChatListItem extends StatelessWidget {
                 ),
               ),
             ),
-          ),
+          ), */
         ],
       ),
       title: Row(
         children: [
-          const Text(
-            "🇺🇸",
-            style: TextStyle(
+          Text(
+            getFlagEmoji(chat.otherUserMaternLanguage!),
+            style: const TextStyle(
               fontSize: 22.0,
             ),
           ),
@@ -77,7 +77,9 @@ class ChatListItem extends StatelessWidget {
       ),
       subtitle: Text(chat.messageTextTranslate!),
       trailing: Text(
-          '${chat.messageDatetime!.hour.toString()}:${chat.messageDatetime!.minute.toString()}'),
+          formatDateTime(chat.messageDatetime.toString()),
+          //'${chat.messageDatetime!.hour.toString()}:${chat.messageDatetime!.minute.toString()}'
+      ),
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => IndividualChatScreen(chat, socket),
@@ -86,3 +88,49 @@ class ChatListItem extends StatelessWidget {
     );
   }
 }
+
+// Función para obtener el emoji de bandera según el idioma
+String getFlagEmoji(String language) {
+  switch (language.toLowerCase()) {
+    case 'español':
+      return '🇪🇸'; // Emoji de la bandera española
+    case 'inglés':
+      return '🇬🇧'; // Emoji de la bandera inglesa
+    case 'alemán':
+      return '🇩🇪'; // Emoji de la bandera alemana
+    case 'italiano':
+      return '🇮🇹'; // Emoji de la bandera italiana
+    case 'portugués':
+      return '🇵🇹'; // Emoji de la bandera portuguesa
+    case 'holandés':
+      return '🇳🇱'; // Emoji de la bandera neerlandesa
+    case 'ruso':
+      return '🇷🇺'; // Emoji de la bandera rusa
+    case 'chino':
+      return '🇨🇳'; // Emoji de la bandera china
+    case 'japonés':
+      return '🇯🇵'; // Emoji de la bandera japonesa
+    case 'coreano':
+      return '🇰🇷'; // Emoji de la bandera coreana
+    case 'árabe':
+      return '🇸🇦'; // Emoji de la bandera árabe
+    case 'hindi':
+      return '🇮🇳'; // Emoji de la bandera hindi
+    case 'bengalí':
+      return '🇧🇩'; // Emoji de la bandera bengalí
+    case 'turco':
+      return '🇹🇷'; // Emoji de la bandera turca
+    case 'hebreo':
+      return '🇮🇱'; // Emoji de la bandera hebrea
+    case 'sueco':
+      return '🇸🇪'; // Emoji de la bandera sueca
+    case 'noruego':
+      return '🇳🇴'; // Emoji de la bandera noruega
+    case 'danés':
+      return '🇩🇰'; // Emoji de la bandera danesa
+    // Puedes agregar más casos según tus necesidades
+    default:
+      return ''; // Valor predeterminado si no se encuentra el idioma
+  }
+}
+

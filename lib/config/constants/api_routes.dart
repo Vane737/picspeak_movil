@@ -1,6 +1,9 @@
 // ------- STRINGS ------------------
-const baseUrl = "https://picspeak-api-production.up.railway.app/api/v1";
+//const baseUrl = "https://picspeak-api-production.up.railway.app/api/v1";
 //const baseUrl = "http://10.0.2.2:3000/api/v1";
+import 'package:intl/intl.dart';
+
+const baseUrl = "http://192.168.0.16:3000/api/v1";
 const loginUrl = '$baseUrl/auth/login';
 const registerUrl = '$baseUrl/auth/register';
 const logoutUrl = '${baseUrl}logout';
@@ -29,3 +32,11 @@ const somethingWentWrong = 'Something went wrong, try again';
 String token = "";
 int userId = 0;
 int chatId = 0;
+
+String formatDateTime(String dateTimeString) {
+  DateTime dateTime = DateTime.parse(dateTimeString);
+  
+  String formattedDateTime = DateFormat('yyyy-MM-dd HH:mm').format(dateTime);
+  
+  return formattedDateTime;
+}
