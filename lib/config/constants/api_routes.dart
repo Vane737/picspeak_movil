@@ -11,6 +11,7 @@ const profileUrl = '$baseUrl/auth/profile';
 const updateProfileUrl = '$baseUrl/auth/update-profile';
 const verifyEmailUrl = '$baseUrl/auth/verify_email';
 
+const userUrl='$baseUrl/users';
 const nationalities='$baseUrl/nacionality';
 const languages='$baseUrl/language';
 const inappropriates='$baseUrl/inappropriate-content';

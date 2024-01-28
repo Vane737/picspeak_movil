@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/models/contact_model.dart';
+import 'package:picspeak_front/presentation/screens/user_information/view_profile_screen.dart';
 import 'package:picspeak_front/views/chat/individual_chat.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
@@ -20,17 +21,30 @@ class ContactListItem extends StatelessWidget {
       ),
       leading: Stack(
         children: [
-          CircleAvatar(
-            radius: 30.0,
-            child: Container(
-              width: 60.0,
-              height: 60.0,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(
-                    contact.imageAsset,
+          Padding(
+            padding: const EdgeInsets.only(right: 2.0),
+            child: GestureDetector(
+              onTap: () async {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ViewProfileScreen(id: contact.contactId)),
+                );
+              },
+              child: CircleAvatar(
+                radius: 30.0,
+                child: Container(
+                  width: 60.0,
+                  height: 60.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: NetworkImage(
+                        contact.imageAsset,
+                      ),
+                    ),
                   ),
                 ),
               ),

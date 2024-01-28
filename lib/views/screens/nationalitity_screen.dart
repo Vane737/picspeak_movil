@@ -36,20 +36,23 @@ class _NationalityState extends State<NationalityScreen> {
 
   Future<List<DropdownObject>> _getNacionalidades() async {
     try {
+      print("ingresa a _getNacionalidades");
       final response = await getNacionalidades();
       final List<DropdownObject> result = [];
 
       if (response != null && response is List) {
+        print("response != null");
         for (final nacionalidad in response) {
           if (nacionalidad is Map &&
               nacionalidad.containsKey('id') &&
               nacionalidad.containsKey('name')) {
             result.add(DropdownObject(
-                id: nacionalidad['id'], name: nacionalidad['name'], img:nacionalidad['url']));
+                id: nacionalidad['id'], name: nacionalidad['name']));
           }
         }
 
         if (result.isNotEmpty) {
+          print("el result no está vacío");
           selectedNationality.value = result.first.id;
           languageList.addAll(await _getLanguages());
           print(
@@ -87,7 +90,7 @@ class _NationalityState extends State<NationalityScreen> {
               language.containsKey('id') &&
               language.containsKey('name')) {
             result.add(
-                DropdownObject(id: language['id'],name: language['name'], img: language['icon_image']));
+                DropdownObject(id: language['id'],name: language['name']));
           }
         }
       }
