@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:picspeak_front/config/constants/api_routes.dart';
 import 'package:picspeak_front/models/chat_model.dart';
 import 'package:picspeak_front/models/message_model.dart';
+import 'package:picspeak_front/models/new_message_model.dart';
 import 'package:picspeak_front/services/auth_service.dart';
 import 'package:picspeak_front/views/chat/chat_bubble.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
@@ -182,7 +183,7 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
   void setupSocketListeners() {
     // Manejar los mensajes cargados al unirse al chat
     widget.socket.on('messagesLoaded', (data) async {
-      print('Received data from server (messagesLoaded): $data');
+      //print('Received data from server (messagesLoaded): $data');
 
       if (data is List) {
         List<ChatMessage> chatMessages =
@@ -194,7 +195,8 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
             return ChatBubble(
               message: message.textOrigin ?? '',
               isSender: userId == message.individualUserId,
-              time: '${message.createdAt!.hour}:${message.createdAt!.minute}',
+              time: formatDateTime(message.createdAt.toString()),            
+              //time: '${message.createdAt!.hour}:${message.createdAt!.minute}',
               textTranslate: message.textTranslate,
               imageMessage: message.url,
               isShow: message.isShow
@@ -207,6 +209,32 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
         }
       } else {
         print('Invalid data format: $data');
+      }
+    });
+
+    // Manejar el evento newMessage
+    widget.socket.on('newMessage', (data) async {
+      print('Received new message : $data');
+
+      if (data is Map) {
+        NewMessage newMessage = NewMessage.fromJson(data);
+        print('New Message ${newMessage.imageUrl}');
+
+        if (mounted) {
+          setState(() {
+            // Agregar un nuevo ChatBubble para el nuevo mensaje
+            chatBubbles.add(ChatBubble(
+              message: newMessage.textOrigin ?? '',
+              isSender: userId == newMessage.senderId,
+              time: formatDateTime(DateTime.now().toString()),
+              textTranslate: newMessage.textTranslate,
+              imageMessage: newMessage.imageUrl,
+              isShow: newMessage.isShow,
+            ));
+          });
+        }
+      } else {
+        print('Invalid data format for newMessage: $data');
       }
     });
   }

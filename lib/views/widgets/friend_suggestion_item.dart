@@ -1,3 +1,5 @@
+// ignore_for_file: use_key_in_widget_constructors, avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/models/api_response.dart';
 import 'package:picspeak_front/models/friend_suggestion_model.dart';
@@ -8,7 +10,7 @@ class FriendSuggestionItem extends StatelessWidget {
   final FriendSuggestionModel suggestion;
   final VoidCallback onPressed;
 
-  FriendSuggestionItem({required this.suggestion, required this.onPressed});
+  const FriendSuggestionItem({required this.suggestion, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

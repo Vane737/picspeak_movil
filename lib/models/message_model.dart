@@ -32,7 +32,7 @@ class ChatMessage {
   });
 
   // Un método de fábrica para crear una instancia de ChatMessage desde un mapa
-  factory ChatMessage.fromJson(Map<String, dynamic> json) {
+  factory ChatMessage.fromJson(Map<dynamic, dynamic> json) {
     return ChatMessage(
       id: json['id'],
       status: json['status'],
