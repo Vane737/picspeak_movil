@@ -213,9 +213,9 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
     }
   }
 
-  void setupSocketListeners() {
+  void setupSocketListeners()  {
   // Manejar los mensajes cargados al unirse al chat
-  widget.socket.on('messagesLoaded', (data) {
+  widget.socket.on('messagesLoaded', (data)  async {
   print('Received data from server (messagesLoaded): $data');
 
       if (data is List) {

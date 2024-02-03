@@ -29,7 +29,7 @@ class _MyScreenState extends State<MyScreen> {
           onPressed: () {
             // Acciones al presionar el botón
             print('Botón presionado');
-            notificationService.showNotification(id: 0, title: 'Esta es una notificacion generada', message: 'Hola mundo');
+            notificationService.showNotification( title: 'Esta es una notificacion generada', message: 'Hola mundo');
           },
           child: Text('Presionar'),
         ),
