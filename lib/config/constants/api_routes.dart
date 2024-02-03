@@ -1,9 +1,9 @@
-// ------- STRINGS ------------------
-//const baseUrl = "https://picspeak-api-production.up.railway.app/api/v1";
-//const baseUrl = "http://10.0.2.2:3000/api/v1";
 import 'package:intl/intl.dart';
 
-const baseUrl = "http://192.168.0.16:3000/api/v1";
+// ------- STRINGS ------------------
+const baseUrl = "https://picspeak-api-production.up.railway.app/api/v1";
+//const baseUrl = "http://10.0.2.2:3000/api/v1";
+//const baseUrl = "http://192.168.0.16:3000/api/v1";
 const loginUrl = '$baseUrl/auth/login';
 const registerUrl = '$baseUrl/auth/register';
 const logoutUrl = '${baseUrl}logout';

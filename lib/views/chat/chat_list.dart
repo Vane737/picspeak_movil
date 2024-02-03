@@ -137,9 +137,9 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
   }
 
   initSocket() {
-    //socket = io.io('https://picspeak-api-production.up.railway.app:3000', <String, dynamic>{
+    socket = io.io('https://picspeak-api-production.up.railway.app', <String, dynamic>{
     //socket = io.io('http://10.0.2.2:3000', <String, dynamic>{
-    socket = io.io('http://192.168.0.16:3000', <String, dynamic>{
+    //socket = io.io('http://192.168.0.16:3000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
       'query': {'userId': userId},

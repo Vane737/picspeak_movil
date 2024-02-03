@@ -159,8 +159,8 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
       widget.socket.emit('sendMessage', messageData);
       // Enviar notificacion
     }
-
   }
+
   void sendNotification(String message) {
     if (widget.socket.connected) {
       Map<String, Object> messageData;
@@ -213,10 +213,10 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
     }
   }
 
-  void setupSocketListeners()  {
-  // Manejar los mensajes cargados al unirse al chat
-  widget.socket.on('messagesLoaded', (data)  async {
-  print('Received data from server (messagesLoaded): $data');
+  void setupSocketListeners() {
+    // Manejar los mensajes cargados al unirse al chat
+    widget.socket.on('messagesLoaded', (data) async {
+      print('Received data from server (messagesLoaded): $data');
 
       if (data is List) {
         List<ChatMessage> chatMessages =
@@ -226,14 +226,13 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
           List<ChatBubble> newChatBubbles =
               await Future.wait(chatMessages.map((message) async {
             return ChatBubble(
-              message: message.textOrigin ?? '',
-              isSender: userId == message.individualUserId,
-              time: formatDateTime(message.createdAt.toString()),            
-              //time: '${message.createdAt!.hour}:${message.createdAt!.minute}',
-              textTranslate: message.textTranslate,
-              imageMessage: message.url,
-              isShow: message.isShow
-            );
+                message: message.textOrigin ?? '',
+                isSender: userId == message.individualUserId,
+                time: formatDateTime(message.createdAt.toString()),
+                //time: '${message.createdAt!.hour}:${message.createdAt!.minute}',
+                textTranslate: message.textTranslate,
+                imageMessage: message.url,
+                isShow: message.isShow);
           }));
 
           setState(() {
@@ -245,25 +244,50 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
       }
     });
 
+    // Agrega este bloque para escuchar el evento newMessageNotification
+    widget.socket.on('newMessageNotification', (data) {
+      print('Received data from server (newMessageNotification): $data');
+      if (data is Map<String, dynamic> && data['type'] == 'message') {
+        String senderName = data['senderName'] ?? 'Unknown';
+        String senderPhoto = data['senderPhoto'] ?? '';
+        String message = data['message'] ?? '';
 
-     // Agrega este bloque para escuchar el evento newMessageNotification
-  widget.socket.on('newMessageNotification', (data) {
-    print('Received data from server (newMessageNotification): $data');
-    if (data is Map<String, dynamic> && data['type'] == 'message') {
-      String senderName = data['senderName'] ?? 'Unknown';
-      String senderPhoto = data['senderPhoto'] ?? '';
-      String message = data['message'] ?? '';
+        // Muestra la notificación utilizando el servicio de notificación
+        NotificationService().showNotification(
+          title: senderName,
+          message: message,
+          // Aqui podria ir el onSelectNotification
+        );
+      } else {
+        print('Invalid data format for newMessageNotification: $data');
+      }
+    });
 
-      // Muestra la notificación utilizando el servicio de notificación
-      NotificationService().showNotification(
-        title: senderName,
-        message: message,
-        // Aqui podria ir el onSelectNotification
-      );
-    } else {
-      print('Invalid data format for newMessageNotification: $data');
-    }
-  });
+    // Manejar el evento newMessage
+    widget.socket.on('newMessage', (data) async {
+      print('Received new message : $data');
+
+      if (data is Map) {
+        NewMessage newMessage = NewMessage.fromJson(data);
+        print('New Message ${newMessage.imageUrl}');
+
+        if (mounted) {
+          setState(() {
+            // Agregar un nuevo ChatBubble para el nuevo mensaje
+            chatBubbles.add(ChatBubble(
+              message: newMessage.textOrigin ?? '',
+              isSender: userId == newMessage.senderId,
+              time: formatDateTime(DateTime.now().toString()),
+              textTranslate: newMessage.textTranslate,
+              imageMessage: newMessage.imageUrl,
+              isShow: newMessage.isShow,
+            ));
+          });
+        }
+      } else {
+        print('Invalid data format for newMessage: $data');
+      }
+    });
   }
 
   @override
@@ -280,7 +304,8 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => ViewProfileScreen(id: widget.chat.otherUserId)),
+                        builder: (context) =>
+                            ViewProfileScreen(id: widget.chat.otherUserId)),
                   );
                 },
                 child: CircleAvatar(
@@ -336,7 +361,7 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
                         icon: const Icon(Icons.send),
                         onPressed: () {
                           String message = _messageController.text;
-print('printMessage $_messageController.text');
+                          print('printMessage $_messageController.text');
                           if (message.isNotEmpty) {
                             sendMessage(message);
                             _messageController.clear();
