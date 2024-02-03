@@ -79,7 +79,7 @@ class ChatListItem extends StatelessWidget {
           ),
         ],
       ),
-      subtitle: Text(chat.messageTextTranslate!),
+      subtitle: Text(chat.messageTextTranslate ?? ""),
       trailing: Text(
           '${chat.messageDatetime!.hour.toString()}:${chat.messageDatetime!.minute.toString()}'),
       onTap: () {

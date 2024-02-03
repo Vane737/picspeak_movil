@@ -1,14 +1,18 @@
 // ignore_for_file: use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
+import 'package:picspeak_front/services/notification_service.dart';
 import 'package:picspeak_front/views/auth/loading_screen.dart';
-import 'package:picspeak_front/views/screens/my_screen.dart';
 import 'views/auth/register_screen.dart';
 import 'views/auth/login_screen.dart';
 import 'config/theme/app_colors.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  await NotificationService().initNotification();
   runApp(MyApp());
+    // Inicializa el servicio de notificaciones
 }
 
 class MyApp extends StatelessWidget {

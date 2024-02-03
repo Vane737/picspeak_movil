@@ -13,6 +13,7 @@ import 'package:picspeak_front/models/contact_model.dart';
 import 'dart:convert';
 import 'package:picspeak_front/presentation/screens/user_information/edit_profile_screen.dart';
 import 'package:picspeak_front/presentation/screens/user_information/view_profile_screen.dart';
+import 'package:picspeak_front/services/notification_service.dart';
 import 'package:picspeak_front/views/widgets/custom_button.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:picspeak_front/views/widgets/contact_list_item.dart';
@@ -108,6 +109,9 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
   late io.Socket socket;
   bool isConnected = false;
   late TabController _tabController;
+  // Inicialización del servicio de notificaciones
+  final NotificationService _notificationService = NotificationService();
+
 
   Future<List<Map<String, dynamic>>> fetchChatData() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -119,6 +123,7 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
     print(response.body);
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = json.decode(response.body);
+      print(jsonData);
       return jsonData.cast<Map<String, dynamic>>();
     } else {
       throw Exception('Failed to load chat data');
@@ -128,6 +133,7 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
   @override
   void initState() {
     super.initState();
+    _notificationService.initNotification();
     _tabController = TabController(length: 2, vsync: this);
     fetchChatData();
     loadFriendSuggestions();
@@ -137,8 +143,8 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
 
   initSocket() {
     socket =
-        // io.io('https://app-picspeak-66m7tu3mma-uc.a.run.app', <String, dynamic>{
-      socket = io.io('http://192.168.0.18:3000', <String, dynamic>{
+        io.io('https://picspeak-api-production.up.railway.app/', <String, dynamic>{
+      // socket = io.io('http://192.168.0.18:3000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
       'query': {'userId': userId},

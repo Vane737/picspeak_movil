@@ -218,6 +218,26 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
         print('Invalid data format: $data');
       }
     });
+
+
+     // Agrega este bloque para escuchar el evento newMessageNotification
+  widget.socket.on('newMessageNotification', (data) {
+    print('Received data from server (newMessageNotification): $data');
+    if (data is Map<String, dynamic> && data['type'] == 'message') {
+      String senderName = data['senderName'] ?? 'Unknown';
+      String senderPhoto = data['senderPhoto'] ?? '';
+      String message = data['message'] ?? '';
+
+      // Muestra la notificación utilizando el servicio de notificación
+      NotificationService().showNotification(
+        title: senderName,
+        message: message,
+        // Aqui podria ir el onSelectNotification
+      );
+    } else {
+      print('Invalid data format for newMessageNotification: $data');
+    }
+  });
   }
 
   @override

@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:picspeak_front/views/chat/chat_list.dart';
 
 class NotificationService {
   final FlutterLocalNotificationsPlugin notificationPlugin = FlutterLocalNotificationsPlugin();
@@ -21,7 +23,27 @@ class NotificationService {
     );
   }
 
-  Future showNotification({ int id = 0, String? title, required String message}) async {
-    return notificationPlugin.show(id, title, message, await notificationsDetails() );
+
+  Future showNotification({ String? title, required String message}) async {
+    int id = title.hashCode ^ message.hashCode;
+    return notificationPlugin.show(id, title, message, await notificationsDetails());
   }
+//   void handleMessage( BuildContext context) {
+//     Navigator.push(context, MaterialPageRoute(builder: (context) => ChatList(),));
+//   }
+
+
+//   Future showNotification({ required BuildContext context, String? title, required String message}) async {
+//   int id = title.hashCode ^ message.hashCode;
+
+//   // Configurar la acción al presionar la notificación
+//   await notificationPlugin.initialize(
+//     InitializationSettings(
+//       android: notificationsDetails().android,
+//     ),
+//     onDidReceiveNotificationResponse: (payload) {  handleMessage( context );},
+//   );
+
+//   return notificationPlugin.show(id, title, message, await notificationsDetails());
+// }
 }
