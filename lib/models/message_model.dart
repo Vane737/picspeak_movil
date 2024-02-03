@@ -12,6 +12,7 @@ class ChatMessage {
   final String? url;
   final String? pathDevice;
   final dynamic content;
+  final bool? isShow;
 
   ChatMessage({
     this.id,
@@ -27,10 +28,11 @@ class ChatMessage {
     this.url,
     this.pathDevice,
     this.content,
+    this.isShow
   });
 
   // Un método de fábrica para crear una instancia de ChatMessage desde un mapa
-  factory ChatMessage.fromJson(Map<String, dynamic> json) {
+  factory ChatMessage.fromJson(Map<dynamic, dynamic> json) {
     return ChatMessage(
       id: json['id'],
       status: json['status'],
@@ -45,6 +47,7 @@ class ChatMessage {
       url: json['url'],
       pathDevice: json['path_device'],
       content: json['content'],
+      isShow: json['is_showing']
     );
   }
 }

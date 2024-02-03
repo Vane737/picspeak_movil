@@ -54,7 +54,7 @@ Future<ApiResponse> getContact(int? id) async {
 Future<ApiResponse> addSuggest(int? userId, int? contactId) async {
   print("ENTRANDO ADD SUGGEST $userId");
   ApiResponse apiResponse = ApiResponse();
-  final Uri uri = Uri.parse('$contact');
+  final Uri uri = Uri.parse(contact);
   try {
     final response = await http.post(uri,
         headers: {"Content-Type": "application/json"},

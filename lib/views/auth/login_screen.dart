@@ -43,7 +43,6 @@ class _LoginScreenState extends State<LoginScreen> {
       await pref.setString('token', user.token ?? '');
       await pref.setInt('userId', user.id ?? 0);
       userId=user.id??0;
-      print('GET TOKEN ${pref.getString('token')}');
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (context) => ChatList(),

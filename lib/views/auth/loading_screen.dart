@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:picspeak_front/config/constants/api_routes.dart';
 import 'package:picspeak_front/models/api_response.dart';
 import 'package:picspeak_front/services/auth_service.dart';
-import 'package:picspeak_front/views/auth/login_screen.dart';
 import 'package:picspeak_front/views/chat/chat_list.dart';
-
 import '../../main.dart';
 
 class Loading extends StatefulWidget {
@@ -17,6 +15,7 @@ class Loading extends StatefulWidget {
 class _LoadingState extends State<Loading> {
   void _loadUserInfo() async {
     String token = await getToken();
+    userId = await getUserId();
     // ignore: avoid_print
     print('TOKEN LOADING $token');
     if (token == '') {

@@ -3,9 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/config/constants/api_routes.dart';
 import 'package:http/http.dart' as http;
-import 'package:picspeak_front/config/theme/app_colors.dart';
-import 'package:picspeak_front/config/theme/app_fonts.dart';
-// import 'package:picspeak_front/config/theme/app_fonts.dart';
 import 'package:picspeak_front/models/api_response.dart';
 import 'package:picspeak_front/models/chat_model.dart';
 import 'package:picspeak_front/models/friend_suggestion_model.dart';
@@ -43,7 +40,6 @@ Future<List<FriendSuggestionModel>> getSuggestFriends() async {
     }
   } catch (e) {
     print('$e');
-    // Handle error if needed
   }
 
   return friendSuggestions;
@@ -79,7 +75,6 @@ Future<List<ContactModel>> getContacts() async {
     }
   } catch (e) {
     print('$e');
-    // Handle error if needed
   }
 
   return contacts;
@@ -142,9 +137,9 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
   }
 
   initSocket() {
-    socket =
-        io.io('https://picspeak-api-production.up.railway.app/', <String, dynamic>{
-      // socket = io.io('http://192.168.0.18:3000', <String, dynamic>{
+    //socket = io.io('https://picspeak-api-production.up.railway.app:3000', <String, dynamic>{
+    //socket = io.io('http://10.0.2.2:3000', <String, dynamic>{
+    socket = io.io('http://192.168.0.16:3000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
       'query': {'userId': userId},
@@ -210,10 +205,9 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
               fontWeight: FontWeight.bold,
               fontSize: 25,
             ),
-          ), // Título principal
+          ),
           actions: [
             Container(
-              // Este es el "segundo AppBar" que emulamos en el ejemplo anterior.
               height: 50,
               color: const Color.fromARGB(255, 11, 121, 158),
               child: Row(
@@ -288,7 +282,7 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
               ),
               Tab(
                   child: Text(
-                'Contactos',
+                'Amigos',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -314,79 +308,46 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
                     } else {
                       final List<Map<String, dynamic>> chatData =
                           snapshot.data!;
-                      print("chat data***********************");
-                      print(chatData);
-                      if (chatData.isEmpty) {
-                        // Mostrar un mensaje de bienvenida y un botón
-                        return Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const SizedBox(height: 60),
-                              const Text(
-                                '¡Bienvenido! Conéctate con personas de todos los lugares del mundo.',
-                                style: AppFonts.heading3Style,
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 20.0),
-                              CustomButton(
-                                alignment: MainAxisAlignment.spaceBetween,
-                                icon: Icons.person_add_alt_rounded,
-                                text: 'Conectar con amigos',
-                                color: AppColors.bgPrimaryColor,
-                                width: 240,
-                                onPressed: () {
-                                  _tabController.animateTo(1);
-                                  // Agregar la lógica para la acción del botón
-                                },
-                              ),
-                            ],
-                          ),
-                        );
-                      } else {
-                        // Add this line to print the data
-                        return Expanded(
-                          child: ListView.builder(
-                            itemCount: chatData.length,
-                            itemBuilder: (context, index) {
-                              final chatMap = chatData[index];
-                              final chat = ChatListModel(
-                                  chatId: chatMap['chat_id'],
-                                  originalUserId: chatMap['original_user_id'],
-                                  originalUserMaternLanguage:
-                                      chatMap['original_user_matern_language'],
-                                  otherUserId: chatMap['other_user_id'],
-                                  otherUserName: chatMap['other_user_name'],
-                                  otherUserLastname:
-                                      chatMap['other_user_lastname'],
-                                  otherUserUsername:
-                                      chatMap['other_user_username'],
-                                  otherUserPhoto: chatMap['other_user_photo'],
-                                  otherUserNacionality:
-                                      chatMap['other_user_nacionality'],
-                                  // otherUserNacionalityUrl:
-                                  //     chatMap['other_user_nacionality_url'],
-                                  otherUserMaternLanguage:
-                                      chatMap['other_user_matern_language'],
-                                  messageUserId: chatMap['message_user_id'],
-                                  messageDatetime: chatMap[
-                                              'message_datetime'] !=
-                                          null
-                                      ? DateTime.tryParse(chatMap[
-                                              'message_datetime'] ??
-                                          '') // Use tryParse to handle null or invalid date
-                                      : null,
-                                  messageTextOrigin:
-                                      chatMap['message_text_origin'],
-                                  messageTextTranslate:
-                                      chatMap['message_text_translate']);
-                              return ChatListItem(chat, socket);
-                            },
-                          ),
-                        );
-                      }
+                      print(chatData); // Add this line to print the data
+                      return Expanded(
+                        child: ListView.builder(
+                          itemCount: chatData.length,
+                          itemBuilder: (context, index) {
+                            final chatMap = chatData[index];
+                            final chat = ChatListModel(
+                                chatId: chatMap['chat_id'],
+                                originalUserId: chatMap['original_user_id'],
+                                originalUserMaternLanguage:
+                                    chatMap['original_user_matern_language'],
+                                otherUserId: chatMap['other_user_id'],
+                                otherUserName: chatMap['other_user_name'],
+                                otherUserLastname:
+                                    chatMap['other_user_lastname'],
+                                otherUserUsername:
+                                    chatMap['other_user_username'],
+                                otherUserPhoto: chatMap['other_user_photo'],
+                                otherUserNacionality:
+                                    chatMap['other_user_nacionality'],
+                                // otherUserNacionalityUrl:
+                                //     chatMap['other_user_nacionality_url'],
+                                otherUserMaternLanguage:
+                                    chatMap['other_user_matern_language'],
+                                messageUserId: chatMap['message_user_id'],
+                                messageDatetime: chatMap['message_datetime'] !=
+                                        null
+                                    ? DateTime.tryParse(chatMap[
+                                            'message_datetime'] ??
+                                        '') // Use tryParse to handle null or invalid date
+                                    : null,
+                                messageTextOrigin:
+                                    chatMap['message_text_origin'] ?? '📷 Foto',
+                                messageTextTranslate:
+                                    chatMap['message_text_translate'] ?? '📷 Foto'
+                            );
+                            return ChatListItem(chat, socket);
+                          },
+                        ),
+                      );
                     }
                   },
                 ),
@@ -450,13 +411,3 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
     );
   }
 }
-
-/* class IndividualChatScreen extends StatefulWidget {
-  final ChatListModel chat;
-  //final io.Socket connectionSocket;
-
-  const IndividualChatScreen(this.chat, socket);
-
-  @override
-  IndividualChatScreenState createState() => IndividualChatScreenState();
-} */
