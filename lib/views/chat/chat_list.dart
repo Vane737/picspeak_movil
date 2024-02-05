@@ -171,6 +171,7 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
   Future<void> loadFriendSuggestions() async {
     try {
       List<FriendSuggestionModel> suggestions = await getSuggestFriends();
+      print('FRIENDS $suggestions');
       setState(() {
         friendSuggestions = suggestions;
       });
@@ -390,6 +391,7 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
                           itemCount: friendSuggestions.length,
                           itemBuilder: (context, index) {
                             //final friend = friendSuggestions[index];
+                            print('Suggestion Friend ${friendSuggestions[index]}');
                             return FriendSuggestionItem(
                               suggestion: friendSuggestions[index],
                               onPressed: () {

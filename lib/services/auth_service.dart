@@ -45,6 +45,7 @@ Future<ApiResponse> login(String email, String password) async {
 Future<ApiResponse> register(String name, String lastname, String username,
     String birthDate, String email, String password, String? photourl) async {
   ApiResponse apiResponse = ApiResponse();
+  
   try {
     final response =
         await http.post(Uri.parse(registerUrl), headers: headers, body: {
@@ -56,6 +57,8 @@ Future<ApiResponse> register(String name, String lastname, String username,
       'password': password,
       'photo_url': photourl
     });
+
+    print('REQUEST $name $lastname $email $username $password $photourl $birthDate');
 
     switch (response.statusCode) {
       case 201:

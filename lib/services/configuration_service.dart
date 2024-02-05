@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:picspeak_front/config/constants/api_routes.dart';
 import 'package:http/http.dart' as http;
+import 'package:picspeak_front/services/auth_service.dart';
 
 Future<dynamic> getNacionalidades() async {
   final Uri uri = Uri.parse(nationalities);
@@ -149,3 +150,39 @@ Future<dynamic> setLanguagesUser(int? userId, List<String> languages) async {
     throw Exception('Error en la solicitud: ${response.reasonPhrase}');
   }
 }
+
+Future<String> getLanguageUserData() async {
+  final userId = await getUserId();
+  final String apiUrl = '$userLanguageUrl/$userId';
+  print('URL LANGUAGE $apiUrl');
+
+  try {
+    final response = await http.get(Uri.parse(apiUrl));
+
+    if (response.statusCode == 200) {
+      
+      final Map<String, dynamic> responseData = json.decode(response.body);
+
+      if (responseData['message'] == 'success' && responseData['data'] != null) {
+        List<dynamic> dataList = responseData['data'];
+
+        if (dataList.isNotEmpty) {
+          Map<String, dynamic> data = dataList.first;
+          String languageName = data['language']['name'];
+          return languageName;
+        } else {
+          throw Exception('No data available');
+        }
+      } else {
+        throw Exception('Error en la respuesta: ${responseData['message']}');
+      }
+    } else {
+      throw Exception('Error en la solicitud: ${response.statusCode}');
+    }
+  } catch (error) {
+    print('Error: $error');
+    return ''; // Valor predeterminado en caso de error
+  }
+}
+
+

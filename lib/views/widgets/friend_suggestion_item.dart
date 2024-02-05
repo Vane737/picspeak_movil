@@ -42,7 +42,7 @@ class FriendSuggestionItem extends StatelessWidget {
       title: Row(
         children: [
           const Text(
-            "🇺🇸",
+            "🇺🇸", //cambiar icon
             style: TextStyle(
               fontSize: 22.0,
             ),
