@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 // ------- STRINGS ------------------
 const baseUrl = "https://picspeak-api-production.up.railway.app/api/v1";
 //const baseUrl = "http://10.0.2.2:3000/api/v1";
-//const baseUrl = "http://192.168.0.16:3000/api/v1";
+//const baseUrl = "http://192.168.245.167:3000/api/v1";
 const loginUrl = '$baseUrl/auth/login';
 const registerUrl = '$baseUrl/auth/register';
 const logoutUrl = '${baseUrl}logout';
@@ -21,6 +21,7 @@ const configurationUser='$baseUrl/configuration'; //para settear con solicitudes
 const chatsByUserUrl = '$baseUrl/chat';
 const suggestUser='$baseUrl/users/suggest';//para la sugerencia de usuarios
 const contact='$baseUrl/contact';//para los contactos
+const userLanguageUrl='$baseUrl/configuration/language-user';
 
 const Map<String, String> headers = {"Accept": "application/json"};
 

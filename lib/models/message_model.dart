@@ -13,6 +13,8 @@ class ChatMessage {
   final String? pathDevice;
   final dynamic content;
   final bool? isShow;
+  final String? audioOriginal;
+  final String? audioTranslated;
 
   ChatMessage({
     this.id,
@@ -28,7 +30,9 @@ class ChatMessage {
     this.url,
     this.pathDevice,
     this.content,
-    this.isShow
+    this.isShow,
+    this.audioOriginal,
+    this.audioTranslated
   });
 
   // Un método de fábrica para crear una instancia de ChatMessage desde un mapa
@@ -47,7 +51,9 @@ class ChatMessage {
       url: json['url'],
       pathDevice: json['path_device'],
       content: json['content'],
-      isShow: json['is_showing']
+      isShow: json['is_showing'],
+      audioOriginal: json['original_audio_url'],
+      audioTranslated: json['translated_audio_url']
     );
   }
 }

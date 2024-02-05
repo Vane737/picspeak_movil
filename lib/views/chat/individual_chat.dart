@@ -359,14 +359,18 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
         if (mounted) {
           List<ChatBubble> newChatBubbles =
               await Future.wait(chatMessages.map((message) async {
+                print('AUDIO URL ${message.audioOriginal} ${message.audioTranslated}');
             return ChatBubble(
-                message: message.textOrigin ?? '',
-                isSender: userId == message.individualUserId,
-                time: formatDateTime(message.createdAt.toString()),
-                //time: '${message.createdAt!.hour}:${message.createdAt!.minute}',
-                textTranslate: message.textTranslate,
-                imageMessage: message.url,
-                isShow: message.isShow);
+              message: message.textOrigin ?? '',
+              isSender: userId == message.individualUserId,
+              time: formatDateTime(message.createdAt.toString()),
+              //time: '${message.createdAt!.hour}:${message.createdAt!.minute}',
+              textTranslate: message.textTranslate,
+              imageMessage: message.url,
+              isShow: message.isShow,
+              audioOriginal: message.audioOriginal,
+              audioTranslated: message.audioTranslated,
+            );
           }));
 
           setState(() {
@@ -409,15 +413,14 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
           setState(() {
             // Agregar un nuevo ChatBubble para el nuevo mensaje
             chatBubbles.add(ChatBubble(
-              message: newMessage.textOrigin ?? '',
-              isSender: userId == newMessage.senderId,
-              time: formatDateTime(DateTime.now().toString()),
-              textTranslate: newMessage.textTranslate,
-              imageMessage: newMessage.imageUrl,
-              isShow: newMessage.isShow,
-              audioOriginal: newMessage.audioOriginal,
-              audioTranslated: newMessage.audioTranslated
-            ));
+                message: newMessage.textOrigin ?? '',
+                isSender: userId == newMessage.senderId,
+                time: formatDateTime(DateTime.now().toString()),
+                textTranslate: newMessage.textTranslate,
+                imageMessage: newMessage.imageUrl,
+                isShow: newMessage.isShow,
+                audioOriginal: newMessage.audioOriginal,
+                audioTranslated: newMessage.audioTranslated));
           });
         }
       } else {

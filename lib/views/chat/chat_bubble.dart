@@ -113,6 +113,27 @@ class _ChatBubbleState extends State<ChatBubble> {
                           color: widget.isSender ? Colors.white : Colors.black,
                         ),
                       ),
+                    if (widget.audioOriginal != null)
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              isPlaying ? Icons.pause : Icons.play_arrow,
+                            ),
+                            onPressed: () {
+                              print('CHAT BUBBLE ${widget.audioOriginal}');
+                              _playPauseAudio(widget.audioOriginal!);
+                            },
+                          ),
+                          Text(
+                            'Audio Message',
+                            style: TextStyle(
+                              color:
+                                  widget.isSender ? Colors.white : Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
                   ],
                 ),
               ),
@@ -150,6 +171,7 @@ class _ChatBubbleState extends State<ChatBubble> {
                               isPlaying ? Icons.pause : Icons.play_arrow,
                             ),
                             onPressed: () {
+                              print('CHAT BUBBLE ${widget.audioOriginal}');
                               _playPauseAudio(widget.audioOriginal!);
                             },
                           ),
@@ -220,6 +242,7 @@ class _ChatBubbleState extends State<ChatBubble> {
       if (isPlaying) {
         await _player.stopPlayer();
       } else {
+        await _player.openPlayer();
         await _player.startPlayer(
           fromURI: audioUrl,
           codec: Codec.aacADTS,
