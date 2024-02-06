@@ -128,7 +128,8 @@ String getFlagEmoji(String language) {
       return '🇳🇴'; // Emoji de la bandera noruega
     case 'danés':
       return '🇩🇰'; // Emoji de la bandera danesa
-    // Puedes agregar más casos según tus necesidades
+    case 'francés':
+      return '🇫🇷';
     default:
       return ''; // Valor predeterminado si no se encuentra el idioma
   }

@@ -1,4 +1,4 @@
-// ignore_for_file: use_key_in_widget_constructors
+// ignore_for_file: use_key_in_widget_constructors, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
@@ -104,7 +104,7 @@ class _ChatBubbleState extends State<ChatBubble> {
                       Divider(
                         color: widget.isSender ? Colors.white : Colors.black,
                         thickness: 1.0,
-                        height: 8.0,
+                        height: 6.0,
                       ),
                     if (widget.textTranslate != null)
                       Text(
@@ -115,18 +115,23 @@ class _ChatBubbleState extends State<ChatBubble> {
                       ),
                     if (widget.audioOriginal != null)
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           IconButton(
                             icon: Icon(
                               isPlaying ? Icons.pause : Icons.play_arrow,
                             ),
                             onPressed: () {
-                              print('CHAT BUBBLE ${widget.audioOriginal}');
-                              _playPauseAudio(widget.audioOriginal!);
+                              if (widget.isSender) {
+                                _playPauseAudio(widget.audioOriginal!);
+                              } else {
+                                _playPauseAudio(widget.audioTranslated!);
+                              }
                             },
                           ),
                           Text(
-                            'Audio Message',
+                            'Toca para reproducir',
                             style: TextStyle(
                               color:
                                   widget.isSender ? Colors.white : Colors.black,
@@ -157,49 +162,36 @@ class _ChatBubbleState extends State<ChatBubble> {
                     const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
                 padding: const EdgeInsets.all(12.0),
                 decoration: BoxDecoration(
-                  color: Colors.grey, // Color para burbuja especial
+                  color: Colors.grey,
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (widget.audioOriginal != null)
-                      Row(
-                        children: [
-                          IconButton(
-                            icon: Icon(
-                              isPlaying ? Icons.pause : Icons.play_arrow,
-                            ),
-                            onPressed: () {
-                              print('CHAT BUBBLE ${widget.audioOriginal}');
-                              _playPauseAudio(widget.audioOriginal!);
-                            },
-                          ),
-                          Text(
-                            'Audio Message',
-                            style: TextStyle(
-                              color:
-                                  widget.isSender ? Colors.white : Colors.black,
-                            ),
-                          ),
-                        ],
-                      ),
-                    if (widget.imageMessage != null)
-                      const Text(
-                        'Imagen con contenido sensible',
-                        style: TextStyle(
-                          color: Colors.black,
+                    if (widget.imageMessage != null) ...[
+                      if (widget.isSender)
+                        Image.network(
+                          widget.imageMessage!,
+                          width: 150,
+                          height: 150,
+                          fit: BoxFit.cover,
                         ),
-                      ),
-                    const Text(
-                      'Toque para mostrar',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12.0,
-                      ),
-                    ),
-                    _buildAudioIcon(),
-                    _buildAudioInfo(),
+                      if (!widget.isSender)
+                        const Text(
+                          'Imagen con contenido sensible',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                      if (!widget.isSender)
+                        const Text(
+                          'Toque para mostrar',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 12.0,
+                          ),
+                        ),
+                    ]
                   ],
                 ),
               ),
@@ -210,7 +202,7 @@ class _ChatBubbleState extends State<ChatBubble> {
               widget.isSender ? Alignment.centerRight : Alignment.centerLeft,
           child: Text(
             widget.time,
-            style: const TextStyle(fontSize: 12.0),
+            style: const TextStyle(fontSize: 11.0),
           ),
         ),
       ],
@@ -237,7 +229,6 @@ class _ChatBubbleState extends State<ChatBubble> {
   }
 
   Future<void> _playPauseAudio(String audioUrl) async {
-    print('ADUIO URL $audioUrl');
     try {
       if (isPlaying) {
         await _player.stopPlayer();
@@ -246,7 +237,14 @@ class _ChatBubbleState extends State<ChatBubble> {
         await _player.startPlayer(
           fromURI: audioUrl,
           codec: Codec.aacADTS,
+          whenFinished: () {
+            setState(() {
+              isPlaying = false;
+            });
+          },
         );
+
+        _player.setSubscriptionDuration(const Duration(milliseconds: 100));
       }
     } catch (e) {
       print('Error playing audio: $e');
@@ -255,37 +253,5 @@ class _ChatBubbleState extends State<ChatBubble> {
     setState(() {
       isPlaying = !isPlaying;
     });
-  }
-
-  Widget _buildAudioIcon() {
-    return Container(
-      padding: const EdgeInsets.only(right: 8.0),
-      child: Icon(
-        Icons.audiotrack,
-        color: widget.isSender ? Colors.white : Colors.black,
-      ),
-    );
-  }
-
-  Widget _buildAudioInfo() {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Audio Message',
-            style: TextStyle(
-              color: widget.isSender ? Colors.white : Colors.black,
-            ),
-          ),
-          Text(
-            'Duration:', //${_player.getProgress()?.toString()}',
-            style: TextStyle(
-              color: widget.isSender ? Colors.white : Colors.black,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

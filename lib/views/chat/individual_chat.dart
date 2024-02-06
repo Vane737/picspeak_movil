@@ -67,9 +67,11 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
   }
 
   Future<void> _getAudioFromRecord() async {
-    if (_isRecording) {
+    bool isRecording = _isRecording;
+    print('ISRECORDING $_isRecording');
+
+    if (isRecording) {
       // Stop recording
-      _isRecording = false;
       String recordedAudioPath = await stopRecording();
       _showSendAudioDialog(recordedAudioPath);
     } else {
@@ -78,7 +80,6 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
 
       if (status.isGranted) {
         // Start recording
-        _isRecording = true;
         await startRecording();
       } else {
         // Request audio recording permission
@@ -86,13 +87,18 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
 
         if (result.isGranted) {
           // Start recording after permission is granted
-          _isRecording = true;
           await startRecording();
         } else {
           print('Audio recording permission denied');
+          return;
         }
       }
     }
+
+    setState(() {
+      _isRecording = !isRecording;
+      print('ISRECORDING STATE $_isRecording');
+    });
   }
 
   Future<void> startRecording() async {
@@ -116,29 +122,35 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Send Audio'),
-          content: const Column(
-            children: [
-              Text('Do you want to send this audio?'),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                print('Send audio: $audioPath');
-                sendAudio(audioPath);
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: const Text('Send'),
-            ),
-          ],
+        return Align(
+          alignment: Alignment.bottomCenter,
+          child: FractionallySizedBox(
+              widthFactor: 0.9,
+              heightFactor: 0.3,
+              child: AlertDialog(
+                title: const Text(''),
+                content: const Column(
+                  children: [
+                    Text('¿Deseas enviar este audio?'),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                    child: const Text('Cancelar'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      print('Enviar audio: $audioPath');
+                      sendAudio(audioPath);
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                    child: const Text('Enviar'),
+                  ),
+                ],
+              )),
         );
       },
     );
@@ -148,42 +160,50 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Enviar imagen'),
-          content: Column(
-            children: [
-              Image.file(
-                File(_selectedImage!.path),
-                height: 80,
-                width: 80,
-                fit: BoxFit.cover,
+        return Align(
+          alignment: Alignment.bottomCenter,
+          child: FractionallySizedBox(
+            widthFactor: 0.9,
+            heightFactor: 0.5,
+            child: AlertDialog(
+              title: const Text(''),
+              contentPadding: EdgeInsets.zero,
+              content: Column(
+                children: [
+                  Expanded(
+                    child: Image.file(
+                      File(_selectedImage!.path),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text('¿Deseas enviar esta imagen?'),
+                ],
               ),
-              const SizedBox(height: 16),
-              const Text('¿Deseas enviar esta imagen?'),
-            ],
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Cerrar el diálogo
+                  },
+                  child: const Text('Cancelar'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    print('Enviar imagen: ${_selectedImage!.path}');
+                    if (_selectedImage != null) {
+                      String? image = _selectedImage == null
+                          ? null
+                          : getStringImage(_selectedImage);
+                      print('Enviar la imagen');
+                      sendImage(image!);
+                    }
+                    Navigator.of(context).pop(); // Cerrar el diálogo
+                  },
+                  child: const Text('Enviar'),
+                ),
+              ],
+            ),
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Cerrar el diálogo
-              },
-              child: const Text('Cancelar'),
-            ),
-            TextButton(
-              onPressed: () {
-                print('Enviar imagen: ${_selectedImage!.path}');
-                if (_selectedImage != null) {
-                  String? image = _selectedImage == null
-                      ? null
-                      : getStringImage(_selectedImage);
-                  print('Enviar la imagen');
-                  sendImage(image!);
-                }
-                Navigator.of(context).pop(); // Cerrar el diálogo
-              },
-              child: const Text('Enviar'),
-            ),
-          ],
         );
       },
     );
@@ -359,7 +379,8 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
         if (mounted) {
           List<ChatBubble> newChatBubbles =
               await Future.wait(chatMessages.map((message) async {
-                print('AUDIO URL ${message.audioOriginal} ${message.audioTranslated}');
+            print(
+                'AUDIO URL ${message.audioOriginal} ${message.audioTranslated}');
             return ChatBubble(
               message: message.textOrigin ?? '',
               isSender: userId == message.individualUserId,
@@ -448,9 +469,19 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
                   );
                 },
                 child: CircleAvatar(
-                  radius: 20.0,
-                  child: Image.network(
-                    widget.chat.otherUserPhoto!,
+                  radius: 20.0, // Define el radio del círculo
+                  backgroundColor: Colors
+                      .blue, // Puedes cambiar el color de fondo según tus necesidades
+                  child: ClipOval(
+                    child: Image.network(
+                      widget.chat
+                          .otherUserPhoto!, // Utiliza la ruta de la imagen del chat actual
+                      fit: BoxFit.cover,
+                      width: 2 *
+                          30.0, // Asegura que la imagen tenga el doble del radio como ancho
+                      height: 2 *
+                          30.0, // Asegura que la imagen tenga el doble del radio como altura
+                    ),
                   ),
                 ),
               ),
@@ -489,10 +520,25 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
                         },
                       ), */
                       IconButton(
-                        icon: _isRecording
-                            ? const Icon(Icons.stop)
-                            : const Icon(Icons.mic),
+                        icon: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Icon(
+                              _isRecording ? Icons.stop : Icons.mic,
+                            ),
+                            if (_isRecording)
+                              Container(
+                                width: 24,
+                                height: 24,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.red,
+                                ),
+                              ),
+                          ],
+                        ),
                         onPressed: () {
+                          print('IS RECORDING $_isRecording');
                           _getAudioFromRecord();
                         },
                       ),
