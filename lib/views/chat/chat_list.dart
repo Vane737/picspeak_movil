@@ -11,7 +11,6 @@ import 'package:picspeak_front/models/friend_suggestion_model.dart';
 import 'package:picspeak_front/models/contact_model.dart';
 import 'dart:convert';
 import 'package:picspeak_front/presentation/screens/user_information/edit_profile_screen.dart';
-import 'package:picspeak_front/presentation/screens/user_information/view_profile_screen.dart';
 import 'package:picspeak_front/services/notification_service.dart';
 import 'package:picspeak_front/views/widgets/custom_button.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;

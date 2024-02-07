@@ -33,18 +33,18 @@ class ContactListItem extends StatelessWidget {
                 );
               },
               child: CircleAvatar(
-                radius: 30.0,
-                child: Container(
-                  width: 60.0,
-                  height: 60.0,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: NetworkImage(
-                        contact.imageAsset,
-                      ),
-                    ),
+                radius: 30.0, // Define el radio del círculo
+                backgroundColor: Colors
+                    .blue, // Puedes cambiar el color de fondo según tus necesidades
+                child: ClipOval(
+                  child: Image.network(
+                    contact
+                        .imageAsset, // Utiliza la ruta de la imagen del chat actual
+                    fit: BoxFit.cover,
+                    width: 2 *
+                        30.0, // Asegura que la imagen tenga el doble del radio como ancho
+                    height: 2 *
+                        30.0, // Asegura que la imagen tenga el doble del radio como altura
                   ),
                 ),
               ),

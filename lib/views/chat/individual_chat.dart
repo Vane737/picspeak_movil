@@ -1,7 +1,6 @@
-// ignore_for_file: file_names, use_key_in_widget_constructors, avoid_print
+// ignore_for_file: file_names, use_key_in_widget_constructors, avoid_print, unused_field, unused_local_variable
 
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/config/constants/api_routes.dart';
@@ -19,7 +18,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_sound/flutter_sound.dart';
-import 'package:http/http.dart' as http;
 
 class IndividualChatScreen extends StatefulWidget {
   final ChatListModel chat;
@@ -248,9 +246,10 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
     if (widget.socket.connected) {
       Map<String, Object> messageData;
       //language to translate
-      String? languageTranslate = userId == widget.chat.otherUserId
+      /* String? languageTranslate = userId == widget.chat.otherUserId
           ? widget.chat.originalUserMaternLanguage
-          : widget.chat.otherUserMaternLanguage;
+          : widget.chat.otherUserMaternLanguage; */
+      String? languageTranslate = await getLanguageReceiver(widget.chat.otherUserId);
       // Datos del mensaje que quieres enviar
       messageData = {
         'receivingUserId': widget.chat.otherUserId,
@@ -276,13 +275,14 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
     }
   }
 
-  void sendNotification(String message) {
+  Future<void> sendNotification(String message) async {
     if (widget.socket.connected) {
       Map<String, Object> messageData;
       //language to translate
-      String? languageTranslate = userId == widget.chat.otherUserId
+     /*  String? languageTranslate = userId == widget.chat.otherUserId
           ? widget.chat.originalUserMaternLanguage
-          : widget.chat.otherUserMaternLanguage;
+          : widget.chat.otherUserMaternLanguage; */
+      String? languageTranslate = await getLanguageReceiver(widget.chat.otherUserId);
       // Datos del mensaje que quieres enviar
       messageData = {
         'receivingUserId': widget.chat.otherUserId,
@@ -329,9 +329,10 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
   }
 
   Future<void> sendAudio(String audioPath) async {
-    String? languageTranslate = userId == widget.chat.otherUserId
+    /* String? languageTranslate = userId == widget.chat.otherUserId
         ? widget.chat.originalUserMaternLanguage
-        : widget.chat.otherUserMaternLanguage;
+        : widget.chat.otherUserMaternLanguage; */
+    String? languageTranslate = await getLanguageReceiver(widget.chat.otherUserId);
 
     String languageOrigen = await getLanguageUserData();
     print('LANGUAGE $languageOrigen');

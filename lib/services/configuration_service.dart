@@ -185,4 +185,37 @@ Future<String> getLanguageUserData() async {
   }
 }
 
+Future<String> getLanguageReceiver(int userId) async {
+  final String apiUrl = '$userLanguageUrl/$userId';
+  print('URL LANGUAGE OTHER $apiUrl USER ID $userId');
+
+  try {
+    final response = await http.get(Uri.parse(apiUrl));
+
+    if (response.statusCode == 200) {
+      
+      final Map<String, dynamic> responseData = json.decode(response.body);
+
+      if (responseData['message'] == 'success' && responseData['data'] != null) {
+        List<dynamic> dataList = responseData['data'];
+
+        if (dataList.isNotEmpty) {
+          Map<String, dynamic> data = dataList.first;
+          String languageName = data['language']['name'];
+          return languageName;
+        } else {
+          throw Exception('No data available');
+        }
+      } else {
+        throw Exception('Error en la respuesta: ${responseData['message']}');
+      }
+    } else {
+      throw Exception('Error en la solicitud: ${response.statusCode}');
+    }
+  } catch (error) {
+    print('Error: $error');
+    return ''; // Valor predeterminado en caso de error
+  }
+}
+
 

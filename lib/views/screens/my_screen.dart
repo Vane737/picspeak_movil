@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/services/notification_service.dart';
 
@@ -22,7 +24,7 @@ class _MyScreenState extends State<MyScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mi Screen'),
+        title: const Text('Mi Screen'),
       ),
       body: Center(
         child: ElevatedButton(
@@ -31,7 +33,7 @@ class _MyScreenState extends State<MyScreen> {
             print('Botón presionado');
             notificationService.showNotification( title: 'Esta es una notificacion generada', message: 'Hola mundo');
           },
-          child: Text('Presionar'),
+          child: const Text('Presionar'),
         ),
       ),
     );

@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:picspeak_front/views/chat/chat_list.dart';
 
 class NotificationService {
   final FlutterLocalNotificationsPlugin notificationPlugin = FlutterLocalNotificationsPlugin();
