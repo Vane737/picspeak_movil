@@ -1,16 +1,18 @@
-// ignore_for_file: use_key_in_widget_constructors, avoid_print
+// ignore_for_file: use_key_in_widget_constructors, avoid_print, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/config/constants/api_routes.dart';
 import 'package:http/http.dart' as http;
 import 'package:picspeak_front/config/theme/app_colors.dart';
 import 'package:picspeak_front/config/theme/app_fonts.dart';
+import 'package:picspeak_front/main.dart';
 import 'package:picspeak_front/models/api_response.dart';
 import 'package:picspeak_front/models/chat_model.dart';
 import 'package:picspeak_front/models/friend_suggestion_model.dart';
 import 'package:picspeak_front/models/contact_model.dart';
 import 'dart:convert';
 import 'package:picspeak_front/presentation/screens/user_information/edit_profile_screen.dart';
+import 'package:picspeak_front/presentation/screens/user_information/view_profile_screen.dart';
 import 'package:picspeak_front/services/notification_service.dart';
 import 'package:picspeak_front/views/widgets/custom_button.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
@@ -96,7 +98,8 @@ class ChatListScreen extends StatefulWidget {
   State<ChatListScreen> createState() => _ChatListScreenState();
 }
 
-class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProviderStateMixin {
+class _ChatListScreenState extends State<ChatListScreen>
+    with SingleTickerProviderStateMixin {
   List<FriendSuggestionModel> friendSuggestions = [];
 
   //List<Chat> chatList = [];
@@ -107,7 +110,6 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
   late TabController _tabController;
   // Inicialización del servicio de notificaciones
   final NotificationService _notificationService = NotificationService();
-
 
   Future<List<Map<String, dynamic>>> fetchChatData() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -138,9 +140,10 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
   }
 
   initSocket() {
-    socket = io.io('https://picspeak-api-production.up.railway.app', <String, dynamic>{
-    //socket = io.io('http://10.0.2.2:3000', <String, dynamic>{
-    //socket = io.io('http://192.168.0.16:3000', <String, dynamic>{
+    socket = io
+        .io('https://picspeak-api-production.up.railway.app', <String, dynamic>{
+      //socket = io.io('http://10.0.2.2:3000', <String, dynamic>{
+      //socket = io.io('http://192.168.0.16:3000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
       'query': {'userId': userId},
@@ -225,6 +228,7 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
                   ),
                   PopupMenuButton<String>(
                     onSelected: (choice) async {
+                      print('CHOICE $choice');
                       // Manejar las opciones del menú.
                       if (choice == 'Perfil') {
                         Navigator.push(
@@ -234,29 +238,60 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
                           ),
                         );
                         // Lógica para abrir la pantalla de chat.
-                      } else if (choice == 'Informacion') {
-                        // SharedPreferences pref =
-                        //     await SharedPreferences.getInstance();
-                        // int? userId = pref.getInt('userId');
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => ViewProfileScreen(id: userId),
-                        //   ),
-                        // );
+                      } else if (choice == 'Información') {
+                        SharedPreferences pref =
+                            await SharedPreferences.getInstance();
+                        int? userId = pref.getInt('userId');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ViewProfileScreen(id: userId),
+                          ),
+                        );
                         //DEBE MOSTRAR LA PANTALLA DE INFORMACIONES DEL PERFIL, COMO ESTADO, INTERESES, CONTENIDO INAPROPIADO
                       } else if (choice == 'Ajustes') {
                         // Lógica para abrir la pantalla de amigos.
-                      } else if (choice == 'Cerrar Sesion') {
+                      } else if (choice == 'Cerrar Sesión') {
                         // Lógica para abrir la pantalla de amigos.
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Confirmación'),
+                            content: const Text(
+                                '¿Estás seguro de querer cerrar sesión?'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('Cerrar Sesión'),
+                                onPressed: () async {
+                                  final SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
+                                  await prefs.remove('userId');
+                                  await prefs.remove('token');
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                      builder: (context) => HomeScreen(),
+                                    ),
+                                    (Route<dynamic> route) => false,
+                                  );
+                                },
+                              ),
+                              TextButton(
+                                child: const Text('Cancelar'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          ),
+                        );
                       }
                     },
                     itemBuilder: (BuildContext context) {
                       return [
                         'Perfil',
-                        'Informacion',
+                        'Información',
                         'Ajustes',
-                        'Cerrar Sesion'
+                        'Cerrar Sesión'
                       ].map((String choice) {
                         return PopupMenuItem<String>(
                           value: choice,
@@ -272,7 +307,7 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
           bottom: TabBar(
             controller: _tabController,
             tabs: const [
-               Tab(
+              Tab(
                 child: Text(
                   'Chat',
                   style: TextStyle(
@@ -366,17 +401,19 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
                                   otherUserMaternLanguage:
                                       chatMap['other_user_matern_language'],
                                   messageUserId: chatMap['message_user_id'],
-                                  messageDatetime: chatMap['message_datetime'] !=
+                                  messageDatetime: chatMap[
+                                              'message_datetime'] !=
                                           null
                                       ? DateTime.tryParse(chatMap[
                                               'message_datetime'] ??
                                           '') // Use tryParse to handle null or invalid date
                                       : null,
                                   messageTextOrigin:
-                                      chatMap['message_text_origin'] ?? '📷 Foto',
+                                      chatMap['message_text_origin'] ??
+                                          '📷 Foto',
                                   messageTextTranslate:
-                                      chatMap['message_text_translate'] ?? '📷 Foto'
-                              );
+                                      chatMap['message_text_translate'] ??
+                                          '📷 Foto');
                               return ChatListItem(chat, socket);
                             },
                           ),
@@ -424,7 +461,8 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
                           itemCount: friendSuggestions.length,
                           itemBuilder: (context, index) {
                             //final friend = friendSuggestions[index];
-                            print('Suggestion Friend ${friendSuggestions[index]}');
+                            print(
+                                'Suggestion Friend ${friendSuggestions[index]}');
                             return FriendSuggestionItem(
                               suggestion: friendSuggestions[index],
                               onPressed: () {
