@@ -1,9 +1,13 @@
 import 'package:intl/intl.dart';
 
 // ------- STRINGS ------------------
-const baseUrl = "https://picspeak-api-production.up.railway.app/api/v1";
+//const baseUrl = "https://picspeak-api-main-production.up.railway.app/api/v1";
+const baseUrl = "http://3.16.67.99:3000/api/v1";
 //const baseUrl = "http://10.0.2.2:3000/api/v1";
-//const baseUrl = "http://192.168.0.16:3000/api/v1";
+//const baseUrl = "http://192.168.0.5:3000/api/v1";
+//const socketUrl = "https://picspeak-api-main-production.up.railway.app";
+const socketUrl = "http://3.16.67.99:3000";
+//const socketUrl = "http://10.0.2.2:3000";
 const loginUrl = '$baseUrl/auth/login';
 const registerUrl = '$baseUrl/auth/register';
 const logoutUrl = '${baseUrl}logout';

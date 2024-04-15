@@ -63,9 +63,9 @@ class FriendSuggestionItem extends StatelessWidget {
           ApiResponse response =
               await addSuggest(pref.getInt('userId'), suggestion.id);
           if (response.error == null) {
-            onPressed(); // Llama a la función de devolución de llamada después de realizar la acción
+            onPressed(); 
           } else {
-            print("ERROR on press: ${response.error}");
+            print("ERROR: ${response.error}");
           }
         },
       ),

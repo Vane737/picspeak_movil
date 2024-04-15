@@ -56,7 +56,6 @@ class MainContent extends StatefulWidget {
 class _MainContentState extends State<MainContent> {
   List<String> allTags = [];
   List<String> selectedTags = [];
-  //['Animales', 'Música', 'Cine', 'Futbol', 'Comedia', 'Tecnologia', 'Idiomas', 'Electronica', 'Lectura'];
 
   @override
   void initState() {
@@ -92,7 +91,6 @@ class _MainContentState extends State<MainContent> {
         onSelectionChanged: (tags) {
           setState(() {
             selectedTags = tags;
-            print(selectedTags);
           });
         },
       ),
@@ -126,15 +124,10 @@ class FooterContent extends StatelessWidget {
             text: 'CONTINUAR',
             icon: Icons.arrow_forward_ios,
             color: AppColors.bgSecondaryColor,
-            // width: 150,
             onPressed: () async {
               SharedPreferences pref = await SharedPreferences.getInstance();
-              print("user id: ${pref.getInt('userId')}");
-              print("tags seleccionados en FooterContent: $selectedTags");
-              //  print("contexto: ${MainContent.selectedTags}");
               final response =
                   await setInterestUser(pref.getInt('userId'), selectedTags);
-
               Navigator.push(
                 context,
                 MaterialPageRoute(

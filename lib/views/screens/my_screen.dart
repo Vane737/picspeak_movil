@@ -29,8 +29,6 @@ class _MyScreenState extends State<MyScreen> {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            // Acciones al presionar el botón
-            print('Botón presionado');
             notificationService.showNotification( title: 'Esta es una notificacion generada', message: 'Hola mundo');
           },
           child: const Text('Presionar'),

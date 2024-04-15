@@ -40,6 +40,7 @@ Future<dynamic> getInappropriateContents() async {
   final jsonResponse = jsonDecode(response.body);
 
   if (response.statusCode == 200) {
+    print(response);
     return jsonResponse['data'];
   } else {
     throw Exception('Error en la solicitud: ${response.reasonPhrase}');

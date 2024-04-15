@@ -69,16 +69,6 @@ class ContactListItem extends StatelessWidget {
           ),
         ],
       ),
-      /* trailing: IconButton(
-        icon: const Icon(
-            Icons.chat), // Icono del botón de chat (puedes personalizarlo)
-        onPressed: () {
-          print("presiona el boton para entrar al chat");
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) =>
-                  IndividualChatScreen(contact.chat, socket)));
-        },
-      ), */
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => IndividualChatScreen(contact.chat, socket)));

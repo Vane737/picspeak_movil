@@ -31,7 +31,6 @@ class CallApi {
 
   getPublicData(apiUrl) async {
     String token = await getToken();
-    debugPrint('Token: $token');
     http.Response response = await http.get(Uri.parse(baseUrl + apiUrl),
         headers: {
           "Content-Type": "application/json",

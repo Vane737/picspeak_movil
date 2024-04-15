@@ -36,12 +36,10 @@ class _NationalityState extends State<NationalityScreen> {
 
   Future<List<DropdownObject>> _getNacionalidades() async {
     try {
-      print("ingresa a _getNacionalidades");
       final response = await getNacionalidades();
       final List<DropdownObject> result = [];
 
       if (response != null && response is List) {
-        print("response != null");
         for (final nacionalidad in response) {
           if (nacionalidad is Map &&
               nacionalidad.containsKey('id') &&
@@ -52,28 +50,20 @@ class _NationalityState extends State<NationalityScreen> {
         }
 
         if (result.isNotEmpty) {
-          print("el result no está vacío");
           selectedNationality.value = result.first.id;
           languageList.addAll(await _getLanguages());
-          print(
-              'La longitud de la lista de language es: ${languageList.length}');
           selectedLanguage.value = languageList.first.id;
-          print('El language seleccionado es: ${selectedLanguage.value}');
           nationalityList.addAll(result);
           return result;
         } else {
-          // Manejar el caso en que la lista resultante esté vacía o no tenga el formato esperado.
           print('La lista de nacionalidades no tiene el formato esperado.');
           return [];
         }
       } else {
-        // Manejar el caso en que la respuesta sea nula o no tenga el formato esperado.
-        print(
-            'La respuesta de getNacionalidades no tiene el formato esperado.');
+        print('La respuesta de getNacionalidades no tiene el formato esperado.');
         return [];
       }
     } catch (e) {
-      // Manejar cualquier excepción que pueda ocurrir durante la ejecución.
       print('Error durante la obtención de nacionalidades: $e');
       return [];
     }
@@ -96,7 +86,6 @@ class _NationalityState extends State<NationalityScreen> {
       }
       return result;
     } catch (e) {
-      // Manejar cualquier excepción que pueda ocurrir durante la ejecución.
       print('Error durante la obtención de idiomas: $e');
       return [];
     }
@@ -141,8 +130,6 @@ class _NationalityState extends State<NationalityScreen> {
             ValueListenableBuilder(
                 valueListenable: selectedNationality,
                 builder: (context, int? selectedNationalityValue, child) {
-                  print('Cambió la nacionalidad: $selectedNationalityValue');
-
                   return ValueListenableBuilder(
                     valueListenable: selectedLanguage,
                     builder: (context, int? selectedLanguageValue, child) {
@@ -226,8 +213,6 @@ class FooterContent extends StatelessWidget {
             // width: 150,
             onPressed: () async {
               SharedPreferences pref = await SharedPreferences.getInstance();
-
-              print("usuario id: ${pref.getInt('userId')}");
               final response = await setLanguageNationalityUser(
                   pref.getInt('userId'), language_id, nationality_id);
               print("Response: $response");

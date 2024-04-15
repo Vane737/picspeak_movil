@@ -8,7 +8,7 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 
 class ChatListItem extends StatelessWidget {
   final ChatListModel chat;
-  final io.Socket socket; // Agrega la instancia del socket como un parámetro
+  final io.Socket socket; 
 
   const ChatListItem(this.chat, this.socket);
 
@@ -22,40 +22,20 @@ class ChatListItem extends StatelessWidget {
       leading: Stack(
         children: [
           CircleAvatar(
-            radius: 30.0, // Define el radio del círculo
+            radius: 30.0, 
             backgroundColor: Colors
-                .blue, // Puedes cambiar el color de fondo según tus necesidades
+                .blue, 
             child: ClipOval(
               child: Image.network(
-                chat.otherUserPhoto!, // Utiliza la ruta de la imagen del chat actual
+                chat.otherUserPhoto!, 
                 fit: BoxFit.cover,
                 width: 2 *
-                    30.0, // Asegura que la imagen tenga el doble del radio como ancho
+                    30.0, 
                 height: 2 *
-                    30.0, // Asegura que la imagen tenga el doble del radio como altura
+                    30.0, 
               ),
             ),
           ),
-          /* Positioned(
-            top: 38,
-            bottom: 0,
-            right: 5,
-            child: Container(
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 95, 228, 99),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-              child: const Text(
-                "En línea",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 10.0,
-                ),
-              ),
-            ),
-          ), */
         ],
       ),
       title: Row(
@@ -78,7 +58,6 @@ class ChatListItem extends StatelessWidget {
       subtitle: Text(chat.messageTextTranslate ?? ""),
       trailing: Text(
           formatDateTime(chat.messageDatetime.toString()),
-          //'${chat.messageDatetime!.hour.toString()}:${chat.messageDatetime!.minute.toString()}'
       ),
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
@@ -101,7 +80,7 @@ String getFlagEmoji(String language) {
     case 'italiano':
       return '🇮🇹'; // Emoji de la bandera italiana
     case 'portugués':
-      return '🇵🇹'; // Emoji de la bandera portuguesa
+      return '🇧🇷'; // Emoji de la bandera brasileña
     case 'holandés':
       return '🇳🇱'; // Emoji de la bandera neerlandesa
     case 'ruso':

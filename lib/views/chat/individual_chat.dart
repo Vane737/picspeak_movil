@@ -240,15 +240,13 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
   }
 
   Future<void> sendMessage(String message) async {
+    print('MENSAJE $message');
     String languageOrigen = await getLanguageUserData();
     print('LANGUAGE $languageOrigen');
 
     if (widget.socket.connected) {
+      print('entrar socket');
       Map<String, Object> messageData;
-      //language to translate
-      /* String? languageTranslate = userId == widget.chat.otherUserId
-          ? widget.chat.originalUserMaternLanguage
-          : widget.chat.otherUserMaternLanguage; */
       String? languageTranslate = await getLanguageReceiver(widget.chat.otherUserId);
       // Datos del mensaje que quieres enviar
       messageData = {
@@ -278,10 +276,6 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
   Future<void> sendNotification(String message) async {
     if (widget.socket.connected) {
       Map<String, Object> messageData;
-      //language to translate
-     /*  String? languageTranslate = userId == widget.chat.otherUserId
-          ? widget.chat.originalUserMaternLanguage
-          : widget.chat.otherUserMaternLanguage; */
       String? languageTranslate = await getLanguageReceiver(widget.chat.otherUserId);
       // Datos del mensaje que quieres enviar
       messageData = {
@@ -386,7 +380,6 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
               message: message.textOrigin ?? '',
               isSender: userId == message.individualUserId,
               time: formatDateTime(message.createdAt.toString()),
-              //time: '${message.createdAt!.hour}:${message.createdAt!.minute}',
               textTranslate: message.textTranslate,
               imageMessage: message.url,
               isShow: message.isShow,

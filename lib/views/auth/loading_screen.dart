@@ -16,8 +16,7 @@ class _LoadingState extends State<Loading> {
   void _loadUserInfo() async {
     String token = await getToken();
     userId = await getUserId();
-    // ignore: avoid_print
-    print('TOKEN LOADING $token');
+
     if (token == '') {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => HomeScreen()),
