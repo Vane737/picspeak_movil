@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print, non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:picspeak_front/views/interfaces/dropdown_object.dart';
+import 'package:picspeak_front/models/dropdown_object.dart';
 import '../../config/theme/app_colors.dart';
 import '../../config/theme/app_fonts.dart';
 import '../widgets/dropdown_button_options.dart';

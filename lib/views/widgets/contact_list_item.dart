@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/models/contact_model.dart';
-import 'package:picspeak_front/presentation/screens/user_information/view_profile_screen.dart';
+import 'package:picspeak_front/views/user_information/view_profile_screen.dart';
 import 'package:picspeak_front/views/chat/individual_chat.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 

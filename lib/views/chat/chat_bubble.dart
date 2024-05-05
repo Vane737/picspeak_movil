@@ -1,4 +1,4 @@
-// ignore_for_file: use_key_in_widget_constructors, avoid_print
+// ignore_for_file: use_key_in_widget_constructors, avoid_print, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';

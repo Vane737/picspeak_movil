@@ -9,7 +9,7 @@ import 'package:picspeak_front/models/chat_model.dart';
 import 'package:picspeak_front/models/message_model.dart';
 import 'package:picspeak_front/models/new_message_model.dart';
 import 'package:picspeak_front/services/auth_service.dart';
-import 'package:picspeak_front/presentation/screens/user_information/view_profile_screen.dart';
+import 'package:picspeak_front/views/user_information/view_profile_screen.dart';
 import 'package:picspeak_front/services/configuration_service.dart';
 import 'package:picspeak_front/services/notification_service.dart';
 import 'package:picspeak_front/views/chat/chat_bubble.dart';
