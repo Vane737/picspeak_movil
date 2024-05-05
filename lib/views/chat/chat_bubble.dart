@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:video_player/video_player.dart';
 
 class ChatBubble extends StatefulWidget {
   final String message;
@@ -12,6 +13,7 @@ class ChatBubble extends StatefulWidget {
   final bool? isShow;
   final String? audioOriginal;
   final String? audioTranslated;
+  final String? videoMessage;
 
   const ChatBubble(
       {Key? key,
@@ -22,7 +24,8 @@ class ChatBubble extends StatefulWidget {
       this.imageMessage,
       this.isShow,
       this.audioOriginal,
-      this.audioTranslated})
+      this.audioTranslated,
+      this.videoMessage})
       : super(key: key);
 
   @override
@@ -33,17 +36,32 @@ class _ChatBubbleState extends State<ChatBubble> {
   late FlutterSoundPlayer _player;
   bool? isBlurEnabled;
   bool isPlaying = false;
+  VideoPlayerController? _videoController;
+  late Future<void> _initialzeVideoPlayer;
 
   @override
   void initState() {
     super.initState();
     isBlurEnabled = widget.isShow;
     _player = FlutterSoundPlayer();
+    if (widget.videoMessage != null) {
+      _videoController = VideoPlayerController.network(widget.videoMessage!);
+      _initialzeVideoPlayer = _videoController!.initialize().then((_) {
+        setState(() {});
+      });
+      _videoController?.setLooping(true);
+
+      _videoController!.addListener(() {setState(() {});});
+    }
   }
 
   @override
   void dispose() {
     _player.closePlayer();
+    if (_videoController != null) {
+      _videoController!.dispose();
+    }
+
     super.dispose();
   }
 
@@ -56,6 +74,8 @@ class _ChatBubbleState extends State<ChatBubble> {
             onTap: () {
               if (widget.imageMessage != null) {
                 _showImageFullScreen(context, widget.imageMessage!);
+              } else if (widget.videoMessage != null) {
+                _showVideoFullScreen(context, widget.videoMessage!);
               }
             },
             child: Align(
@@ -93,7 +113,16 @@ class _ChatBubbleState extends State<ChatBubble> {
                         height: 150,
                         fit: BoxFit.cover,
                       ),
-                    if (widget.imageMessage == null)
+                    if (widget.videoMessage != null)
+                      _videoController != null &&
+                              _videoController!.value.isInitialized
+                          ? SizedBox(
+                              height: 200,
+                              child: VideoPlayer(_videoController!),
+                            )
+                          : const CircularProgressIndicator(),
+                    if (widget.imageMessage == null &&
+                        widget.videoMessage == null)
                       Text(
                         widget.message,
                         style: TextStyle(
@@ -151,6 +180,8 @@ class _ChatBubbleState extends State<ChatBubble> {
                 _showImageFullScreen(context, widget.imageMessage!);
               } else if (widget.audioOriginal != null) {
                 _playPauseAudio(widget.audioOriginal!);
+              } else if (widget.videoMessage != null) {
+                _showVideoFullScreen(context, widget.videoMessage!);
               }
             },
             child: Align(
@@ -179,6 +210,28 @@ class _ChatBubbleState extends State<ChatBubble> {
                       if (!widget.isSender)
                         const Text(
                           'Imagen con contenido sensible',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                      if (!widget.isSender)
+                        const Text(
+                          'Toque para mostrar',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 12.0,
+                          ),
+                        ),
+                    ],
+                    if (widget.videoMessage != null) ...[
+                      if (widget.isSender)
+                        SizedBox(
+                          height: 200,
+                          child: VideoPlayer(_videoController!),
+                        ),
+                      if (!widget.isSender)
+                        const Text(
+                          'Video con contenido sensible',
                           style: TextStyle(
                             color: Colors.black,
                           ),
@@ -253,5 +306,42 @@ class _ChatBubbleState extends State<ChatBubble> {
     setState(() {
       isPlaying = !isPlaying;
     });
+  }
+
+  void _showVideoFullScreen(BuildContext context, String videoUrl) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Scaffold(
+                  appBar: AppBar(
+                    title: const Text(''),
+                  ),
+                  body: FutureBuilder(
+                    future: _initialzeVideoPlayer,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return AspectRatio(
+                          aspectRatio: _videoController!.value.aspectRatio,
+                          child: VideoPlayer(_videoController!),
+                        );
+                      } else {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                    },
+                  ),
+                  floatingActionButton: FloatingActionButton(
+                      child: Icon(_videoController!.value.isPlaying
+                          ? Icons.pause
+                          : Icons.play_arrow),
+                      onPressed: () {
+                        setState(() {
+                          if (_videoController!.value.isPlaying) {
+                            _videoController!.pause();
+                          } else {
+                            _videoController!.play();
+                          }
+                        });
+                      }),
+                )));
   }
 }

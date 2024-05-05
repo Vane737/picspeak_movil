@@ -7,6 +7,7 @@ class NewMessage {
   final bool? isShow;
   final String? audioOriginal;
   final String? audioTranslated;
+  final String? videoMessage;
 
   NewMessage(
       {this.textOrigin,
@@ -16,9 +17,9 @@ class NewMessage {
       this.messageTime,
       this.isShow,
       this.audioOriginal,
-      this.audioTranslated});
+      this.audioTranslated,
+      this.videoMessage});
 
-  // Un método de fábrica para crear una instancia de ChatMessage desde un mapa
   factory NewMessage.fromJson(Map<dynamic, dynamic> json) {
     return NewMessage(
         textOrigin:
@@ -34,6 +35,8 @@ class NewMessage {
             : null),
         audioTranslated: (json['audio'].isNotEmpty
             ? json['audio'][0]['translatedAudioUrl']
-            : null));
+            : null),
+        videoMessage:
+            (json['video'].isNotEmpty ? json['video'][0]['video_url'] : null));
   }
 }

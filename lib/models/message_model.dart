@@ -15,6 +15,7 @@ class ChatMessage {
   final bool? isShow;
   final String? audioOriginal;
   final String? audioTranslated;
+  final String? videoUrl;
 
   ChatMessage({
     this.id,
@@ -32,7 +33,8 @@ class ChatMessage {
     this.content,
     this.isShow,
     this.audioOriginal,
-    this.audioTranslated
+    this.audioTranslated,
+    this.videoUrl
   });
 
   // Un método de fábrica para crear una instancia de ChatMessage desde un mapa
@@ -53,7 +55,8 @@ class ChatMessage {
       content: json['content'],
       isShow: json['is_showing'],
       audioOriginal: json['original_audio_url'],
-      audioTranslated: json['translated_audio_url']
+      audioTranslated: json['translated_audio_url'],
+      videoUrl: json['video_url']
     );
   }
 }

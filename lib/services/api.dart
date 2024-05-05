@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:picspeak_front/config/constants/api_routes.dart';
 import 'package:picspeak_front/services/auth_service.dart';

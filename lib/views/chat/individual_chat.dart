@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/config/constants/api_routes.dart';
+import 'package:picspeak_front/config/theme/app_colors.dart';
 import 'package:picspeak_front/models/chat_model.dart';
 import 'package:picspeak_front/models/message_model.dart';
 import 'package:picspeak_front/models/new_message_model.dart';
@@ -34,6 +35,7 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
   List<ChatBubble> chatBubbles = [];
   final ImagePicker _imagePicker = ImagePicker();
   File? _selectedImage;
+  File? _selectedVideo;
   late FlutterSoundPlayer _player;
   late FlutterSoundRecorder _recorder;
 
@@ -49,7 +51,44 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
     );
   }
 
-  Future<void> _getImageFromGallery() async {
+  Future<void> _getMultimediaFromGallery() async {
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.transparent,
+        builder: (BuildContext context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: const CircleAvatar(
+                    backgroundColor: AppColors.bgYellow,
+                    child: Icon(
+                      Icons.image,
+                      color: Colors.white,
+                    )),
+                onTap: () {
+                  Navigator.pop(context);
+                  _selectImage();
+                },
+              ),
+              ListTile(
+                leading: const CircleAvatar(
+                    backgroundColor: AppColors.bgYellow,
+                    child: Icon(
+                      Icons.video_camera_front,
+                      color: Colors.white,
+                    )),
+                onTap: () {
+                  Navigator.pop(context);
+                  _selectVideo();
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  Future<void> _selectImage() async {
     final XFile? image = await _imagePicker.pickImage(
         source: ImageSource.gallery, imageQuality: 50);
 
@@ -57,7 +96,20 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
       setState(() {
         _selectedImage = File(image.path);
       });
+      _showSendImageDialog();
+    } else {
+      print('Selección de imagen cancelada.');
+    }
+  }
 
+  Future<void> _selectVideo() async {
+    final XFile? video =
+        await _imagePicker.pickVideo(source: ImageSource.gallery);
+
+    if (video != null) {
+      setState(() {
+        _selectedVideo = File(video.path);
+      });
       _showSendImageDialog();
     } else {
       print('Selección de imagen cancelada.');
@@ -66,25 +118,19 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
 
   Future<void> _getAudioFromRecord() async {
     bool isRecording = _isRecording;
-    print('ISRECORDING $_isRecording');
 
     if (isRecording) {
-      // Stop recording
       String recordedAudioPath = await stopRecording();
       _showSendAudioDialog(recordedAudioPath);
     } else {
-      // Check audio recording permission
       var status = await Permission.microphone.status;
 
       if (status.isGranted) {
-        // Start recording
         await startRecording();
       } else {
-        // Request audio recording permission
         var result = await Permission.microphone.request();
 
         if (result.isGranted) {
-          // Start recording after permission is granted
           await startRecording();
         } else {
           print('Audio recording permission denied');
@@ -95,7 +141,6 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
 
     setState(() {
       _isRecording = !isRecording;
-      print('ISRECORDING STATE $_isRecording');
     });
   }
 
@@ -141,7 +186,6 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
                   ),
                   TextButton(
                     onPressed: () {
-                      print('Enviar audio: $audioPath');
                       sendAudio(audioPath);
                       Navigator.of(context).pop(); // Close the dialog
                     },
@@ -168,14 +212,15 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
               contentPadding: EdgeInsets.zero,
               content: Column(
                 children: [
-                  Expanded(
-                    child: Image.file(
-                      File(_selectedImage!.path),
-                      fit: BoxFit.cover,
+                  if (_selectedImage != null)
+                    Expanded(
+                      child: Image.file(
+                        File(_selectedImage!.path),
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
                   const SizedBox(height: 16),
-                  const Text('¿Deseas enviar esta imagen?'),
+                  const Text('¿Deseas enviar este archivo?'),
                 ],
               ),
               actions: [
@@ -187,13 +232,18 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
                 ),
                 TextButton(
                   onPressed: () {
-                    print('Enviar imagen: ${_selectedImage!.path}');
+                    String? image = _selectedImage == null
+                        ? null
+                        : getStringImage(_selectedImage);
+                    print('file $image');
                     if (_selectedImage != null) {
-                      String? image = _selectedImage == null
-                          ? null
-                          : getStringImage(_selectedImage);
-                      print('Enviar la imagen');
                       sendImage(image!);
+                    }
+                    String? video = _selectedVideo == null
+                        ? null
+                        : getStringImage(_selectedVideo);
+                    if (_selectedVideo != null) {
+                      sendVideo(video!);
                     }
                     Navigator.of(context).pop(); // Cerrar el diálogo
                   },
@@ -222,7 +272,6 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
     super.dispose();
   }
 
-  // Método para unirse al chat
   joinChat() {
     if (widget.socket.connected) {
       var joinChatData = {
@@ -240,14 +289,13 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
   }
 
   Future<void> sendMessage(String message) async {
-    print('MENSAJE $message');
     String languageOrigen = await getLanguageUserData();
-    print('LANGUAGE $languageOrigen');
 
     if (widget.socket.connected) {
-      print('entrar socket');
       Map<String, Object> messageData;
-      String? languageTranslate = await getLanguageReceiver(widget.chat.otherUserId);
+      String? languageTranslate =
+          await getLanguageReceiver(widget.chat.otherUserId);
+
       // Datos del mensaje que quieres enviar
       messageData = {
         'receivingUserId': widget.chat.otherUserId,
@@ -265,18 +313,16 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
         },
       };
 
-      print('MESSAGE $messageData');
-
       // Emitir el evento 'sendMessage' con los datos del mensaje
       widget.socket.emit('sendMessage', messageData);
-      // Enviar notificacion
     }
   }
 
   Future<void> sendNotification(String message) async {
     if (widget.socket.connected) {
       Map<String, Object> messageData;
-      String? languageTranslate = await getLanguageReceiver(widget.chat.otherUserId);
+      String? languageTranslate =
+          await getLanguageReceiver(widget.chat.otherUserId);
       // Datos del mensaje que quieres enviar
       messageData = {
         'receivingUserId': widget.chat.otherUserId,
@@ -302,7 +348,6 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
   void sendImage(String image) {
     if (widget.socket.connected) {
       Map<String, Object> messageData;
-      print('IMAGE SEND: $image');
       messageData = {
         'receivingUserId': widget.chat.otherUserId,
         'message': {
@@ -316,20 +361,39 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
           ]
         },
       };
-      print('MESSAGE IMAGE $messageData');
-      // Emitir el evento 'sendMessage' con los datos del mensaje
+      widget.socket.emit('sendMessage', messageData);
+
+      setState(() {
+        _selectedImage = null;
+      });
+    }
+  }
+
+  void sendVideo(String video) {
+    if (widget.socket.connected) {
+      Map<String, Object> messageData;
+      messageData = {
+        'receivingUserId': widget.chat.otherUserId,
+        'message': {
+          'userId': userId,
+          'chatId': widget.chat.chatId,
+          'resources': [
+            {
+              'type': 'V',
+              'pathDevice': video,
+            }
+          ]
+        },
+      };
+      print('MESSAGE VIDEO $messageData');
       widget.socket.emit('sendMessage', messageData);
     }
   }
 
   Future<void> sendAudio(String audioPath) async {
-    /* String? languageTranslate = userId == widget.chat.otherUserId
-        ? widget.chat.originalUserMaternLanguage
-        : widget.chat.otherUserMaternLanguage; */
-    String? languageTranslate = await getLanguageReceiver(widget.chat.otherUserId);
-
+    String? languageTranslate =
+        await getLanguageReceiver(widget.chat.otherUserId);
     String languageOrigen = await getLanguageUserData();
-    print('LANGUAGE $languageOrigen');
 
     if (widget.socket.connected) {
       try {
@@ -352,9 +416,6 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
           },
           "audioFile": audioBytes
         };
-
-        print('MESSAGE AUDIO $messageData');
-        // Emit the 'sendMessage' event with the audio message data
         widget.socket.emit('sendMessage', messageData);
       } catch (e) {
         print('Error sending audio: $e');
@@ -374,8 +435,6 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
         if (mounted) {
           List<ChatBubble> newChatBubbles =
               await Future.wait(chatMessages.map((message) async {
-            print(
-                'AUDIO URL ${message.audioOriginal} ${message.audioTranslated}');
             return ChatBubble(
               message: message.textOrigin ?? '',
               isSender: userId == message.individualUserId,
@@ -385,6 +444,7 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
               isShow: message.isShow,
               audioOriginal: message.audioOriginal,
               audioTranslated: message.audioTranslated,
+              videoMessage: message.videoUrl,
             );
           }));
 
@@ -405,11 +465,9 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
         String senderPhoto = data['senderPhoto'] ?? '';
         String message = data['message'] ?? '';
 
-        // Muestra la notificación utilizando el servicio de notificación
         NotificationService().showNotification(
           title: senderName,
           message: message,
-          // Aqui podria ir el onSelectNotification
         );
       } else {
         print('Invalid data format for newMessageNotification: $data');
@@ -422,12 +480,15 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
 
       if (data is Map) {
         NewMessage newMessage = NewMessage.fromJson(data);
-        print('New Message ${newMessage.audioOriginal}');
 
-        if (mounted) {
-          setState(() {
-            // Agregar un nuevo ChatBubble para el nuevo mensaje
-            chatBubbles.add(ChatBubble(
+        bool isDuplicate = chatBubbles.any((bubble) =>
+            bubble.message == newMessage.textOrigin &&
+            bubble.isSender == (userId == newMessage.senderId));
+
+        if (!isDuplicate) {
+          if (mounted) {
+            setState(() {
+              chatBubbles.add(ChatBubble(
                 message: newMessage.textOrigin ?? '',
                 isSender: userId == newMessage.senderId,
                 time: formatDateTime(DateTime.now().toString()),
@@ -435,8 +496,11 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
                 imageMessage: newMessage.imageUrl,
                 isShow: newMessage.isShow,
                 audioOriginal: newMessage.audioOriginal,
-                audioTranslated: newMessage.audioTranslated));
-          });
+                audioTranslated: newMessage.audioTranslated,
+                videoMessage: newMessage.videoMessage
+              ));
+            });
+          }
         }
       } else {
         print('Invalid data format for newMessage: $data');
@@ -463,18 +527,14 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
                   );
                 },
                 child: CircleAvatar(
-                  radius: 20.0, // Define el radio del círculo
-                  backgroundColor: Colors
-                      .blue, // Puedes cambiar el color de fondo según tus necesidades
+                  radius: 20.0,
+                  backgroundColor: Colors.blue,
                   child: ClipOval(
                     child: Image.network(
-                      widget.chat
-                          .otherUserPhoto!, // Utiliza la ruta de la imagen del chat actual
+                      widget.chat.otherUserPhoto!,
                       fit: BoxFit.cover,
-                      width: 2 *
-                          30.0, // Asegura que la imagen tenga el doble del radio como ancho
-                      height: 2 *
-                          30.0, // Asegura que la imagen tenga el doble del radio como altura
+                      width: 2 * 30.0,
+                      height: 2 * 30.0,
                     ),
                   ),
                 ),
@@ -504,15 +564,9 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
                   child: Row(
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.camera_alt),
-                        onPressed: _getImageFromGallery,
+                        icon: const Icon(Icons.attach_file),
+                        onPressed: _getMultimediaFromGallery,
                       ),
-                      /* IconButton(
-                        icon: const Icon(Icons.emoji_emotions),
-                        onPressed: () {
-                          showEmojiPicker(context);
-                        },
-                      ), */
                       IconButton(
                         icon: Stack(
                           alignment: Alignment.center,
@@ -532,7 +586,6 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
                           ],
                         ),
                         onPressed: () {
-                          print('IS RECORDING $_isRecording');
                           _getAudioFromRecord();
                         },
                       ),
