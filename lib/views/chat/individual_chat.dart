@@ -588,7 +588,7 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
             child: ListView.builder(
               itemCount: chatBubbles.length,
               itemBuilder: (context, index) {
-                return chatBubbles[index];
+                return chatBubbles.reversed.toList()[index];
               },
             ),
           ),
