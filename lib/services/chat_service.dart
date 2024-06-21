@@ -7,11 +7,10 @@ import 'package:http/http.dart' as http;
 import 'package:picspeak_front/services/auth_service.dart';
 import 'package:picspeak_front/models/api_response.dart';
 
-
-
 Future<ApiResponse> getSuggestFriend(int? id) async {
   ApiResponse apiResponse = ApiResponse();
   final Uri uri = Uri.parse('$suggestUser/$id');
+
   try {
     final response = await http.get(uri);
     if (response.statusCode == 200) {
@@ -30,6 +29,7 @@ Future<ApiResponse> getSuggestFriend(int? id) async {
 Future<ApiResponse> getContact(int? id) async {
   ApiResponse apiResponse = ApiResponse();
   final Uri uri = Uri.parse('$contact/user/$id');
+
   try {
     final response = await http.get(uri);
     if (response.statusCode == 200) {
@@ -48,6 +48,7 @@ Future<ApiResponse> getContact(int? id) async {
 Future<ApiResponse> addSuggest(int? userId, int? contactId) async {
   ApiResponse apiResponse = ApiResponse();
   final Uri uri = Uri.parse(contact);
+
   try {
     final response = await http.post(uri,
         headers: {"Content-Type": "application/json"},
@@ -84,3 +85,19 @@ Future<dynamic> getAllChatByUser() async {
   }
 }
 
+Future<dynamic> getFastAnswers(String message) async {
+  final response = await http.post(Uri.parse(fastAnswers),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({'message': message}));
+  final jsonResponse = jsonDecode(response.body);
+  print('statusCode ${response.statusCode}');
+
+  if (response.statusCode == 201) {
+    List<String> answers = List<String>.from(jsonResponse['answers']);
+    print('answers $answers');
+
+    return answers;
+  } else {
+    throw Exception('Error en la solicitud: ${response.reasonPhrase}');
+  }
+}

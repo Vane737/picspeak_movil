@@ -155,7 +155,6 @@ Future<dynamic> setLanguagesUser(int? userId, List<String> languages) async {
 Future<String> getLanguageUserData() async {
   final userId = await getUserId();
   final String apiUrl = '$userLanguageUrl/$userId';
-  print('URL LANGUAGE $apiUrl');
 
   try {
     final response = await http.get(Uri.parse(apiUrl));
@@ -188,7 +187,6 @@ Future<String> getLanguageUserData() async {
 
 Future<String> getLanguageReceiver(int userId) async {
   final String apiUrl = '$userLanguageUrl/$userId';
-  print('URL LANGUAGE OTHER $apiUrl USER ID $userId');
 
   try {
     final response = await http.get(Uri.parse(apiUrl));

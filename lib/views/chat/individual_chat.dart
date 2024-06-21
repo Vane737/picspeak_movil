@@ -9,6 +9,7 @@ import 'package:picspeak_front/models/chat_model.dart';
 import 'package:picspeak_front/models/message_model.dart';
 import 'package:picspeak_front/models/new_message_model.dart';
 import 'package:picspeak_front/services/auth_service.dart';
+import 'package:picspeak_front/services/chat_service.dart';
 import 'package:picspeak_front/views/user_information/view_profile_screen.dart';
 import 'package:picspeak_front/services/configuration_service.dart';
 import 'package:picspeak_front/services/notification_service.dart';
@@ -41,6 +42,7 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
 
   bool _isRecording = false;
   String _recordedAudioPath = '';
+  List<String> fastAnswers = [];
 
   void showEmojiPicker(BuildContext context) {
     showModalBottomSheet(
@@ -281,8 +283,6 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
         'fondo': 'tuFondo',
       };
 
-      print('JOIN DATA $joinChatData');
-
       // Emitir el evento 'chatJoined' con los datos del evento
       widget.socket.emit('chatJoined', joinChatData);
     }
@@ -296,7 +296,6 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
       String? languageTranslate =
           await getLanguageReceiver(widget.chat.otherUserId);
 
-      // Datos del mensaje que quieres enviar
       messageData = {
         'receivingUserId': widget.chat.otherUserId,
         'message': {
@@ -315,6 +314,12 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
 
       // Emitir el evento 'sendMessage' con los datos del mensaje
       widget.socket.emit('sendMessage', messageData);
+    }
+    _messageController.clear();
+    if (fastAnswers.contains(message)) {
+      setState(() {
+        fastAnswers.clear();
+      });
     }
   }
 
@@ -451,6 +456,11 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
           setState(() {
             chatBubbles.addAll(newChatBubbles);
           });
+
+          ChatBubble? lastMessage = getLastMessage();
+          if (lastMessage != null && !lastMessage.isSender) {
+            await updateFastAnswer(lastMessage.message);
+          }
         }
       } else {
         print('Invalid data format: $data');
@@ -489,23 +499,49 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
           if (mounted) {
             setState(() {
               chatBubbles.add(ChatBubble(
-                message: newMessage.textOrigin ?? '',
-                isSender: userId == newMessage.senderId,
-                time: formatDateTime(DateTime.now().toString()),
-                textTranslate: newMessage.textTranslate,
-                imageMessage: newMessage.imageUrl,
-                isShow: newMessage.isShow,
-                audioOriginal: newMessage.audioOriginal,
-                audioTranslated: newMessage.audioTranslated,
-                videoMessage: newMessage.videoMessage
-              ));
+                  message: newMessage.textOrigin ?? '',
+                  isSender: userId == newMessage.senderId,
+                  time: formatDateTime(DateTime.now().toString()),
+                  textTranslate: newMessage.textTranslate,
+                  imageMessage: newMessage.imageUrl,
+                  isShow: newMessage.isShow,
+                  audioOriginal: newMessage.audioOriginal,
+                  audioTranslated: newMessage.audioTranslated,
+                  videoMessage: newMessage.videoMessage));
             });
+
+            ChatBubble? lastMessage = getLastMessage();
+            if (lastMessage != null && !lastMessage.isSender) {
+              await updateFastAnswer(lastMessage.message);
+            }
           }
         }
       } else {
         print('Invalid data format for newMessage: $data');
       }
     });
+  }
+
+  ChatBubble? getLastMessage() {
+    if (chatBubbles.isEmpty) {
+      return null;
+    }
+
+    return chatBubbles.last;
+  }
+
+  Future<void> updateFastAnswer(String message) async {
+    try {
+      List<String> answers = await getFastAnswers(message);
+      List<String> filteredAnswers =
+          answers.where((answer) => answer.isNotEmpty).toList();
+
+      setState(() {
+        fastAnswers = filteredAnswers;
+      });
+    } catch (e) {
+      print('Error updating fast answers: $e');
+    }
   }
 
   @override
@@ -556,66 +592,87 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
               },
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.attach_file),
-                        onPressed: _getMultimediaFromGallery,
-                      ),
-                      IconButton(
-                        icon: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Icon(
-                              _isRecording ? Icons.stop : Icons.mic,
-                            ),
-                            if (_isRecording)
-                              Container(
-                                width: 24,
-                                height: 24,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.red,
-                                ),
-                              ),
-                          ],
-                        ),
-                        onPressed: () {
-                          _getAudioFromRecord();
-                        },
-                      ),
-                      Expanded(
-                        child: TextField(
-                          controller: _messageController,
-                          decoration: const InputDecoration(
-                            hintText: 'Escribe un mensaje...',
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.send),
-                        onPressed: () {
-                          String message = _messageController.text;
-                          print('printMessage $_messageController.text');
-                          if (message.isNotEmpty) {
-                            sendMessage(message);
-                            _messageController.clear();
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+          _buildMessageInput(),
         ],
       ),
+    );
+  }
+
+  Widget _buildMessageInput() {
+    return Column(
+      children: [
+        if (fastAnswers.isNotEmpty)
+          SizedBox(
+            height: 50,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: fastAnswers.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    sendMessage(fastAnswers[index]);
+                  },
+                  child: Chip(
+                    label: Text(fastAnswers[index]),
+                  ),
+                );
+              },
+            ),
+          ),
+        const Divider(height: 2.0),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.attach_file),
+                onPressed: _getMultimediaFromGallery,
+              ),
+              IconButton(
+                icon: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Icon(
+                      _isRecording ? Icons.stop : Icons.mic,
+                    ),
+                    if (_isRecording)
+                      Container(
+                        width: 24,
+                        height: 24,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.red,
+                        ),
+                      ),
+                  ],
+                ),
+                onPressed: () {
+                  _getAudioFromRecord();
+                },
+              ),
+              Expanded(
+                child: TextField(
+                  controller: _messageController,
+                  decoration: const InputDecoration(
+                    hintText: 'Escribe un mensaje...',
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.send),
+                onPressed: () {
+                  String message = _messageController.text;
+                  if (message.isNotEmpty) {
+                    sendMessage(message);
+                    //_messageController.clear();
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+        //_buildFastMessageSuggestions(),
+      ],
     );
   }
 }

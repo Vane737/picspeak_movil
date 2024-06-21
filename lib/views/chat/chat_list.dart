@@ -63,6 +63,7 @@ Future<List<ContactModel>> getContacts() async {
               item['photo_url'] ?? "",
               item["contactId"] ?? 0,
               ChatListModel(
+                  userId: item['chat']['userId'],
                   chatId: item['chat']['id'],
                   originalUserId: pref.getInt('userId') ?? 0,
                   otherUserId: item['contactId'],
@@ -439,6 +440,7 @@ class _ChatListViewState extends State<ChatListView> {
                 itemBuilder: (context, index) {
                   final chatMap = chatData[index];
                   final chat = ChatListModel(
+                    userId: chatMap['userId'],
                       chatId: chatMap['chat_id'],
                       originalUserId: chatMap['original_user_id'],
                       originalUserMaternLanguage:
