@@ -187,6 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               loading = true;
                             });
                             _loginUser();
+                            FocusScope.of(context).unfocus();
                           }
                         },
                       ),

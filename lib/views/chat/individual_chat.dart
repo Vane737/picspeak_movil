@@ -582,18 +582,24 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
         ),
         automaticallyImplyLeading: true,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: chatBubbles.length,
-              itemBuilder: (context, index) {
-                return chatBubbles.reversed.toList()[index];
-              },
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                reverse: true,
+                itemCount: chatBubbles.length,
+                itemBuilder: (context, index) {
+                  return chatBubbles.reversed.toList()[index];
+                },
+              ),
             ),
-          ),
-          _buildMessageInput(),
-        ],
+            _buildMessageInput(),
+          ],
+        ),
       ),
     );
   }
@@ -664,7 +670,8 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
                   String message = _messageController.text;
                   if (message.isNotEmpty) {
                     sendMessage(message);
-                    //_messageController.clear();
+                    _messageController.clear();
+                    FocusScope.of(context).unfocus();
                   }
                 },
               ),

@@ -113,6 +113,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                             );
                           }
+                          FocusScope.of(context).unfocus();
                         },
                       )
                     ],
