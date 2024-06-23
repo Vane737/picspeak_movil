@@ -164,15 +164,11 @@ class EditProfileScreenState extends State<EditProfileScreen> {
         result.email = responseData.email;
         user.birthDate = responseData.birthDate;
         user.email = responseData.email;
-
-        // Asigna otros campos según sea necesario
-        print("Datos del perfil del usuario: $result");
       } else {
         // Manejar el caso en el que la respuesta no es del tipo esperado
         print("Error: La respuesta no es del tipo esperado.");
       }
     }
-    print("Este es el result: $result");
     return result;
   }
 

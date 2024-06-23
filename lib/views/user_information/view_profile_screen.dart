@@ -37,7 +37,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
     });
 
     await _getProfileUser().then((profile) {
-      print("Este es el id: ${profile.id}");
       setState(() {
         user.id = profile.id;
         user.photourl = profile.photourl;
@@ -48,22 +47,13 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
         user.email = profile.email;
       });
     });
-
-    // Ahora puedes imprimir los datos actualizados de user
-    print("Nombre del usuario: ${user.username}");
   }
 
   Future<List<String>> _getInterests() async {
-    print("id user profile: ${widget.id}");
     final response = await getInterestsUser(widget.id);
-    // String? tokenizer = await getTokenFromLocalStorage();
-    // print("Esto es el token desde getInterest: ${tokenizer}");
     final List<String> result = [];
     if (response != null) {
-      // print("Esto devuelve {$response}");
       for (final interestUser in response) {
-        print(
-            "Esto es un objeto del array : ${interestUser['interest']['name']}");
         result.add(interestUser['interest']['name']);
       }
     }
@@ -73,7 +63,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
   Future<User> _getProfileUser() async {
     // ApiResponse response = await getUserDetail();
     ApiResponse response = await getUser(widget.id);
-    print("EL RESPONSE DEL _getProfileUsear: $response");
     User result = User(); // Inicializa un nuevo objeto User
 
     if (response.data != null) {
@@ -88,14 +77,11 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
         result.username = responseData.username;
         result.birthDate = responseData.birthDate;
         result.email = responseData.email;
-        // Asigna otros campos según sea necesario
-        print("Datos del perfil del usuario: $result");
       } else {
         // Manejar el caso en el que la respuesta no es del tipo esperado
         print("Error: La respuesta no es del tipo esperado.");
       }
     }
-    print("Este es el result: $result");
     return result;
   }
 
@@ -127,8 +113,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Cierra el cuadro de diálogo
-                // Acción al cancelar
-                print('Cancelado');
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(
@@ -142,8 +126,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
             TextButton(
               onPressed: () {//SI LE DÁ A ACEPTAR ELIMINAR CONTACTO
                 Navigator.of(context).pop(); // Cierra el cuadro de diálogo
-                // Acción al aceptar
-                print('Guardado');
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(

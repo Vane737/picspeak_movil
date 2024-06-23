@@ -90,12 +90,9 @@ Future<dynamic> getFastAnswers(String message) async {
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({'message': message}));
   final jsonResponse = jsonDecode(response.body);
-  print('statusCode ${response.statusCode}');
 
   if (response.statusCode == 201) {
     List<String> answers = List<String>.from(jsonResponse['answers']);
-    print('answers $answers');
-
     return answers;
   } else {
     throw Exception('Error en la solicitud: ${response.reasonPhrase}');

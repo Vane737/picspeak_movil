@@ -343,8 +343,6 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
           ]
         },
       };
-
-      print('MESSAGE $messageData');
       // Emitir el evento 'sendMessage' con los datos del mensaje
       widget.socket.emit('sendMessage', messageData);
     }
@@ -435,8 +433,6 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
   void setupSocketListeners() {
     // Manejar los mensajes cargados al unirse al chat
     widget.socket.on('messagesLoaded', (data) async {
-      print('Received data from server (messagesLoaded): $data');
-
       if (data is List) {
         List<ChatMessage> chatMessages =
             data.map((item) => ChatMessage.fromJson(item)).toList();
@@ -490,8 +486,6 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
 
     // Manejar el evento newMessage
     widget.socket.on('newMessage', (data) async {
-      print('Received new message : $data');
-
       if (data is Map) {
         NewMessage newMessage = NewMessage.fromJson(data);
 
@@ -561,7 +555,6 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
       {required String senderName,
       required String message,
       required String senderPhoto}) {
-        print('showNotification $senderName $message');
     NotificationService().showNotification(
       title: senderName,
       message: message,
