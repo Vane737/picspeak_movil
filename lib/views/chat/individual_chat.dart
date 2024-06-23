@@ -10,9 +10,9 @@ import 'package:picspeak_front/models/message_model.dart';
 import 'package:picspeak_front/models/new_message_model.dart';
 import 'package:picspeak_front/services/auth_service.dart';
 import 'package:picspeak_front/services/chat_service.dart';
+import 'package:picspeak_front/services/notification_service.dart';
 import 'package:picspeak_front/views/user_information/view_profile_screen.dart';
 import 'package:picspeak_front/services/configuration_service.dart';
-import 'package:picspeak_front/services/notification_service.dart';
 import 'package:picspeak_front/views/chat/chat_bubble.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
@@ -266,6 +266,7 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
     setupSocketListeners();
     _player = FlutterSoundPlayer();
     _recorder = FlutterSoundRecorder();
+    NotificationService().initNotification();
   }
 
   @override
@@ -311,7 +312,6 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
           ]
         },
       };
-
       // Emitir el evento 'sendMessage' con los datos del mensaje
       widget.socket.emit('sendMessage', messageData);
     }
@@ -392,6 +392,10 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
       };
       print('MESSAGE VIDEO $messageData');
       widget.socket.emit('sendMessage', messageData);
+
+      setState(() {
+        _selectedVideo = null;
+      });
     }
   }
 
@@ -470,15 +474,15 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
     // Agrega este bloque para escuchar el evento newMessageNotification
     widget.socket.on('newMessageNotification', (data) {
       print('Received data from server (newMessageNotification): $data');
-      if (data is Map<String, dynamic> && data['type'] == 'message') {
-        String senderName = data['senderName'] ?? 'Unknown';
-        String senderPhoto = data['senderPhoto'] ?? '';
-        String message = data['message'] ?? '';
-
-        NotificationService().showNotification(
-          title: senderName,
-          message: message,
-        );
+      if (data is Map<String, dynamic>) {
+        String type = data['type'] ?? '';
+        if (type == 'message') {
+          showNotification(
+            senderName: data['senderName'] ?? 'Unknown',
+            message: data['message'] ?? '',
+            senderPhoto: data['senderPhoto'] ?? '',
+          );
+        }
       } else {
         print('Invalid data format for newMessageNotification: $data');
       }
@@ -514,6 +518,15 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
             if (lastMessage != null && !lastMessage.isSender) {
               await updateFastAnswer(lastMessage.message);
             }
+
+            String senderName = data['senderName'] ?? 'Unknown';
+            String message = data['message'] ?? '';
+
+            showNotification(
+              senderName: senderName,
+              message: newMessage.textOrigin ?? '',
+              senderPhoto: data['senderPhoto'] ?? '',
+            );
           }
         }
       } else {
@@ -542,6 +555,17 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
     } catch (e) {
       print('Error updating fast answers: $e');
     }
+  }
+
+  void showNotification(
+      {required String senderName,
+      required String message,
+      required String senderPhoto}) {
+        print('showNotification $senderName $message');
+    NotificationService().showNotification(
+      title: senderName,
+      message: message,
+    ); 
   }
 
   @override

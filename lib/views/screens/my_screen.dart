@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+/* // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:picspeak_front/services/notification_service.dart';
@@ -37,3 +37,4 @@ class _MyScreenState extends State<MyScreen> {
     );
   }
 }
+ */
