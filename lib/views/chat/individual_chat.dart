@@ -373,6 +373,7 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
   }
 
   void sendVideo(String video) {
+    print('socket ${widget.socket.connected}');
     if (widget.socket.connected) {
       Map<String, Object> messageData;
       messageData = {
@@ -388,12 +389,8 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
           ]
         },
       };
-      print('MESSAGE VIDEO $messageData');
+      print('sendMessage $messageData');
       widget.socket.emit('sendMessage', messageData);
-
-      setState(() {
-        _selectedVideo = null;
-      });
     }
   }
 
@@ -486,12 +483,17 @@ class IndividualChatScreenState extends State<IndividualChatScreen> {
 
     // Manejar el evento newMessage
     widget.socket.on('newMessage', (data) async {
+      print('newMessage $data');
       if (data is Map) {
+        print('entra a data is map');
         NewMessage newMessage = NewMessage.fromJson(data);
+        print('new message ${newMessage.textOrigin} ${newMessage.videoMessage} ${newMessage.imageUrl}');
 
         bool isDuplicate = chatBubbles.any((bubble) =>
             bubble.message == newMessage.textOrigin &&
             bubble.isSender == (userId == newMessage.senderId));
+        
+        print('video chat ${newMessage.videoMessage}');
 
         if (!isDuplicate) {
           if (mounted) {

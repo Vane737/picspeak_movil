@@ -37,6 +37,6 @@ class NewMessage {
             ? json['audio'][0]['translatedAudioUrl']
             : null),
         videoMessage:
-            (json['video'].isNotEmpty ? json['video'][0]['video_url'] : null));
+            (json['video'].isNotEmpty ? json['video'][0]['url'] : null));
   }
 }
